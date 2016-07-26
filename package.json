@@ -1,0 +1,16 @@
+{
+  "family": "minicanvas",
+  "name": "DamJs",
+  "version": "1.0.0",
+  "main": "./src/DamJs.js",
+  "dependencies": {
+    "jquery": "*"
+  },
+  "devDependencies": {
+    "amdclean": "^2.7.0",
+    "grunt": "*",
+    "grunt-cli": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-unwrap": "*"
+  }
+}

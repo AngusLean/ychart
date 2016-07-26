@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>canvas测试</title>
+<script type="text/javascript" src="../require/require.js"></script>
+</head>
+
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing"  style="border:blue solid 1px ;width :800px;height:400px  "> </div>
+</div>
+
+</body>
+<script type="text/javascript" charset="utf-8">
+
+require.config({
+    packages: [
+        {
+            name: "ychart",
+            location: '../src',
+            main: "Base"
+        }
+    ]
+});
+
+require(["ychart/tool/debug","ychart/extend/dam/dam","ychart/Ycharts","ychart/shape/Rect"],
+            function(debug,damview,Ychart,Rect){
+    var newdam={
+        type: "土石坝",
+        DMTPWD :35,
+        MAXDMHG :150,
+        DMTPEL : 600,
+        UPDMSL :0.5,
+        DWDMSL :0.5,
+        <!-- name: "长池水库", -->
+        CDREWALL:{
+            WTDTH: 4,
+            UPSL: 0.04,
+            DWSL: 0.04
+        },
+        HYCH: {
+            Z : 555,
+            NRPLLV : 557,
+            DDWL: 540
+        }
+    };
+
+    var damview = new damview(newdam);
+
+    dam = Ychart.init("drawing");
+    damview.setBeginPt([150,40]);
+
+    dam.add(damview.getData())
+    dam.BrushAll();
+});
+</script>
+</html>

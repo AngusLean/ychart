@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件模块测试</title>
+    <script type="text/javascript" src="../../require/require.js"></script>
+</head>
+<body>
+
+    <script>
+        require.config({
+            packages: [
+                {
+                    name: "ychart",
+                    location: '../src',
+                    main: "Base"
+                }
+            ]
+        });
+
+        require(["ychart/base/eventful"],function(eventful){
+            var EV= new eventful();
+            var cb1 = function(name){
+                console.log("cb1: "+name+" "+this);
+            };
+            var cb2 = function(name){
+                console.log("cb2: "+name+" "+this);
+            };
+
+            EV.on("load",cb1, this);
+            EV.on("load",cb2, this);
+
+
+            EV.trigger("load","dfd");
+
+            var say = function () {
+                console.log("say")
+            };
+            EV.once("say",say );
+
+            console.log("开始调用单次回调..");
+            EV.trigger("say");
+            console.log("再次调用单次回调..");
+            EV.trigger("say");
+
+
+            for(var i=0 ;i<50 ;i++){
+                EV.on("test" , function(dt){
+                    console.log(Math.random()+" ---- 传入参数 "+dt);
+                });
+            }
+            for(i=0 ;i<3 ;i++){
+                EV.trigger("test",i);
+            }
+        });
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>handler测试</title>
+    <script type="text/javascript" src="../require/require.js"></script>
+
+</head>
+<body>
+    <div style="width :800px; margin: 0 auto;">
+        <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+    </div>
+
+    <script>
+        require.config({
+            packages: [
+                {
+                    name: "ychart",
+                    location: '../src',
+                    main: "Base"
+                }
+            ]
+        });
+        (function(){
+            require(["ychart/Ycharts", "ychart/shape/Line","ychart/shape/Rect", "ychart/shape/YText", "ychart/Group",
+            "ychart/Handler"],
+                    function(ycharts,Line,Rect ,Ytext ,Group ,Handler){
+                        yh = ycharts.init("drawing");
+                        var line1 =new Line({
+                            beginpt: [0,0],
+                            endpt: [100,100],
+                            style:{
+                                lineColor: "blue",
+                                lineWidth: 5
+                            }
+                        });
+                        var line2 =new Line({
+                            beginpt: [150,0],
+                            endpt: [20,100],
+                            style:{
+                                lineColor: "blue",
+                                lineWidth: 15
+                            }
+                        });
+
+                        /*line2.on("mousemove",function(){
+                            console.log("line2 鼠标移入");
+                        });*/
+                        yh.add(line1);
+                        yh.add(line2);
+                        yh.BrushAll();
+                    });
+
+
+        })();
+
+
+    </script>
+</body>
+</html>

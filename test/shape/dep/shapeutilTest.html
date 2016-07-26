@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>shapeutil测试</title>
+    <script type="text/javascript" src="../../../require/require.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "></div>
+    <div  style="border:blue solid 1px ;width :800px;height:400px;margin-top:10px ">
+        <canvas id="drawing1" width="800" height="400"></canvas>
+    </div>
+</div>
+
+<script>
+    require.config({
+        packages: [
+            {
+                name: "ychart",
+                location: '../../../src',
+                main: "Base"
+            }
+        ]
+    });
+    (function () {
+        require(["ychart/shape/dep/shapeutil","ychart/tool/event"],
+            function (shapeutil ,eventUtil) {
+                var NOP = function(){};
+                var sp = {
+                    BeforeBrush:NOP,
+                    styleProxy: {getBrushType: NOP},
+                    BuildPath : function(ctx , config){
+//                        ctx.beginPath();
+                        ctx.moveTo(20,20);
+                        ctx.lineWidth = 15;
+                        ctx.rect(25,25,200,200);
+//                        ctx.lineTo(100,100);
+                        ctx.stroke();
+//                        ctx.restore();
+                    }
+                };
+                var pts=[
+                        [20,20],
+                        [20.1,20.1],
+                        [21.1,21],
+                        [50.1,50]
+                ];
+
+                var canvas = document.getElementById("drawing1");
+                sp.BuildPath(canvas.getContext("2d"));
+                canvas.addEventListener("mousemove",function(event){
+                    var event = eventUtil.getEvent(event);
+                    event = eventUtil.clientToLocal(canvas ,event ,event);
+                    if(shapeutil.isPtInPath(sp ,null ,event.ycX ,event.ycY)){
+                        document.body.style.cursor = "pointer";
+                        console.log("is focus");
+                    }
+                });
+                canvas.addEventListener("mouseout",function(event){
+                    var event = eventUtil.getEvent(event);
+                    event = eventUtil.clientToLocal(canvas ,event ,event);
+                    document.body.style.cursor = "default";
+                });
+                pts.forEach(function(item){
+                    console.log(item+" 在路径中: "+shapeutil.isPtInPath(sp,null,item[0],item[1]));
+                });
+
+
+        });
+    })();
+
+
+</script>
+</body>
+</html>
