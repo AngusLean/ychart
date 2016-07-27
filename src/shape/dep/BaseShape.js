@@ -71,12 +71,16 @@ define( function (require) {
     baseShape.prototype.BeforeBrush = function (ctx) {
         ctx.save();
 
-        this.updateTransform();
-        this.setTransform(ctx);
+        this.SetShapeTransform(ctx);
 
         this.configProxy.bindContext(ctx);
     };
 
+    baseShape.prototype.SetShapeTransform = function (ctx) {
+        this.updateTransform();
+        this.setTransform(ctx);
+    };
+    
     baseShape.prototype.AfterBrush = function (ctx) {
         var tp = this.configProxy.getBrushType();
         switch (tp) {
@@ -131,9 +135,8 @@ define( function (require) {
     };
 
     baseShape.prototype.setOption = function (option) {
-        // util.merge(this.config , option , true ,null);
-        // this.styleProxy.update(option.style);
-        // this.__dirty = true;
+        this.configProxy.update(option);
+        this.__dirty = true;
     };
 
 
