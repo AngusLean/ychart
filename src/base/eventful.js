@@ -19,7 +19,7 @@ define(function (require) {
     Eventful.prototype.on = function (event, handler, context) {
         var h = this._handlers ;
         if(!h || !event || !handler){
-            return;
+            return this;
         }
         
         if(!h[event]){

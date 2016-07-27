@@ -46,6 +46,8 @@ define(function(require){
             this.preProcessShapeInLayer(shape, layer);
 
             shape.Brush(layer.getContext());
+            
+            this.afterProcessShapeInLayer(shape ,layer);
         }
     };
 
@@ -122,6 +124,10 @@ define(function(require){
         _preProcessShapeInLayer(shape);
     };
 
+    Painter.prototype.afterProcessShapeInLayer = function (shape ,layer) {
+        shape.__dirty = false;
+    };
+    
     Painter.prototype.getLayer = function(zLevel){
         var layer = this.layer[zLevel];
         if(!layer){

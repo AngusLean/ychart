@@ -29,7 +29,6 @@ define(function(require){
                 this._x = e.offsetX;
                 this._y = e.offsetY;
                 this._dragingTarget = target;
-                console.log("拖动开始");
                 this.trigger(target,'dragStart',e.event);
             }
         },
@@ -45,13 +44,13 @@ define(function(require){
 
                 var dx = x - this._x;
                 var dy = y - this._y;
-                this._x = dx;
-                this._y = dy;
-                draggingTarget.drift(dx, dy, e);
-                this.trigger(draggingTarget, 'draging', e.event);
+                this._x = x;
+                this._y = y;
+                draggingTarget.drift(dx, dy);
+                // this.trigger(draggingTarget, 'draging', e.event);
                 
                 //更新视图
-                // this.__yh && this.__yh.update();
+                this.__yh && this.__yh.update();
                 
                /* var dropTarget = this.findHover(x, y, draggingTarget);
                 var lastDropTarget = this._dropTarget;

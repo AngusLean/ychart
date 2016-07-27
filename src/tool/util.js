@@ -72,7 +72,7 @@ define(function (require) {
     }
 
     function mergeItem(target, source, key, overwrite) {
-        if (source.hasOwnProperty(key)) {
+        if (source.hasOwnProperty(key) && !(source[key] == null)) {
             var targetProp = target[key];
             if (typeof targetProp == 'object') {
                 // 如果需要递归覆盖，就递归调用merge

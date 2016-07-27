@@ -3,7 +3,7 @@ define(function(require) {
 
     //使用默认样式
     var Style = require("../shape/dep/style");
-    var st = new Style();
+    var st = new Style._style();
 
     var defaultFont = st.font;
     var defaultAlign = st.textAlign;

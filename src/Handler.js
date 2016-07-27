@@ -18,8 +18,8 @@ define(function(require){
         return function (arg1) {
             return handler.call(context, arg1);
         };
-
     }
+    
     function bind2Arg(handler ,context) {
         return function (arg1, arg2) {
             return handler.call(context, arg1, arg2);
@@ -44,14 +44,14 @@ define(function(require){
             obj = this.getHoverElement(ev);
             //判断和之前获取焦点的是否是同一个形状
             if(this._lastHovered != null && this._lastHovered != obj){
-                this.triggerProxy(this._lastHovered , "blur" ,extendEventPackge(this._lastHovered ,ev));
+                this.triggerProxy(this._lastHovered , "blur" ,ev);
             }
             //某个形状处于焦点中
             if(obj){
                 //设置处于焦点时的样式
                 this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
                 //分发该元素的鼠标移动事件
-                this.triggerProxy(obj ,"mousemove" ,extendEventPackge(obj ,ev));
+                this.triggerProxy(obj ,"mousemove" ,ev);
                 
             }else{
                 //默认样式
@@ -65,7 +65,7 @@ define(function(require){
             ev = eventUtil.clientToLocal(this.root ,ev ,ev);
             obj = this.getHoverElement(ev);
             if(this._lastHovered != null){
-                this.triggerProxy(this._lastHovered ,"globalout" ,extendEventPackge(this._lastHovered ,ev));
+                this.triggerProxy(this._lastHovered ,"globalout" ,ev);
             }
         }
 
@@ -109,7 +109,7 @@ define(function(require){
                 if(obj){
 
                     //分发该元素的获取焦点事件
-                    this.triggerProxy(obj ,name ,extendEventPackge(obj ,ev));
+                    this.triggerProxy(obj ,name ,ev);
 
                     //todo 此处效率很低
                     this._painter.refresh();
@@ -138,7 +138,7 @@ define(function(require){
      * @param event  事件对象
      */
     handlers.prototype.triggerProxy = function(element, eventName ,event){
-        element.trigger && element.trigger(eventName,event);
+        element.trigger && element.trigger(eventName, extendEventPackge(element , event));
     };
 
     /**
