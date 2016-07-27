@@ -32,7 +32,7 @@ define(function(require){
         //建立路径
         shape.BuildPath(ctx ,config);
         var rs;
-        var type=shape.styleProxy.getBrushType();
+        var type=shape.configProxy.getBrushType();
         //对于填充和边线+填充的图形调用isPointInPath方法
         if(type == "all" || type == "fill"){
             rs = ctx.isPointInPath(x , y);

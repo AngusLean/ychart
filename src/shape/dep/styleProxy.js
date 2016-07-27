@@ -4,26 +4,33 @@ define(function(require) {
     var util = require("../../tool/util");
 
     var Style = require("./style");
+    var defaultStyle = Style._style;
+    var styleMapper = Style._styleMap;
 
+    var styleTranslator = function (style) {
+        if(style){
+            util.replaceattr(style , styleMapper);
+        }
+    };
 
     /**
      * 在合并样式时会出现覆盖的情况
      */
-    var _styleProxy = function(style) {
+    var styleProxy = function(style) {
         style = style || {};
-        this.style = new Style(style);
+        this.style = util.merge(new defaultStyle() ,style ,true ,styleMapper);
         this.brushType = null;
         this.init(style);
     };
 
-    _styleProxy.prototype.init = function(style){
+    styleProxy.prototype.init = function(style){
          this.brushType = style.brushType ? style.brushType :
             style.strokeStyle ?
                 (style.fillStyle ? 'both' : 'stroke') :
                 (style.fillStyle ? "fill" : "none") ;
     };
 
-    _styleProxy.prototype.bindContext = function(ctx) {
+    styleProxy.prototype.bindContext = function(ctx) {
         var style = this.style;
         for (var prop in style) {
             ctx[prop] = style[prop];
@@ -39,13 +46,20 @@ define(function(require) {
         }
     };
 
-    _styleProxy.prototype.getBrushType = function(style) {
+    styleProxy.prototype.update = function (_style) {
+        if(_style){
+            util.merge(this.style ,_style ,true ,styleMapper);
+            this.init(_style);
+        }
+    };
+    
+    styleProxy.prototype.getBrushType = function(style) {
         return this.brushType;
     };
 
-    _styleProxy.prototype.getStyle = function() {
+    styleProxy.prototype.getStyle = function() {
         return this.style;
     };
 
-    return _styleProxy;
+    return styleProxy;
 });

@@ -5,7 +5,7 @@ define( function (require) {
     var debugs = require("../../tool/debug");
     var text = require("../../tool/text");
     var Elements = require("../../base/element");
-    var StyleProxy = require("./styleProxy");
+    var OptionProxy = require("./OptionProxy");
 
     var warn = debugs.warn;
 
@@ -14,16 +14,16 @@ define( function (require) {
      * @param opts
      */
     var baseShape = function(opts) {
+        
+        this.configProxy  = new OptionProxy(opts);
+
+        //是否忽略当前元素
         this.ignore = opts.ignore || false;
 
-        this.styleProxy = new StyleProxy(opts.style);
-
-        this.config = util.merge({}, opts, true);
-        
         //当前图像是否发生了变化. 该属性通常是由于运行期间改变了元素的属性设置为true
         this.__dirty = false;
         
-        //绘图实例
+        //绘图实例。 在被添加到ychart实例时设置
         this.__yh == null;
         
         Elements.call(this,opts);
@@ -39,7 +39,7 @@ define( function (require) {
     * @constructor
     */
     baseShape.prototype.DrawText = function (ctx, config) {
-        if(util.checkNull(config.text)){
+        /*if(util.checkNull(config.text)){
             return;
         }
 
@@ -51,7 +51,7 @@ define( function (require) {
         y = y + height/2;
 
         ctx.save();
-        var st = this.styleProxy.getStyle();
+        var st = this.configProxy.getStyle();
         //文字颜色
         if(!util.checkNull(st.textColor)){
             ctx.fillStyle = st.textColor;
@@ -65,7 +65,7 @@ define( function (require) {
         text.fillText(ctx, config.text, x, m[5]-y, st.font,
                      st.textAlign, st.textBaseline);
 
-        ctx.restore();
+        ctx.restore();*/
     };
 
     baseShape.prototype.BeforeBrush = function (ctx) {
@@ -73,12 +73,12 @@ define( function (require) {
 
         this.updateTransform();
         this.setTransform(ctx);
-        //设置样式
-        this.styleProxy.bindContext(ctx);
+
+        this.configProxy.bindContext(ctx);
     };
 
     baseShape.prototype.AfterBrush = function (ctx) {
-        var tp = this.styleProxy.getBrushType();
+        var tp = this.configProxy.getBrushType();
         switch (tp) {
         case "both":
         case "all":
@@ -118,30 +118,36 @@ define( function (require) {
     * @constructor
     */
     baseShape.prototype.Brush = function (ctx) {
-        if(!this.config.ignore){
+        var config = this.configProxy.getConfig();
+        if(!config.ignore){
             //设置样式
-            this.BeforeBrush(ctx, this.config);
-            //考虑到某个具体绘制函数可能需要用到处理过后的样式
-            this.config.style = this.styleProxy.getStyle();
+            this.BeforeBrush(ctx, config);
             //具体图形自己的定制
-            this.BuildPath(ctx, this.config);
-            this.DrawText(ctx,this.config);
+            this.BuildPath(ctx, config);
+            this.DrawText(ctx,config);
             //恢复事故现场
-            this.AfterBrush(ctx, this.config.style);
+            this.AfterBrush(ctx, config);
         }
     };
+
+    baseShape.prototype.setOption = function (option) {
+        // util.merge(this.config , option , true ,null);
+        // this.styleProxy.update(option.style);
+        // this.__dirty = true;
+    };
+
 
     var isPtInPath = require("./shapeutil").isPtInPath;
     
     baseShape.prototype.contain = function(point){
         // var local = this.transformCoordToLocal(point.x , point.y);
         var local = [point.x ,point.y];
-        return isPtInPath(this , this.config , local[0] ,local[1]);
+        return isPtInPath(this , this.configProxy.getConfig() , local[0] ,local[1]);
     };
     
     baseShape.prototype.drift = function (dx, dy) {
         if(!util.isArr(this.position)){
-            this.position = [];
+            this.position = [0,0];
         }
 
         this.position[0] += dx;

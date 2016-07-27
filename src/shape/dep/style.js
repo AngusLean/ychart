@@ -45,15 +45,7 @@ define(function(require){
      * @param opt  初始化样式
      * @private
      */
-    var _style = function(opt){
-        if(opt){
-            util.replaceattr(opt , styleMap);
-            for(var attr in opt){
-                if(opt[attr]){
-                    this[attr] = opt[attr];
-                }
-            }
-        }
+    var _style = function(){
     };
 
 
@@ -152,5 +144,8 @@ define(function(require){
     };
 
 
-    return _style;
+    return {
+        _style : _style,
+        _styleMap : styleMap
+    };
 });
