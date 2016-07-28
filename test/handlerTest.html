@@ -39,6 +39,7 @@
                         var line1 =new Line({
                             beginpt: [0,0],
                             endpt: [100,100],
+                            draggable: false,
                             style:{
                                 lineColor: "blue",
                                 lineWidth: 5
@@ -53,10 +54,12 @@
                             }
                         });
 
-                       /* line2.on("mousedown",function(){
+                        line2.on("mousedown",function(){
                             console.log("鼠标点下..");
-                        });*/
-
+                        });
+                        line2.on("click",function(){
+                            console.log("鼠标单击..");
+                        });
                         yh.add(line1);
                         yh.add(line2);
                         yh.BrushAll();
@@ -71,7 +74,7 @@
                         });
                         var te;
                         $("setoptiontest").addEventListener("click",function (event) {
-                            te= setInterval(randomDrawLine,100);
+                            te= setInterval(randomDrawLine,1000/60);
                         });
                         $("stopoptiontest").addEventListener("click",function () {
                             window.clearInterval(te);

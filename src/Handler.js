@@ -9,25 +9,13 @@ define(function(require){
     var util = require("./tool/util");
     
     var Draggable = require("./base/draggable");
-    var Eventful = require("./base/eventful");
-    
-    var bind = function(fn ,ctx){
-        return function(){
-            return fn.apply(ctx ,arguments);
-        };
-    };
 
     function bind1Arg(handler ,context) {
         return function (arg1) {
             return handler.call(context, arg1);
         };
     }
-    
-    function bind2Arg(handler ,context) {
-        return function (arg1, arg2) {
-            return handler.call(context, arg1, arg2);
-        };
-    }
+
     //临时变量
     var ev ,obj;
 
@@ -41,10 +29,9 @@ define(function(require){
         _lastHovered : null,
 
         //鼠标移动事件捕获及分发
-        mousemove : function (event) {
-            ev = eventUtil.getEvent(event);
-            ev = eventUtil.clientToLocal(this.root ,ev ,ev);
-            obj = this.getHoverElement(ev);
+        mousemove : function (exEvent) {
+
+            ev = exEvent, obj = exEvent.targetEle;
             //判断和之前获取焦点的是否是同一个形状
             if(this._lastHovered != null && this._lastHovered != obj){
                 this.triggerProxy(this._lastHovered , "blur" ,ev);
@@ -63,22 +50,14 @@ define(function(require){
             this._lastHovered = obj;
         },
 
-        mouseout: function (event) {
-            ev = eventUtil.getEvent(event);
-            ev = eventUtil.clientToLocal(this.root ,ev ,ev);
-            obj = this.getHoverElement(ev);
+        mouseout: function (exEvent) {
+            ev = exEvent , obj = ev.targetEle;
             if(this._lastHovered != null){
                 this.triggerProxy(this._lastHovered ,"globalout" ,ev);
             }
         }
-
     };
-
-    var extendEventPackge = function(object ,event){
-        //目标形状
-        event.targetEle = object;
-        return event;
-    };
+    
 
     var handlers = function(root ,painter ,storage){
 
@@ -90,14 +69,15 @@ define(function(require){
         this._painter = painter;
         //事件处理程序
         this._handlers = [];
-
+        
+        //拖动管理。 只需要调用它的事件分发函数即可
+        this._dragmanager = new Draggable();
+        
         this._DEFAULT_FOCUS_CURSOR = "pointer";
         this._DEFAULT_CURSOR = "default";
         this.initHandlers();
-        
-        Eventful.call(this);
-        Draggable.call(this);
     };
+
 
     /**
      * 初始化事件处理程序及绑定事件。
@@ -106,36 +86,49 @@ define(function(require){
     handlers.prototype.initHandlers = function(){
 
         var defaultEventProcess  =  function (name) {
-            return function (event) {
-                ev = eventUtil.getEvent(event);
-                ev = eventUtil.clientToLocal(this.root ,ev ,ev);
-                obj = this.getHoverElement(ev);
+            return function (exEvent) {
+                ev = exEvent;
+                obj = ev.targetEle;
 
                 //某个形状处于焦点中
                 if(obj){
-
                     //分发该元素的获取焦点事件
                     this.triggerProxy(obj ,name ,ev);
-
-                    //todo 此处效率很低
-                    this._painter.refresh();
                 }
             };
         };
 
-        var _this = this;
-        ALL_HANDLER_NAMES.forEach(function (item, index) {
+        var _this = this,exEvent;
+        ALL_HANDLER_NAMES.forEach(function (item) {
+            var eventHandler = DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item)
+                : DEFAULT_HANDLERS[item];
             //设置所有的事件处理函数
-            _this._handlers[item] = bind1Arg(
-                //如果没有提供事件处理函数，则使用上面定义的默认处理函数
-                (DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item)
-                    : DEFAULT_HANDLERS[item])
-            ,_this);
-            eventUtil.addHandler(_this.root , item , _this._handlers[item]);
+            _this._handlers[item] = eventHandler;
+            eventUtil.addHandler(_this.root , item , bind1Arg(function(event){
+
+                exEvent = this.extendAndFixEventPackge(event);
+              
+                //转发标准事件到元素。
+                this._handlers[item].call(_this , event);
+                //拖动管理。 元素拖动相关的事件由这里面发出去。
+                this._dragmanager.trigger(item , exEvent);
+            } , _this));
         });
 
     };
 
+    /**
+     * 设置事件的额外属性已适应ychart的事件响应系统
+     * @param event
+     * @returns {Event}
+     */
+    handlers.prototype.extendAndFixEventPackge = function(event){
+        event = eventUtil.getEvent(event);
+        event = eventUtil.clientToLocal(this.root ,event ,event);
+        //目标形状
+        event.targetEle = this.getHoverElement(event);
+        return event;
+    };
 
     /**
      * 事件分发。
@@ -143,8 +136,8 @@ define(function(require){
      * @param eventName  事件名称
      * @param event  事件对象
      */
-    handlers.prototype.triggerProxy = function(element, eventName ,event){
-        element.trigger && element.trigger(eventName, extendEventPackge(element , event));
+    handlers.prototype.triggerProxy = function(element, eventName ,exEvent){
+        element.trigger && element.trigger(eventName, exEvent);
     };
 
     /**
@@ -166,9 +159,6 @@ define(function(require){
         return null;
     };
 
-    
-    util.ClassUtil.mixin(handlers, Eventful, true);
-    util.ClassUtil.mixin(handlers, Draggable, true);
     
     return handlers;
 });

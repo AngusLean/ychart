@@ -19,7 +19,10 @@ define( function (require) {
 
         //是否忽略当前元素
         this.ignore = opts.ignore || false;
-
+        
+        //是否可以拖动
+        this.draggable = opts.draggable == undefined ? true : opts.draggable;
+        
         //当前图像是否发生了变化. 该属性通常是由于运行期间改变了元素的属性设置为true
         this.__dirty = false;
         
@@ -30,7 +33,7 @@ define( function (require) {
     };
 
     baseShape.prototype.type = "baseshape";
-
+    
     /**
     *  如果某个形状设置了变换的话这就不满足要求。 目前实现仅仅满足使用直觉座标系时
     *  todo 更改绘制文字时变换的控制。当前实现过于丑陋
@@ -39,7 +42,7 @@ define( function (require) {
     * @constructor
     */
     baseShape.prototype.DrawText = function (ctx, config) {
-        /*if(util.checkNull(config.text)){
+        if(util.checkNull(config.text)){
             return;
         }
 
@@ -65,7 +68,7 @@ define( function (require) {
         text.fillText(ctx, config.text, x, m[5]-y, st.font,
                      st.textAlign, st.textBaseline);
 
-        ctx.restore();*/
+        ctx.restore();
     };
 
     baseShape.prototype.BeforeBrush = function (ctx) {
