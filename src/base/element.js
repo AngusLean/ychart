@@ -20,7 +20,7 @@ define(function (require) {
 
         Transform.call(this, opts);
         Eventful.call(this);
-        Draggable.call(this);
+        // Draggable.call(this);
     };
 
     //元素默认所在的层级
@@ -48,6 +48,6 @@ define(function (require) {
 
     util.ClassUtil.mixin(Elements, Transform, true);
     util.ClassUtil.mixin(Elements, Eventful, true);
-    util.ClassUtil.mixin(Elements, Draggable, true);
+    // util.ClassUtil.mixin(Elements, Draggable, true);
     return Elements;
 });

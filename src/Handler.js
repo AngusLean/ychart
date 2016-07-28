@@ -6,8 +6,11 @@ define(function(require){
     
     
     var eventUtil = require("./tool/event");
-   
-
+    var util = require("./tool/util");
+    
+    var Draggable = require("./base/draggable");
+    var Eventful = require("./base/eventful");
+    
     var bind = function(fn ,ctx){
         return function(){
             return fn.apply(ctx ,arguments);
@@ -91,6 +94,9 @@ define(function(require){
         this._DEFAULT_FOCUS_CURSOR = "pointer";
         this._DEFAULT_CURSOR = "default";
         this.initHandlers();
+        
+        Eventful.call(this);
+        Draggable.call(this);
     };
 
     /**
@@ -160,6 +166,9 @@ define(function(require){
         return null;
     };
 
-
+    
+    util.ClassUtil.mixin(handlers, Eventful, true);
+    util.ClassUtil.mixin(handlers, Draggable, true);
+    
     return handlers;
 });

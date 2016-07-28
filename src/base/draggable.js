@@ -9,16 +9,15 @@ define(function(require){
     var Draggable = function(){
         this.on('mousedown', this._dragStart, this);
         this.on('mousemove', this._dragIng, this);
-        this.on('mouseup', this._dragEnd, this);
-        this.on('blur', this._dragEnd, this);
-        this.on('globalout', this._dragEnd, this);
+        this.on('mouseup', this._dragEndByUp, this);
+        this.on('globalout', this._dragEndByOut, this);
     };
 
 
     Draggable.prototype = {
         constructor: Draggable,
 
-        _dragDelay : 1000,
+        _dragDelay : 0,
 
         _lastClickTime: null,
 
@@ -29,7 +28,7 @@ define(function(require){
                 this._x = e.offsetX;
                 this._y = e.offsetY;
                 this._dragingTarget = target;
-                this.trigger(target,'dragStart',e.event);
+                // this.trigger(target,'dragStart',e.event);
             }
         },
 
@@ -38,7 +37,7 @@ define(function(require){
             var crt = new Date();
             crt = crt- this._lastClickTime;
             if (draggingTarget && crt >= this._dragDelay) {
-                console.log("拖动中..."+crt);
+
                 var x = e.offsetX;
                 var y = e.offsetY;
 
@@ -46,11 +45,12 @@ define(function(require){
                 var dy = y - this._y;
                 this._x = x;
                 this._y = y;
-                draggingTarget.drift(dx, dy);
+                // draggingTarget.drift(dx, dy);
+                console.log("拖动中..."+dx+" , "+dy);
                 // this.trigger(draggingTarget, 'draging', e.event);
                 
                 //更新视图
-                this.__yh && this.__yh.update();
+                // this.__yh && this.__yh.update();
                 
                /* var dropTarget = this.findHover(x, y, draggingTarget);
                 var lastDropTarget = this._dropTarget;
@@ -66,12 +66,21 @@ define(function(require){
                 }*/
             }
         },
+        _dragEndByOut : function (e) {
+            console.log("global out");
+            this._dragEnd(e);
+        },
+        _dragEndByUp : function (e) {
+            console.log("blur");
+            this._dragEnd(e);
+        },
         _dragEnd : function(e){
-
+            console.log("拖动完成 "+e);
             var draggingTarget = this._draggingTarget;
 
+/*
             if (draggingTarget) {
-                console.log("拖动完成");
+
                 draggingTarget.dragging = false;
             }
 
@@ -80,9 +89,11 @@ define(function(require){
             if (this._dropTarget) {
                 this.trigger(this._dropTarget, 'drop', e.event);
             }
+*/
 
             this._draggingTarget = null;
             this._dropTarget = null;
+            this._x = 0,this._y =0;
         }
     };
 
