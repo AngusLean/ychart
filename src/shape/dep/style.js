@@ -69,10 +69,10 @@ define(function(require){
         lineWidth: 1,
 
         /**
-         * 线条两端样式
+         * 线条两端样式. butt、round、square
          * @type string
          */
-        lineCap: "butt",
+        lineCap: "round",
 
         /**
          * bevel,miter线条相交的方式. 园交,斜交还是斜接.

@@ -32,12 +32,16 @@ define(function(require){
      * @param opts
      * @constructor
      */
-    var Layer = function(id, opts){
+    var Layer = function(id, zLevel , opts){
         this.id = id;
         this.dom = document.getElementById(id);
+        this.zLevel = zLevel;
+        
         if(util.checkNull(this.dom)){
             this.dom = createDOM(id, "canvas" ,opts.width ,opts.height ,opts.left || 0 ,opts.top || 0);
         }
+        
+        this.dom.setAttribute("zLevel",zLevel);
         this.ctx = getContext(this.dom);
         if (util.checkNull(this.ctx)) {
             alert("浏览器不支持HTML5 canvas绘图,请更新浏览器 " + this.ctx);
@@ -55,6 +59,13 @@ define(function(require){
         this.__needClear = false;
     };
 
+    /**
+     * 获取当前层的zlevel
+     */
+    Layer.prototype.getZlevel = function () {
+        return this.zLevel;
+    };
+    
     /**
      * 获取当前绘图层的上下文
      * @returns {context}

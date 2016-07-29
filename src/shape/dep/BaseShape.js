@@ -20,6 +20,9 @@ define( function (require) {
         //是否忽略当前元素
         this.ignore = opts.ignore || false;
         
+        //当前形状所属的层
+        this.zLevel = opts.zLevel || 0;
+        
         //是否可以拖动
         this.draggable = opts.draggable == undefined ? true : opts.draggable;
         

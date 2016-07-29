@@ -22,7 +22,7 @@ define(function(require){
         this.top = temp.top;
         temp = null;
       
-        this.layer =  {};
+        this.layer =  [];
     };
 
     Painter.prototype.refresh = function(){
@@ -59,8 +59,9 @@ define(function(require){
         var i ,layer,zlevel ,shape;
         for(i=0 ;i<shapeList.length ;i++){
             shape = shapeList[i];
-            zlevel = shape.zLevel || 0;
+            zlevel = shape.zLevel;
             layer = this.getLayer(zlevel);
+            //已经设置过
             if(layer.__needClear){
                 continue;
             }
@@ -131,14 +132,14 @@ define(function(require){
     Painter.prototype.getLayer = function(zLevel){
         var layer = this.layer[zLevel];
         if(!layer){
-            layer = new Layer(guid()+"-zlevel",{
+            layer = new Layer(guid()+"-zlevel",zLevel ,{
                 width: this.getWidth(),
                 height: this.getHeight(),
                 left: this.left,
                 top: this.top
             });
+            this.insertLayer(zLevel , layer);
             this.layer[zLevel] = layer;
-            this.insertLayer(layer);
         }
 
         return layer;
@@ -162,10 +163,21 @@ define(function(require){
 
     /**
      * 在文档中插入指定的layer节点
-     * TODO 对不同layer进行排序
      */
-    Painter.prototype.insertLayer = function(layer){
+    Painter.prototype.insertLayer = function(zLevel ,layer){
         var dom = layer.dom;
+        if(this.layer.length != 0){
+            var children = this.container.getElementsByTagName("canvas");
+            var i,len ,child;
+            for(i=0 ,len = children.length ; i<len ;i++){
+                child = children[i];
+                if(zLevel < parseInt(child.getAttribute("zLevel"))){
+                    child.parentNode.insertBefore(dom , child);
+                    children = null;
+                    return;
+                }
+            }
+        }
         this.container.appendChild(dom);
     };
 

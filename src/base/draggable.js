@@ -41,6 +41,7 @@ define(function(require){
             var crt = new Date();
             crt = crt- this._lastClickTime;
             if (target && target.draggable && crt >= this._dragDelay) {
+                // exEvent.target.style.cursor = "move";
                 var x = exEvent.offsetX;
                 var y = exEvent.offsetY;
 
@@ -56,7 +57,7 @@ define(function(require){
             }
         },
         _dragEnd : function(exEvent){
-
+            // exEvent.target.style.cursor = "default";
             target = this._dragingTarget;
             if (target) {
                 target.dragging = false;

@@ -14,6 +14,7 @@ define(function(require){
     var debug = function (info) {
         console.log(dbpre + info);
     };
+    
     var warn = function (info) {
         console.log(wnpre + info);
     };
@@ -49,6 +50,7 @@ define(function(require){
     };
 
     return {
+        open : true,
         printobj: printObj,
         debug: debug,
         warn: warn

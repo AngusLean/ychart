@@ -1,6 +1,5 @@
 define(function(require){
     "use strict";
-    var sputil  = require("./dep/shapeutil");
 
     /**
      * 圆形

@@ -39,7 +39,8 @@
                         var line1 =new Line({
                             beginpt: [0,0],
                             endpt: [100,100],
-                            draggable: false,
+                            draggable: true,
+                            zLevel: 3,
                             style:{
                                 lineColor: "blue",
                                 lineWidth: 5
@@ -48,6 +49,7 @@
                         line2 =new Line({
                             beginpt: [150,0],
                             endpt: [20,100],
+                            zLevel: 1,
                             style:{
                                 lineColor: "red",
                                 lineWidth: 15
