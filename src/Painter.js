@@ -41,13 +41,15 @@ define(function(require){
                 layer.clear();
                 lastZlevel = zlevel;
                 layer.__needClear = false;
+
+                this.preProcessShapeInLayer(shape, layer);
+
+                shape.Brush(layer.getContext());
+
+                this.afterProcessShapeInLayer(shape ,layer);
             }
 
-            this.preProcessShapeInLayer(shape, layer);
 
-            shape.Brush(layer.getContext());
-            
-            this.afterProcessShapeInLayer(shape ,layer);
         }
     };
 

@@ -11,6 +11,7 @@
     "grunt": "*",
     "grunt-cli": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-unwrap": "*"
+    "grunt-unwrap": "*",
+    "yuidocjs": "0.10.0"
   }
 }

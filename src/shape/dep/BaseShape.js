@@ -27,7 +27,7 @@ define( function (require) {
         this.draggable = opts.draggable == undefined ? true : opts.draggable;
         
         //当前图像是否发生了变化. 该属性通常是由于运行期间改变了元素的属性设置为true
-        this.__dirty = false;
+        this.__dirty = true;
         
         //绘图实例。 在被添加到ychart实例时设置
         this.__yh == null;
