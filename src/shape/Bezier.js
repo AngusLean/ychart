@@ -6,6 +6,30 @@ define(function(require){
     var warn = debugs.warn;
     var debug = debugs.debug;
 
+    var insiderange = function (val, rg1, rg2) {
+        return val < rg1 || val > rg2;
+    };
+    var sqrt = function (val) {
+        return Math.sqrt(val);
+    };
+    var abs = function (val) {
+        return Math.abs(val);
+    };
+    var atan = function (val) {
+        return Math.atan(val);
+    };
+    var sin = function (val) {
+        return Math.sin(val);
+    };
+    var cos = function (val) {
+        return Math.cos(val);
+    };
+    var floor = function (val) {
+        return Math.floor(val);
+    };
+    var radian2angle = function (radian) {
+        return radian * 180 / Math.PI;
+    };
     /**
      * 绘制一条曲线路径. 调用此方法后当前的context将包含一条路径.
      * @param {x,y} beginpt 开始点坐标
@@ -14,36 +38,13 @@ define(function(require){
      * @param {0-4的整数} systole 波浪的起伏程度, 表现为上下波动程度. 1为标准.
      * 小于1就是缩放.1-4就是放大
      */
-    return require("./ShapeBuilder").extend({
+    return require("../core/ShapeBuilder").extend({
 
         type: "BezierPath",
 
         BuildPath: function (ctx, config) {
             var beginpt = config.beginpt, endpt = config.endpt, compact = config.compact || 5, systole = config.systole;
-            var insiderange = function (val, rg1, rg2) {
-                return val < rg1 || val > rg2;
-            };
-            var sqrt = function (val) {
-                return Math.sqrt(val);
-            };
-            var abs = function (val) {
-                return Math.abs(val);
-            };
-            var atan = function (val) {
-                return Math.atan(val);
-            };
-            var sin = function (val) {
-                return Math.sin(val);
-            };
-            var cos = function (val) {
-                return Math.cos(val);
-            };
-            var floor = function (val) {
-                return Math.floor(val);
-            };
-            var radian2angle = function (radian) {
-                return radian * 180 / Math.PI;
-            };
+            
             var linequadrant = function () {
                 if (beginpt[0] < endpt[0] && beginpt[1] >= endpt[1]) return 1;
                 if (beginpt[0] >= endpt[0] && beginpt[1] > endpt[1]) return 2;

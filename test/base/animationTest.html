@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>animationTest</title>
+    <script type="text/javascript" src="../../require/require.js"></script>
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+</div>
+<div style="width: 800px;height: 100px;border: solid 1px blue; margin: 0 auto;margin-top:20px;">
+    <input type="button" id="setoptiontest" value="动画测试"/>
+</div>
+<script>
+
+    var $= function (id) {
+        return document.getElementById(id);
+    };
+
+    require.config({
+        packages: [
+            {
+                name: "ychart",
+                location: '../../src',
+                main: "Base"
+            }
+        ]
+    });
+    (function(){
+        require(["ychart/Ycharts", "ychart/shape/Line","ychart/shape/Rect", "ychart/shape/YText", "ychart/Group",
+                    "ychart/Handler","ychart/animation/animation"],
+                function(ycharts,Line,Rect ,Ytext ,Group ,Handler ,Animation){
+                    var yh = ycharts.init("drawing");
+                    var line1 =new Line({
+                        beginpt: [0,0],
+                        endpt: [100,100],
+                        draggable: true,
+                        zLevel: 3,
+                        style:{
+                            lineColor: "blue",
+                            lineWidth: 5
+                        }
+                    });
+                    var line2 =new Line({
+                        beginpt: [150,0],
+                        endpt: [20,100],
+                        zLevel: 1,
+                        style:{
+                            lineColor: "red",
+                            lineWidth: 15
+                        }
+                    });
+
+                    yh.add(line1);
+                    yh.add(line2);
+                    yh.BrushAll();
+
+                    var beginTm;
+                    $("setoptiontest").addEventListener("click",function (event) {
+                        Animation.animate({
+                            onBegin : function () {
+                                beginTm = +new Date();
+                                return true;
+                            },
+                            onChanging : randomDrawLine,
+                            onEnd : function () {
+                                var end = +new Date();
+                                if(end - beginTm > 2000){
+                                    return true;
+                                }
+                                return false;
+                            }
+                        });
+                    });
+
+
+                    function randomDrawLine(){
+                        line2.drift(1,0);
+
+                        yh.update();
+                    }
+
+                    function between(begin, end) {
+                        return Math.random()*(end-begin)+begin;
+                    }
+
+                    function randomInt10(){
+                        return Math.random() * 36+40;
+                    }
+
+                    function randomInt50(){
+                        return Math.random() * 16;
+                    }
+
+                    function randomInt150(){
+                        return Math.random() * 50+106;
+                    }
+                    function randomInt200(){
+                        return Math.random() * 160+100;
+                    }
+
+                    function getRandomColor() {
+                        var letters = '0123456789ABCDEF'.split('');
+                        var color = '#';
+                        for (var i = 0; i < 6; i++ ) {
+                            color += letters[Math.floor(Math.random() * 16)];
+                        }
+                        return color;
+                    }
+                });
+
+
+    })();
+
+
+
+</script>
+</body>
+</html>

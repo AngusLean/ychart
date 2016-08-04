@@ -5,8 +5,8 @@
  * 打包文件详情见 /build/
  */
 define(
-    ["Ycharts","./shape/Bezier","./shape/Circle","./shape/Line","./shape/Rect","./shape/Triangle",
-    "./shape/YText","./extend/dam/dam" ,"./Group"],
+    ["Ycharts","shape/Bezier","shape/Circle","shape/Line","shape/Rect","shape/Triangle",
+    "shape/YText","./extend/dam/dam" ,"./Group"],
 
     function(Ycharts ,Bezier ,Circle ,Line ,Rect ,Triangle ,YText ,Dam
     ,Group){

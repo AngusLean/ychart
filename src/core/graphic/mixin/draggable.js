@@ -7,7 +7,7 @@ define(function(require){
 
     var target;
     var EventUtil = require("./eventful");
-    var util = require("../tool/util");
+    var util = require("../../../tool/util");
     
     var Draggable = function(){
         EventUtil.call(this);

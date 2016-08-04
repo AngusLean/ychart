@@ -9,7 +9,7 @@ define(function(require){
      * @property {number} r 半径
      * @constructor
      */
-    return require("./ShapeBuilder").extend({
+    return require("../core/ShapeBuilder").extend({
 
         type: "circle",
 

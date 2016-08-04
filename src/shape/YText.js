@@ -3,7 +3,7 @@ define(function(require){
 
 
     var util = require("../tool/util");
-    var utext = require("../tool/text");
+    var utext = require("../core/graphic/helper/text");
 
     /**
     * 文本
@@ -13,7 +13,7 @@ define(function(require){
     * @property {arrar[number]} beginpt 开始座标
     * @constructor
     */
-    return require("./ShapeBuilder").extend({
+    return require("../core/ShapeBuilder").extend({
 
         type: "Text",
 

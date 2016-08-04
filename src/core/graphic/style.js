@@ -35,9 +35,7 @@ define(function(require){
         globalCompositionOperation: "globalCompositionOperation",
         overlaystyle: "globalCompositionOperation"
     };
-
-
-    var util = require("../../tool/util");
+    
 
     /**
      * 全局默认样式。 所有形状或者路劲的样式都基于这个样式。

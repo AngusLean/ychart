@@ -8,11 +8,9 @@ define(function(require){
         return Math.pow(val,2);
     };
     
-
-
+    
     var _ctx = null;
     
-
     var getContext = function(){
         function createCanvas(){
             return document.createElement("canvas");

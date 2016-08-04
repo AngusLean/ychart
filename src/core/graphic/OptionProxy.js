@@ -6,7 +6,7 @@
 define(function (require) {
    "use strict";
     
-    var styleProxy = require("./styleProxy");
+    var styleProxy = require("./StyleProxy");
     var util = require("../../tool/util");
     
     

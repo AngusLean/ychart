@@ -1,12 +1,11 @@
 define(function (require) {
     "use strict";
 
-    var util = require("../tool/util");
-    var guid = require("../tool/guid");
+    var util = require("../../tool/util");
+    var guid = require("../../tool/guid");
 
-    var Transform = require("./transform");
-    var Eventful = require("./eventful");
-    var Draggable = require("./draggable");
+    var Transform = require("./mixin/transform");
+    var Eventful = require("./mixin/eventful");
 
     var Elements = function (opts) {
 
@@ -20,7 +19,6 @@ define(function (require) {
 
         Transform.call(this, opts);
         Eventful.call(this);
-        // Draggable.call(this);
     };
 
     //元素默认所在的层级
@@ -48,6 +46,5 @@ define(function (require) {
 
     util.ClassUtil.mixin(Elements, Transform, true);
     util.ClassUtil.mixin(Elements, Eventful, true);
-    // util.ClassUtil.mixin(Elements, Draggable, true);
     return Elements;
 });

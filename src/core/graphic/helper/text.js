@@ -2,14 +2,14 @@ define(function(require) {
     "use strict";
 
     //使用默认样式
-    var Style = require("../shape/dep/style");
+    var Style = require("../style");
     var st = new Style._style();
 
     var defaultFont = st.font;
     var defaultAlign = st.textAlign;
     var defaultBaseline = st.textBaseline;
 
-    var _ctx = require("../shape/dep/shapeutil").getContext();
+    var _ctx = require("./shapeutil").getContext();
 
     var TextUtil = {
         TEXT_CACHE_MAX: 5000,

@@ -2,7 +2,7 @@ define(function(require) {
     "use strict";
 
     var util = require("./tool/util");
-    var element = require("./base/element");
+    var element = require("./core/graphic/Element");
 
     var Group = function(opt) {
 

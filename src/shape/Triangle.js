@@ -10,7 +10,7 @@ define(function(require){
      * @property {number} direction bottom 为向下。 默认向上
      * @constructor
      */
-    return require("./ShapeBuilder").extend({
+    return require("../core/ShapeBuilder").extend({
 
         type: "triangle",
 

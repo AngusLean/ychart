@@ -7,8 +7,8 @@ define(function(require) {
 
     'use strict';
 
-    var matrix = require('./../tool/matrix');
-    var vector = require('./../tool/vector');
+    var matrix = require('./helper/matrix');
+    var vector = require('./helper/vector');
     var mIdentity = matrix.identity;
 
     var EPSILON = 5e-5;

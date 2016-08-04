@@ -1,7 +1,7 @@
 define(function(require){
    "use strict";
 
-    return require("./ShapeBuilder").extend({
+    return require("../core/ShapeBuilder").extend({
 
         type: "Line",
 

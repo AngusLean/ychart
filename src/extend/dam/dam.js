@@ -2,13 +2,13 @@ define(function(require) {
     "use strict";
 
     var util = require("../../tool/util");
-    var textutil = require("../../tool/text");
+    var textutil = require("../../core/graphic/helper/text");
     var dammd = require("./dam_md");
 
     var Group = require("../../Group");
-    var Rect = require("../../shape/Rect");
-    var Line = require("../../shape/Line");
-    var YText = require("../../shape/YText");
+    var Rect = require(".././Rect");
+    var Line = require(".././Line");
+    var YText = require(".././YText");
 
     var debugs = require("../../tool/debug");
     var warn = debugs.warn,
@@ -280,7 +280,7 @@ define(function(require) {
 
         // 建立水位标识
         buildWaterLevelLine: function(param) {
-            var Triangle = require("../../shape/Triangle");
+            var Triangle = require(".././Triangle");
             var wlline = new Group();
             var _this = this;
             wlline.addChild(new Line({

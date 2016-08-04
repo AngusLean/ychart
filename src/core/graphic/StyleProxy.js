@@ -6,12 +6,7 @@ define(function(require) {
     var Style = require("./style");
     var defaultStyle = Style._style;
     var styleMapper = Style._styleMap;
-
-    var styleTranslator = function (style) {
-        if(style){
-            util.replaceattr(style , styleMapper);
-        }
-    };
+    
 
     /**
      * 在合并样式时会出现覆盖的情况

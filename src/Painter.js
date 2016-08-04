@@ -48,8 +48,6 @@ define(function(require){
 
                 this.afterProcessShapeInLayer(shape ,layer);
             }
-
-
         }
     };
 

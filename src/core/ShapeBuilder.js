@@ -1,7 +1,7 @@
 define(function(require){
     "use strict";
 
-    var baseShape = require("./dep/BaseShape");
+    var baseShape = require("./graphic/BaseShape");
     var util = require("../tool/util");
     var debugs = require("../tool/debug");
 

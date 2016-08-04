@@ -8,7 +8,7 @@ define(function(require){
     var eventUtil = require("./tool/event");
     var util = require("./tool/util");
     
-    var Draggable = require("./base/draggable");
+    var Draggable = require("./core/graphic/mixin/draggable");
 
     function bind1Arg(handler ,context) {
         return function (arg1) {
@@ -109,7 +109,7 @@ define(function(require){
                 exEvent = this.extendAndFixEventPackge(event);
               
                 //转发标准事件到元素。
-                this._handlers[item].call(_this , event);
+                this._handlers[item].call(_this , exEvent);
                 //拖动管理。 元素拖动相关的事件由这里面发出去。
                 this._dragmanager.trigger(item , exEvent);
             } , _this));

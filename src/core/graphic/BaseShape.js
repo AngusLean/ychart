@@ -3,8 +3,8 @@ define( function (require) {
 
     var util = require("../../tool/util");
     var debugs = require("../../tool/debug");
-    var text = require("../../tool/text");
-    var Elements = require("../../base/element");
+    var text = require("./helper/text");
+    var Elements = require("./Element");
     var OptionProxy = require("./OptionProxy");
 
     var warn = debugs.warn;
@@ -144,9 +144,8 @@ define( function (require) {
         this.configProxy.update(option);
         this.__dirty = true;
     };
-
-
-    var isPtInPath = require("./shapeutil").isPtInPath;
+    
+    var isPtInPath = require("./helper/shapeutil").isPtInPath;
     
     baseShape.prototype.contain = function(point){
         // var local = this.transformCoordToLocal(point.x , point.y);

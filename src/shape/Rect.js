@@ -10,7 +10,7 @@ define(function(require){
      * @param notClose {boolean} 是否是不闭合的多边形.默认闭合
      * @constructor
      */
-    return require("./ShapeBuilder").extend({
+    return require("../core/ShapeBuilder").extend({
 
         type: "Rect",
 
