@@ -6,6 +6,7 @@ define( function (require) {
     var text = require("./helper/text");
     var Elements = require("./Element");
     var OptionProxy = require("./OptionProxy");
+    var Moveable = require("./mixin/moveable");
 
     var warn = debugs.warn;
 
@@ -14,12 +15,9 @@ define( function (require) {
      * @param opts
      */
     var baseShape = function(opts) {
-        
+        //配置管理代理
         this.configProxy  = new OptionProxy(opts);
 
-        //是否忽略当前元素
-        this.ignore = opts.ignore || false;
-        
         //当前形状所属的层
         this.zLevel = opts.zLevel || 0;
         
@@ -153,19 +151,9 @@ define( function (require) {
         return isPtInPath(this , this.configProxy.getConfig() , local[0] ,local[1]);
     };
     
-    baseShape.prototype.drift = function (dx, dy) {
-        if(!util.isArr(this.position)){
-            this.position = [0,0];
-        }
-
-        this.position[0] += dx;
-        this.position[1] += dy;
-        
-        this.__dirty = true;
-    };
-    
 
     util.ClassUtil.inherit(baseShape, Elements ,true);
-    
+    util.ClassUtil.mixin(baseShape, Moveable, true);
+
     return baseShape;
 });

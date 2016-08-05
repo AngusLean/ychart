@@ -8,19 +8,22 @@ define(function (require) {
     var Eventful = require("./mixin/eventful");
 
     var Elements = function (opts) {
-
-        //元素的唯一ID 
-        this.id = null;
-
-        //父元素。 在被添加到实例时设置
-        this.parent = null;
-
+        
+        //是否忽略当前元素
+        this.ignore = opts.ignore || false;
+        
         this.init();
 
         Transform.call(this, opts);
         Eventful.call(this);
     };
-
+    
+    //父元素。 在被添加到实例时设置
+    Elements.prototype.parent = null;
+    
+    //元素的唯一ID
+    Elements.prototype.id = null;
+    
     //元素默认所在的层级
     Elements.prototype.zLevel = 0;
 
@@ -31,7 +34,7 @@ define(function (require) {
     Elements.prototype.type = "element";
 
     Elements.prototype.getId = function () {
-        return this.id;
+        return this.id; 
     };
 
     Elements.prototype.getType = function () {
@@ -39,7 +42,7 @@ define(function (require) {
     };
 
     //调用子类设置的type设置该元素的唯一ID
-    Elements.prototype.init = function () {
+    Elements.prototype.init = function () { 
         this.id = this.type + "--" + guid();
     };
 

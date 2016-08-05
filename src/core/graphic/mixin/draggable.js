@@ -11,6 +11,7 @@ define(function(require){
     
     var Draggable = function(){
         EventUtil.call(this);
+        
         this.on('mousedown', this._dragStart, this);
         this.on('mousemove', this._dragIng, this);
         this.on('mouseup', this._dragEnd, this);

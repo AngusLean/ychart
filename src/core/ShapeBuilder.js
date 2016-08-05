@@ -16,7 +16,7 @@ define(function(require){
      * @param defaults
      * @returns {BaseShape}
      */
-    function extend(defaults){
+    var extend = function(defaults){
         if(debugs.open){
             for(var item in REQUIRED_CHILD){
                 if(!util.isType(REQUIRED_CHILD[item])(defaults[item])){
@@ -46,7 +46,7 @@ define(function(require){
         util.ClassUtil.inherit(sub ,baseShape);
 
         return sub;
-    }
+    };
 
 
     return {
