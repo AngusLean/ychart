@@ -38,6 +38,9 @@ define(function (require) {
                 }
             }
         }
+       if(this.styleProxy == null){
+           this.styleProxy = new styleProxy();
+       }
         this.config.style = this.styleProxy.getStyle();
     };
 

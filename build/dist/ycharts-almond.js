@@ -1741,7 +1741,7 @@ define('Painter',['require','./Layer','./tool/guid','./tool/util','./Group'],fun
      * @constructor
      */
     var Painter = function(ych ,storage){
-        this._storage = storage;
+        this.__storage = storage;
         this.container = document.getElementById(ych.domid);
         var temp = util.DomUtil.getPosition(this.container);
         this.width = temp.width;
@@ -1754,7 +1754,7 @@ define('Painter',['require','./Layer','./tool/guid','./tool/util','./Group'],fun
     };
 
     Painter.prototype.refresh = function(){
-        var shapeList = this._storage.getDisplayableShapeList();
+        var shapeList = this.__storage.getDisplayableShapeList();
 
         this.updateLayerState(shapeList);
 
@@ -2109,7 +2109,7 @@ define('Handler',['require','./tool/event','./tool/util','./base/draggable'],fun
      * @param event  包含有ycX和ycY属性的事件对象
      */
     handlers.prototype.getHoverElement = function(exEvent){
-        var shapes = this._storage.getDisplayableShapeList();
+        var shapes = this.__storage.getDisplayableShapeList();
         var sp;
         for(var i=0 ,len = shapes.length ; i<len ;i++){
             sp = shapes[i];

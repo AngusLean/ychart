@@ -12,9 +12,11 @@ define(function(require){
      * @param ych
      * @constructor
      */
-    var Painter = function(ych ,storage){
-        this._storage = storage;
-        this.container = document.getElementById(ych.domid);
+    var Painter = function(yh ,storage){
+        this.__storage = storage;
+        this.__yh = yh;
+
+        this.container = document.getElementById(yh.domid);
         var temp = util.DomUtil.getPosition(this.container);
         this.width = temp.width;
         this.height = temp.height;
@@ -26,10 +28,9 @@ define(function(require){
     };
 
     Painter.prototype.refresh = function(){
-        var shapeList = this._storage.getDisplayableShapeList();
+        var shapeList = this.__storage.getDisplayableShapeList();
 
         this.updateLayerState(shapeList);
-
         var i,shape,layer,zlevel ,lastZlevel=-1;
         for(i=0 ;i<shapeList.length ;i++){
             shape = shapeList[i];
@@ -43,7 +44,6 @@ define(function(require){
                 layer.__needClear = false;
 
                 this.preProcessShapeInLayer(shape, layer);
-
                 shape.Brush(layer.getContext());
 
                 this.afterProcessShapeInLayer(shape ,layer);
@@ -59,6 +59,9 @@ define(function(require){
         var i ,layer,zlevel ,shape;
         for(i=0 ;i<shapeList.length ;i++){
             shape = shapeList[i];
+            //对于每个形状来说要到具体绘制的时候才知道所属的ychart实例，所以在这里添加
+            !shape.__yh && (shape.__yh = this.__yh);
+
             zlevel = shape.zLevel;
             layer = this.getLayer(zlevel);
             //已经设置过
@@ -67,6 +70,7 @@ define(function(require){
             }
             //如果图像为脏，则需要清除当前画布
             layer.__needClear = shape.__dirty;
+
         }
     };
 
@@ -108,7 +112,7 @@ define(function(require){
                 }
             };
             _buildGroupQuene(gp);
-            var before;
+            var before = groupquene[0];
             groupquene.forEach(function (item, index) {
                 if(index === 0){
                     item.parent = ly;

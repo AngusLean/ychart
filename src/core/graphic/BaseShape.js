@@ -87,6 +87,7 @@ define( function (require) {
     
     baseShape.prototype.AfterBrush = function (ctx) {
         var tp = this.configProxy.getBrushType();
+        console.log("brush type: "+tp);
         switch (tp) {
         case "both":
         case "all":
@@ -144,7 +145,6 @@ define( function (require) {
     };
     
     var isPtInPath = require("./helper/shapeutil").isPtInPath;
-    
     baseShape.prototype.contain = function(point){
         // var local = this.transformCoordToLocal(point.x , point.y);
         var local = [point.x ,point.y];

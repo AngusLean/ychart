@@ -52,7 +52,6 @@ define(function(require){
                 this._y = y;
                 target.drift(dx, -dy);
                 this.trigger(target, 'draging', exEvent);
-                
                 //更新视图
                 target.__yh && target.__yh.update();
             }

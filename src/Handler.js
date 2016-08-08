@@ -64,9 +64,9 @@ define(function(require){
         //实际事件响应容器
         this.root = root;
         //存储器
-        this._storage = storage ;
+        this.__storage = storage ;
         //绘图器
-        this._painter = painter;
+        this.__painter = painter;
         //事件处理程序
         this._handlers = [];
         
@@ -145,7 +145,7 @@ define(function(require){
      * @param event  包含有ycX和ycY属性的事件对象
      */
     handlers.prototype.getHoverElement = function(exEvent){
-        var shapes = this._storage.getDisplayableShapeList();
+        var shapes = this.__storage.getDisplayableShapeList();
         var sp;
         for(var i=0 ,len = shapes.length ; i<len ;i++){
             sp = shapes[i];
