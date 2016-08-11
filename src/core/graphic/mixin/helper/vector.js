@@ -1,4 +1,4 @@
-define(function () {
+
     var ArrayCtor = typeof Float32Array === 'undefined' ? Array : Float32Array;
 
     /**
@@ -266,5 +266,4 @@ define(function () {
     vector.dist = vector.distance;
     vector.distSquare = vector.distanceSquare;
 
-    return vector;
-});
+    export default vector;

@@ -1,53 +1,49 @@
-define(function (require) {
-    "use strict";
+import {ClassUtil} from "../../tool/util"
+import guid from "../../tool/guid"
+import Transform from "./mixin/transform"
+import Eventful from "./mixin/eventful"
 
-    var util = require("../../tool/util");
-    var guid = require("../../tool/guid");
+var Elements = function (opts) {
 
-    var Transform = require("./mixin/transform");
-    var Eventful = require("./mixin/eventful");
+    //是否忽略当前元素
+    this.ignore = opts.ignore || false;
 
-    var Elements = function (opts) {
-        
-        //是否忽略当前元素
-        this.ignore = opts.ignore || false;
-        
-        this.init();
+    this.init();
 
-        Transform.call(this, opts);
-        Eventful.call(this);
-    };
-    
-    //父元素。 在被添加到实例时设置
-    Elements.prototype.parent = null;
-    
-    //元素的唯一ID
-    Elements.prototype.id = null;
-    
-    //元素默认所在的层级
-    Elements.prototype.zLevel = 0;
+    Transform.call(this, opts);
+    Eventful.call(this);
+};
 
-    //元素是否被忽略（不会计算样式，不会显示）
-    Elements.prototype.ignore = false;
+//父元素。 在被添加到实例时设置
+Elements.prototype.parent = null;
 
-    //元素类型。 子类应该覆盖该属性
-    Elements.prototype.type = "element";
+//元素的唯一ID
+Elements.prototype.id = null;
 
-    Elements.prototype.getId = function () {
-        return this.id; 
-    };
+//元素默认所在的层级
+Elements.prototype.zLevel = 0;
 
-    Elements.prototype.getType = function () {
-        return this.type;
-    };
+//元素是否被忽略（不会计算样式，不会显示）
+Elements.prototype.ignore = false;
 
-    //调用子类设置的type设置该元素的唯一ID
-    Elements.prototype.init = function () { 
-        this.id = this.type + "--" + guid();
-    };
+//元素类型。 子类应该覆盖该属性
+Elements.prototype.type = "element";
+
+Elements.prototype.getId = function () {
+    return this.id;
+};
+
+Elements.prototype.getType = function () {
+    return this.type;
+};
+
+//调用子类设置的type设置该元素的唯一ID
+Elements.prototype.init = function () {
+    this.id = this.type + "--" + guid();
+};
 
 
-    util.ClassUtil.mixin(Elements, Transform, true);
-    util.ClassUtil.mixin(Elements, Eventful, true);
-    return Elements;
-});
+ClassUtil.mixin(Elements, Transform, true);
+ClassUtil.mixin(Elements, Eventful, true);
+export default Elements;
+

@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script src="./dist/Ychart.js"></script>
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="400"></canvas>
+        <div id="container" style="width:400px;height:400px;border:solid 1px red"></div>
+        <input type="button"  value="Next"/>
+    </body>
+    <script>
+       var yh = ychart.init("container");
+        yh.add(new ychart.shape.Line({
+            beginpt:[20,20],
+            endpt: [100,100],
+            style:{
+                lineColor: "red",
+                lineWidth: 5
+            }
+        }));
+        yh.BrushAll();
+    </script>
+</html>

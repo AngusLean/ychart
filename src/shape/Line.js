@@ -1,7 +1,6 @@
-define(function(require){
-   "use strict";
+import ShapeBuilder from "../core/ShapeBuilder"
 
-    return require("../core/ShapeBuilder").extend({
+export default ShapeBuilder.extend({
 
         type: "Line",
 
@@ -24,4 +23,3 @@ define(function(require){
     })
 
 
-});

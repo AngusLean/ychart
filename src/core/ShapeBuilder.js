@@ -1,9 +1,8 @@
-define(function(require){
-    "use strict";
 
-    var baseShape = require("./graphic/BaseShape");
-    var util = require("../tool/util");
-    var debugs = require("../tool/debug");
+
+    import baseShape from "./graphic/BaseShape"
+    import {isObj,isType,ClassUtil} from "../tool/util"
+    import debugs from "../tool/debug"
 
     var REQUIRED_CHILD = {
         type: "String",
@@ -19,7 +18,7 @@ define(function(require){
     var extend = function(defaults){
         if(debugs.open){
             for(var item in REQUIRED_CHILD){
-                if(!util.isType(REQUIRED_CHILD[item])(defaults[item])){
+                if(!isType(REQUIRED_CHILD[item])(defaults[item])){
                     debugs.debug("构造新形状出错，属性名称："+item+" 属性要求的类型： "
                         +REQUIRED_CHILD[item]+" 实际类型: "+(typeof defaults[item]));
                     debugs.printobj(defaults);
@@ -34,7 +33,7 @@ define(function(require){
          */
         function sub(opt){
 
-            if(util.isObj(defaults)){
+            if(isObj(defaults)){
                 for(var attr in defaults){
                     this[attr] = defaults[attr];
                 }
@@ -43,13 +42,12 @@ define(function(require){
             baseShape.call(this ,opt);
         }
 
-        util.ClassUtil.inherit(sub ,baseShape);
+        ClassUtil.inherit(sub ,baseShape);
 
         return sub;
     };
 
 
-    return {
-        extend: extend
+    export default {
+        extend
     };
-});

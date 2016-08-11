@@ -1,11 +1,8 @@
-define(function(require){
-    "use strict";
 
-    var util = require("../tool/util");
-    var debugs = require("../tool/debug");
+    import debugs from "../tool/debug"
+    import ShapeBuilder from "../core/ShapeBuilder"
+
     var warn = debugs.warn;
-    var debug = debugs.debug;
-
     var insiderange = function (val, rg1, rg2) {
         return val < rg1 || val > rg2;
     };
@@ -38,7 +35,7 @@ define(function(require){
      * @param {0-4的整数} systole 波浪的起伏程度, 表现为上下波动程度. 1为标准.
      * 小于1就是缩放.1-4就是放大
      */
-    return require("../core/ShapeBuilder").extend({
+    export default ShapeBuilder.extend({
 
         type: "BezierPath",
 
@@ -149,5 +146,3 @@ define(function(require){
         }
     })
 
-
-});

@@ -1,10 +1,8 @@
-define(function(require){
-    "use strict";
 
-    var Layer = require("./Layer");
-    var guid = require("./tool/guid");
-    var util = require("./tool/util");
-
+    import Layer from "./Layer"
+    import guid from "./tool/guid"
+    import Group from "./Group"
+    import {DomUtil,checkNull} from "./tool/util"
     /**
      * 绘图组件。
      * 该组件控制所有元素绘制相关的处理，包括各个元素之间的层级关系、属性继承等
@@ -17,7 +15,7 @@ define(function(require){
         this.__yh = yh;
 
         this.container = document.getElementById(yh.domid);
-        var temp = util.DomUtil.getPosition(this.container);
+        var temp = DomUtil.getPosition(this.container);
         this.width = temp.width;
         this.height = temp.height;
         this.left = temp.left;
@@ -72,7 +70,6 @@ define(function(require){
     };
 
 
-    var Group = require("./Group");
 
     /**
      * 处理当前形状的层次结构,把当前形状的父元素与绘图层Layer关联起来
@@ -82,7 +79,7 @@ define(function(require){
     Painter.prototype.preProcessShapeInLayer = function(shape ,layer){
 
         var _preProcessShapeInLayer = function(_shape){
-            if(util.checkNull(_shape.parent)){
+            if(checkNull(_shape.parent)){
                 _shape.parent = layer;
             }else if(_shape.parent instanceof Group){
                 _groupPreProcess(_shape.parent ,layer);
@@ -182,5 +179,4 @@ define(function(require){
         this.container.appendChild(dom);
     };
 
-    return Painter;
-});
+    export default Painter;

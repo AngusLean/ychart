@@ -1,4 +1,4 @@
-define(function () {
+
     var ArrayCtor = typeof Float32Array === 'undefined'
         ? Array
         : Float32Array;
@@ -154,5 +154,4 @@ define(function () {
         }
     };
 
-    return matrix;
-});
+    export default matrix;

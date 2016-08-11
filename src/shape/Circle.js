@@ -1,6 +1,4 @@
-define(function(require){
-    "use strict";
-
+    import ShapeBuilder from "../core/ShapeBuilder"
     /**
      * 圆形
      * @typedef {Object} ICircleStyle
@@ -9,7 +7,7 @@ define(function(require){
      * @property {number} r 半径
      * @constructor
      */
-    return require("../core/ShapeBuilder").extend({
+    export default ShapeBuilder.extend({
 
         type: "circle",
 
@@ -17,9 +15,7 @@ define(function(require){
             ctx.beginPath();
             ctx.arc(config.x, config.y, config.r, Math.PI * 2,
                     config.startangel || 0, config.endangel || Math.PI * 2);
-            config.style.brushType = config.style.brushType || "stroke";
         }
     })
 
 
-});

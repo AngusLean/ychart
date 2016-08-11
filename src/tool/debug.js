@@ -1,58 +1,57 @@
-define(function(require){
-    var util = require("./util");
+import {isObj,isArr} from "./util";
 
-    var dbpre = "DamJs Debug Info :    ";
-    var wnpre = "DamJs warn Info :    ";
-    var dbprespace = function(){
-        var i=0,rs="      ";
-        for(i =0 ;i<dbpre.length ;i++){
-            rs += " ";
-        }
-        return rs;
-    }();
+var dbpre = "DamJs Debug Info :    ";
+var wnpre = "DamJs warn Info :    ";
+var dbprespace = function () {
+    var i = 0, rs = "      ";
+    for (i = 0; i < dbpre.length; i++) {
+        rs += " ";
+    }
+    return rs;
+}();
 
-    var debug = function (info) {
-        console.log(dbpre + info);
-    };
-    
-    var warn = function (info) {
-        console.log(wnpre + info);
-    };
+var debug = function (info) {
+    console.log(dbpre + info);
+};
 
-    var isobj = false;
-    var printObj = function(obj){
-        function _printObj(obj){
-            var ele;
-            if(util.isObj(obj)){
-                for(ele in obj){
-                    if(util.isObj(obj[ele])){
-                        debug(ele+" : ");
-                        isobj = true;
-                        printObj(obj[ele]);
-                        isobj = false;
-                    }else{
-                        if(isobj){
-                            console.log(dbprespace+ele+" : "+obj[ele]);
-                        }
-                        else
-                            debug(ele+" : "+obj[ele]);
+var warn = function (info) {
+    console.log(wnpre + info);
+};
+
+var isobj = false;
+var printobj = function (obj) {
+    function _printObj(obj) {
+        var ele;
+        if (isObj(obj)) {
+            for (ele in obj) {
+                if (isObj(obj[ele])) {
+                    debug(ele + " : ");
+                    isobj = true;
+                    printObj(obj[ele]);
+                    isobj = false;
+                } else {
+                    if (isobj) {
+                        console.log(dbprespace + ele + " : " + obj[ele]);
                     }
-                }
-            }else if(util.isArr(obj)){
-                var len = obj.length;
-                for(var i=0 ;i<len ;i++){
-                    printObj(obj[i]);
+                    else
+                        debug(ele + " : " + obj[ele]);
                 }
             }
+        } else if (isArr(obj)) {
+            var len = obj.length;
+            for (var i = 0; i < len; i++) {
+                printObj(obj[i]);
+            }
         }
-        _printObj(obj);
-        isobj = false;
-    };
+    }
 
-    return {
-        open : true,
-        printobj: printObj,
-        debug: debug,
-        warn: warn
-    };
-});
+    _printObj(obj);
+    isobj = false;
+};
+
+export default {
+    printobj,
+    debug,
+    warn
+};
+

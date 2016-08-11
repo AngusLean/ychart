@@ -3,132 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <title>handler测试</title>
-    <script type="text/javascript" src="../require/require.js"></script>
+    <script type="text/javascript" src="../dist/ychart.js"></script>
 
 </head>
 <body>
-    <div style="width :800px; margin: 0 auto;">
-        <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
-    </div>
-    <div style="width: 800px;height: 100px;border: solid 1px blue; margin: 0 auto;margin-top:20px;">
-        X位移:<input type="text" id="dx" value="10">
-        Y位移:<input type="text" id="dy" value="10">
-        <input type="button" id="dragtest" value="拖动测试"/>
-        <input type="button" id="setoptiontest" value="动态修改元素样式测试"/>
-        <input type="button" id="stopoptiontest" value="停止动态修改样式测试"/>
-    </div>
-    <script>
-        var $= function (id) {
-            return document.getElementById(id);
-        };
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "></div>
+</div>
+<div style="width: 800px;height: 100px;border: solid 1px blue; margin: 0 auto;margin-top:20px;">
+    X位移:<input type="text" id="dx" value="10">
+    Y位移:<input type="text" id="dy" value="10">
+    <input type="button" id="dragtest" value="拖动测试"/>
+    <input type="button" id="setoptiontest" value="动态修改元素样式测试"/>
+    <input type="button" id="stopoptiontest" value="停止动态修改样式测试"/>
+</div>
+<script>
+    var $ = function (id) {
+        return document.getElementById(id);
+    };
 
-        require.config({
-            packages: [
-                {
-                    name: "ychart",
-                    location: '../src',
-                    main: "Base"
-                }
-            ]
-        });
-        (function(){
-            require(["ychart/Ycharts", "ychart/shape/Line","ychart/shape/Rect", "ychart/shape/YText", "ychart/Group",
-            "ychart/Handler"],
-                    function(ycharts,Line,Rect ,Ytext ,Group ,Handler){
-                        yh = ycharts.init("drawing");
-                        var line1 =new Line({
-                            beginpt: [0,0],
-                            endpt: [100,100],
-                            draggable: true,
-                            zLevel: 3,
-                            style:{
-                                lineColor: "blue",
-                                lineWidth: 5
-                            }
-                        });
-                        line2 =new Line({
-                            beginpt: [150,0],
-                            endpt: [20,100],
-                            zLevel: 1,
-                            style:{
-                                lineColor: "red",
-                                lineWidth: 15
-                            }
-                        });
 
-                        line2.on("mousedown",function(){
-                            console.log("鼠标点下..");
-                        });
-                        line2.on("click",function(){
-                            console.log("鼠标单击..");
-                        });
-                        yh.add(line1);
-                        yh.add(line2);
-                        yh.BrushAll();
+    var ycharts = ychart, Line = ychart.shape.Line, Ytext = ychart.shape.YText;
+    var Group = ychart.Group;
+    var Rect = ychart.shape.Rect;
+    yh = ycharts.init("drawing");
+    var line1 = new Line({
+        beginpt: [0, 0],
+        endpt: [100, 100],
+        draggable: true,
+        zLevel: 3,
+        style: {
+            lineColor: "blue",
+            lineWidth: 5
+        }
+    });
+    line2 = new Line({
+        beginpt: [150, 0],
+        endpt: [20, 100],
+        zLevel: 1,
+        style: {
+            lineColor: "red",
+            lineWidth: 15
+        }
+    });
 
-                        $("dragtest").addEventListener("click",function (event) {
+    line2.on("mousedown", function () {
+        console.log("鼠标点下..");
+    });
+    line2.on("click", function () {
+        console.log("鼠标单击..");
+    });
+    yh.add(line1);
+    yh.add(line2);
+    yh.BrushAll();
+
+    $("dragtest").addEventListener("click", function (event) {
 //                            randomDrawLine();
-                            var x= parseInt($("dx").value);
-                            var y = parseInt($("dy").value);
-                            line2.drift(x,y);
-                            yh.update();
-                        });
-                        var te;
-                        $("setoptiontest").addEventListener("click",function (event) {
-                            te= setInterval(randomDrawLine,1000/60);
-                        });
-                        $("stopoptiontest").addEventListener("click",function () {
-                            window.clearInterval(te);
-                        });
+        var x = parseInt($("dx").value);
+        var y = parseInt($("dy").value);
+        line2.drift(x, y);
+        yh.update();
+    });
+    var te;
+    $("setoptiontest").addEventListener("click", function (event) {
+        te = setInterval(randomDrawLine, 1000 / 60);
+    });
+    $("stopoptiontest").addEventListener("click", function () {
+        window.clearInterval(te);
+    });
 
-                        function randomDrawLine(){
-                            line2.setOption({
-                                beginpt: [randomInt10() ,randomInt50()],
-                                endpt: [randomInt150(),randomInt200()],
-                                style: {
-                                    lineColor: getRandomColor()
-                                }
-                            });
-                            line1.setOption({
-                                beginpt: [randomInt10() ,randomInt50()],
-                                endpt: [randomInt150(),randomInt200()],
-                                style: {
-                                    lineColor: getRandomColor(),
-                                    lineWidth: randomInt10()
-                                }
-                            });
-                            yh.update();
-                        }
+    function randomDrawLine() {
+        line2.setOption({
+            beginpt: [randomInt10(), randomInt50()],
+            endpt: [randomInt150(), randomInt200()],
+            style: {
+                lineColor: getRandomColor()
+            }
+        });
+        line1.setOption({
+            beginpt: [randomInt10(), randomInt50()],
+            endpt: [randomInt150(), randomInt200()],
+            style: {
+                lineColor: getRandomColor(),
+                lineWidth: randomInt10()
+            }
+        });
+        yh.update();
+    }
 
-                        function randomInt10(){
-                            return Math.random() * 36+40;
-                        }
+    function randomInt10() {
+        return Math.random() * 36 + 40;
+    }
 
-                        function randomInt50(){
-                            return Math.random() * 16;
-                        }
+    function randomInt50() {
+        return Math.random() * 16;
+    }
 
-                        function randomInt150(){
-                            return Math.random() * 50+106;
-                        }
-                        function randomInt200(){
-                            return Math.random() * 160+100;
-                        }
+    function randomInt150() {
+        return Math.random() * 50 + 106;
+    }
+    function randomInt200() {
+        return Math.random() * 160 + 100;
+    }
 
-                        function getRandomColor() {
-                            var letters = '0123456789ABCDEF'.split('');
-                            var color = '#';
-                            for (var i = 0; i < 6; i++ ) {
-                                color += letters[Math.floor(Math.random() * 16)];
-                            }
-                            return color;
-                        }
-                    });
-
-
-        })();
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 
 
-    </script>
+</script>
 </body>
 </html>
