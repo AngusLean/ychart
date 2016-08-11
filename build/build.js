@@ -53,7 +53,7 @@ rollup.rollup({
     return write('dist/ychart.js', bundle.generate({
       format: 'umd',
       banner: banner,
-      moduleName: 'Ychart'
+      moduleName: 'ychart'
     }).code)
   })
 })
