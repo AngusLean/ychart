@@ -22,8 +22,7 @@ define(function(require){
         this.height = temp.height;
         this.left = temp.left;
         this.top = temp.top;
-        temp = null;
-      
+
         this.layer =  [];
     };
 
@@ -65,11 +64,9 @@ define(function(require){
             zlevel = shape.zLevel;
             layer = this.getLayer(zlevel);
             //已经设置过
-            if(layer.__needClear){
-                continue;
-            }
+
             //如果图像为脏，则需要清除当前画布
-            layer.__needClear = shape.__dirty;
+            !layer.__needClear && (layer.__needClear = shape.__dirty);
 
         }
     };

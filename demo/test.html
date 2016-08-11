@@ -39,7 +39,7 @@ require.config({
     require(["ychart/Ycharts", "ychart/shape/Line","ychart/shape/Rect", "ychart/shape/YText", "ychart/Group"],
     function(ycharts,Line,Rect ,Ytext ,Group){
         yh = ycharts.init("drawing");
-        line1 =new Line({
+        var line1 =new Line({
             beginpt: [0,0],
             endpt: [15,150],
             style:{
@@ -48,7 +48,7 @@ require.config({
             }
         });
         var line2 =new Line({
-            beginpt: [0,0],
+            beginpt: [50,0],
             endpt: [150,15],
             style:{
                 lineColor: "red",
@@ -75,12 +75,13 @@ require.config({
         var gp1 = new Group({
             position: [190,180]
         });
-        gp.addChild(line1);
-        gp.addChild(line2);
-        gp.addChild(tx);
-        gp1.addChild(gp);
+//        gp.addChild(line1);
+//        gp.addChild(line2);
+//        gp.addChild(tx);
+//        gp1.addChild(gp);
 
-        yh.add(gp1);
+        yh.add(line1);
+        yh.add(line2);
         <!-- yh.add(rect); -->
         yh.BrushAll();
     });

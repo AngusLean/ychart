@@ -87,7 +87,6 @@ define( function (require) {
     
     baseShape.prototype.AfterBrush = function (ctx) {
         var tp = this.configProxy.getBrushType();
-        console.log("brush type: "+tp);
         switch (tp) {
         case "both":
         case "all":
