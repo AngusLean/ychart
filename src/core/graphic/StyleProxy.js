@@ -1,19 +1,17 @@
-define(function(require) {
-    "use strict";
 
-    var util = require("../../tool/util");
 
-    var Style = require("./style");
+
+    import {isObj ,merge} from "../../tool/util"
+    import Style from "./style"
+
     var defaultStyle = Style._style;
     var styleMapper = Style._styleMap;
-    
-
     /**
      * 在合并样式时会出现覆盖的情况
      */
     var styleProxy = function(style) {
         style = style || {};
-        this.style = util.merge(new defaultStyle() ,style ,true ,styleMapper);
+        this.style = merge(new defaultStyle() ,style ,true ,styleMapper);
         this.brushType = null;
         this.init(style);
     };
@@ -31,7 +29,7 @@ define(function(require) {
             ctx[prop] = style[prop];
         }
         // 渐变效果覆盖其他的fillStyle样式
-        if (util.isObj(style.gradient)) {
+        if (isObj(style.gradient)) {
             var _gradient = ctx.createLinearGradient(style.gradient.beginpt[0], style.gradient.beginpt[1],
                 style.gradient.endpt[0], style.gradient.endpt[1]);
 
@@ -43,7 +41,7 @@ define(function(require) {
 
     styleProxy.prototype.update = function (_style) {
         if(_style){
-            util.merge(this.style ,_style ,true ,styleMapper);
+            merge(this.style ,_style ,true ,styleMapper);
             this.init(_style);
         }
     };
@@ -56,5 +54,5 @@ define(function(require) {
         return this.style;
     };
 
-    return styleProxy;
-});
+    export default styleProxy;
+

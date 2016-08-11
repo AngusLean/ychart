@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>event模块测试</title>
-    <script type="text/javascript" src="../../require/require.js"></script>
+    <script type="text/javascript" src="../dist/ychart.js"></script>
 </head>
 <body>
 <div style="width:500px;margin: 0 auto">
@@ -12,33 +12,24 @@
 </body>
 
 <script>
-    require.config({
-        packages: [
-            {
-                name: "ychart",
-                location: '../../../src',
-                main: "Base"
-            }
-        ]
-    });
 
-    var ele = document.getElementById("test");
-    require(["ychart/Ycharts", "ychart/shape/Line" ,"ychart/tool/event"],function(ycharts, Line ,event){
 
-        var yh = ycharts.init("test");
-        yh.add(new Line({
-            beginpt: [10,10],
-            endpt: [15,150],
-            style:{
-                lineColor: "blue"
-            }
-        }));
-        yh.BrushAll();
+    var ycharts = ychart, Line = ychart.shape.Line, Ytext = ychart.shape.YText;
+    var Group = ychart.Group;
+    var Rect = ychart.shape.Rect;
+    var yh = ycharts.init("test");
+    yh.add(new Line({
+        beginpt: [10, 10],
+        endpt: [15, 150],
+        style: {
+            lineColor: "blue"
+        }
+    }));
+    yh.BrushAll();
 
-        event.addHandler(ele,"click" ,function(e){
-            e = event.clientToLocal(ele,e ,e);
-            console.log("after cal: "+e.ycX+" ; "+e.ycY+" "+this);
-        });
+    event.addHandler(ele, "click", function (e) {
+        e = event.clientToLocal(ele, e, e);
+        console.log("after cal: " + e.ycX + " ; " + e.ycY + " " + this);
     });
 
 </script>

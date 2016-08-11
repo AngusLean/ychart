@@ -1,5 +1,3 @@
-define(function (require) {
-   "use strict";
 
     var ClientToLocal = function(el, e ,out){
         var out = out || {};
@@ -10,7 +8,7 @@ define(function (require) {
         return out;
     };
 
-    var EventUtil = {
+    export default {
         addHandler: function (element, type, handler) {
             if (element.addEventListener) {
                 element.addEventListener(type, handler, false);
@@ -57,5 +55,4 @@ define(function (require) {
     };
 
 
-    return EventUtil;
-});
+

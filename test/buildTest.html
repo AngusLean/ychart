@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>canvas测试</title>
 <!--<script type="text/javascript" src="../require/require.js"></script>-->
-<script type="text/javascript" src="../build/dist/ycharts-almond.min.js"></script>
+<script type="text/javascript" src="../dist/ychart.js"></script>
 </head>
 <body>
 <div style="width :800px; margin: 0 auto;">
@@ -13,9 +13,9 @@
 <script>
 function tt(){
 
-        var ycharts = YH.ycharts,Line = YH.shape.Line ,Ytext = YH.shape.YText;
-        var Group = YH.Group;
-        var Rect= YH.shape.Rect;
+        var ycharts = ychart,Line = ychart.shape.Line ,Ytext = ychart.shape.YText;
+        var Group = ychart.Group;
+        var Rect= ychart.shape.Rect;
 
         var yh = ycharts.init("drawing");
         var line1 =new Line({

@@ -1,5 +1,4 @@
-define(function(require){
-    "use strict";
+import ShapeBuilder from "../core/ShapeBuilder"
 
     /**
      * 三角形
@@ -10,7 +9,7 @@ define(function(require){
      * @property {number} direction bottom 为向下。 默认向上
      * @constructor
      */
-    return require("../core/ShapeBuilder").extend({
+    export default ShapeBuilder.extend({
 
         type: "triangle",
 
@@ -29,5 +28,3 @@ define(function(require){
         }
     })
 
-
-});

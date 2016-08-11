@@ -1,6 +1,3 @@
-define(function(require){
-    "use strict";
-
 
     /**
      * 映射配置属性名到canvas属性.
@@ -142,8 +139,8 @@ define(function(require){
     };
 
 
-    return {
+    export default {
         _style : _style,
         _styleMap : styleMap
     };
-});
+

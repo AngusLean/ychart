@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Group测试</title>
-    <script type="text/javascript" src="../require/require.js"></script>
+    <script type="text/javascript" src="../dist/ychart.js"></script>
 
 </head>
 <body>
@@ -16,39 +16,31 @@
         return document.getElementById(id);
     };
 
-    require.config({
-        packages: [
-            {
-                name: "ychart",
-                location: '../src',
-                main: "Base"
-            }
-        ]
+
+    var ycharts = ychart,Line = ychart.shape.Line ,Ytext = ychart.shape.YText;
+    var Group = ychart.Group;
+    var Rect= ychart.shape.Rect;
+    yh = ycharts.init("drawing");
+    var line1 =new Line({
+        beginpt: [0,0],
+        endpt: [15,150],
+        style:{
+            lineColor: "blue",
+            lineWidth: 5
+        }
     });
-    require(["ychart/Ycharts", "ychart/shape/Line","ychart/shape/Rect", "ychart/shape/YText", "ychart/Group"],
-            function(ycharts,Line,Rect ,Ytext ,Group){
-                yh = ycharts.init("drawing");
-                var line1 =new Line({
-                    beginpt: [0,0],
-                    endpt: [15,150],
-                    style:{
-                        lineColor: "blue",
-                        lineWidth: 5
-                    }
-                });
 
-                var gp = new Group({
-                    style: {
-                        lineColor: "blue"
-                    }
-                });
+    var gp = new Group({
+        style: {
+            lineColor: "blue"
+        }
+    });
 
-                gp.addChild(line1);
+    gp.addChild(line1);
 
-                yh.add(gp);
-                <!-- yh.add(rect); -->
-                yh.BrushAll();
-            });
+    yh.add(gp);
+    <!-- yh.add(rect); -->
+    yh.BrushAll();
     </script>
 </body>
 </html>

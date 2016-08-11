@@ -1,22 +1,10 @@
-define(function(require) {
-    "use strict";
-    var util = require("./tool/util");
-    var Storage = require("./Storage");
-    var Painter = require("./Painter");
-    var Handler = require("./Handler");
-    var Group = require("./Group");
-    
-    var doc = function (eleid) {
-        return document.getElementById(eleid);
-    };
-    
-    function getContext(id) {
-        var drawing = doc(id);
-        if (drawing && drawing.getContext) {
-            return drawing.getContext("2d");
-        }
-        return null;
-    }
+
+
+    import Storage from "./Storage"
+    import Painter from "./Painter"
+    import Handler from "./Handler"
+
+
 
 
     /**
@@ -37,7 +25,7 @@ define(function(require) {
         //绘图具体操作类。 与storage交互
         this.painter = new Painter(this , this.storage);
         //事件相关操作
-        this.handler = new Handler(doc(this.domid), this.painter ,this.storage);
+        this.handler = new Handler(this.domid, this.painter ,this.storage);
     };
 
 
@@ -91,5 +79,4 @@ define(function(require) {
     };
 
 
-    return ycharts;
-});
+    export default ycharts;

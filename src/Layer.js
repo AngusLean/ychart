@@ -1,7 +1,5 @@
-define(function(require){
-    "use strict";
 
-    var util = require("./tool/util");
+    import {checkNull} from "./tool/util"
     function getContext(drawing) {
         if (drawing && drawing.getContext) {
             return drawing.getContext("2d");
@@ -37,13 +35,13 @@ define(function(require){
         this.dom = document.getElementById(id);
         this.zLevel = zLevel;
         
-        if(util.checkNull(this.dom)){
+        if(checkNull(this.dom)){
             this.dom = createDOM(id, "canvas" ,opts.width ,opts.height ,opts.left || 0 ,opts.top || 0);
         }
         
         this.dom.setAttribute("zLevel",zLevel);
         this.ctx = getContext(this.dom);
-        if (util.checkNull(this.ctx)) {
+        if (checkNull(this.ctx)) {
             alert("浏览器不支持HTML5 canvas绘图,请更新浏览器 " + this.ctx);
             return;
         }
@@ -82,5 +80,5 @@ define(function(require){
         this.ctx.clearRect(0 , 0 , this.ctxWidth , this.ctxHeight);
     };
 
-    return Layer;
-});
+    export default Layer;
+
