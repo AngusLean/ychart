@@ -1,9 +1,0 @@
-{
-  "libs": [
-  ],
-  "plugins": {
-     "requirejs": {
-        "baseURL": "./src"
-    }
-  }
-}
