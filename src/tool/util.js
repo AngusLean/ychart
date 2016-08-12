@@ -1,4 +1,14 @@
-//确定属性是否只存在于原型中
+/**
+ *@module ychart/tool/util
+ */
+
+/**
+ * 确定属性是否只存在于原型中
+ * @function
+ * @param object
+ * @param name
+ * @returns {boolean}
+ */
 var hasPrototypeProperty = function (object, name) {
     return !object.hasOwnProperty(name) && (name in object);
 };
@@ -7,11 +17,23 @@ function parseInt10(val) {
     return parseInt(val, 10);
 }
 
-
+/**
+ * 检查一个对象是否为空
+ * @function
+ * @param which
+ * @returns {boolean}
+ */
 export function checkNull(which) {
     return !which || typeof which == 'undefined' || which == 'null';
 }
 
+/**
+ * 按照指定key合并两个对象
+ * @param target
+ * @param source
+ * @param key
+ * @param overwrite
+ */
 export function mergeItem(target, source, key, overwrite) {
     if (source.hasOwnProperty(key) && !(source[key] == null)) {
         var targetProp = target[key];
@@ -33,7 +55,7 @@ export function mergeItem(target, source, key, overwrite) {
 /**
  * 合并源对象的属性到目标对象.
  * 该方法会直接更改目标对象
- * @memberOf module:zrender/tool/tool
+ * @function
  * @param {*} target 目标对象
  * @param {*} source 源对象
  * @param {boolean} overwrite 是否覆盖
@@ -57,6 +79,7 @@ export function merge(target, source, overwrite, map) {
 /**
  * 用指定的map属性名映射替代目标对象的属性名. 仅仅改变属性的名称
  * 该方法会直接更改目标对象
+ * @function
  * @param {object} target    要被替换的对象
  * @param {object} map   对象属性名的映射
  */
@@ -96,6 +119,7 @@ export function forEach(ele, ctx, cb) {
         }
     }
 }
+
 export var isFunc = isType("Function"),
     isObj = isType("Object"),
     isArr = isType("Array");

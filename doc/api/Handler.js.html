@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Handler.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Handler.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 全局事件处理程序，负责绑定事件到canvas元素上以及分发下去
+ * @module ychart/Handler
+ */
+
+
+import eventUtil from "./tool/event"
+import {doc} from "./tool/dom"
+import Draggable from "./core/graphic/mixin/draggable"
+
+function bind1Arg(handler, context) {
+    return function (arg1) {
+        return handler.call(context, arg1);
+    };
+}
+
+//临时变量
+var ev, obj;
+
+//所有的事件名称
+var ALL_HANDLER_NAMES = ["click", "mousedown", "mousemove", "mouseup", "focus"];
+
+//自定义的一些事件处理函数
+var DEFAULT_HANDLERS = {
+
+    //上一个获取焦点的元素
+    _lastHovered: null,
+
+    //鼠标移动事件捕获及分发
+    mousemove: function (exEvent) {
+
+        ev = exEvent, obj = exEvent.targetEle;
+        //判断和之前获取焦点的是否是同一个形状
+        if (this._lastHovered != null &amp;&amp; this._lastHovered != obj) {
+            this.triggerProxy(this._lastHovered, "blur", ev);
+        }
+        //某个形状处于焦点中
+        if (obj) {
+            //设置处于焦点时的样式
+            this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
+            //分发该元素的鼠标移动事件
+            this.triggerProxy(obj, "mousemove", ev);
+
+        } else {
+            //默认样式
+            this.root.style.cursor = this._DEFAULT_CURSOR;
+        }
+        this._lastHovered = obj;
+    },
+
+    mouseout: function (exEvent) {
+        ev = exEvent , obj = ev.targetEle;
+        if (this._lastHovered != null) {
+            this.triggerProxy(this._lastHovered, "globalout", ev);
+        }
+    }
+};
+
+var handlers = function (root, painter, storage) {
+
+    //实际事件响应容器
+    this.root = doc(root);
+    //存储器
+    this.__storage = storage;
+    //绘图器
+    this.__painter = painter;
+    //事件处理程序
+    this._handlers = [];
+
+    //拖动管理。 只需要调用它的事件分发函数即可
+    this._dragmanager = new Draggable();
+
+    this._DEFAULT_FOCUS_CURSOR = "pointer";
+    this._DEFAULT_CURSOR = "default";
+    this.initHandlers();
+};
+
+
+/**
+ * 初始化事件处理程序及绑定事件。
+ * this._handlers保存着所有的事件处理函数
+ */
+handlers.prototype.initHandlers = function () {
+
+    var defaultEventProcess = function (name) {
+        return function (exEvent) {
+            ev = exEvent;
+            obj = ev.targetEle;
+
+            //某个形状处于焦点中
+            if (obj) {
+                //分发该元素的获取焦点事件
+                this.triggerProxy(obj, name, ev);
+            }
+        };
+    };
+
+    var _this = this, exEvent;
+    ALL_HANDLER_NAMES.forEach(function (item) {
+        var eventHandler = DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item)
+            : DEFAULT_HANDLERS[item];
+        //设置所有的事件处理函数
+        _this._handlers[item] = eventHandler;
+        eventUtil.addHandler(_this.root, item, bind1Arg(function (event) {
+
+            exEvent = this.extendAndFixEventPackge(event);
+
+            //转发标准事件到元素。
+            this._handlers[item].call(_this, exEvent);
+            //拖动管理。 元素拖动相关的事件由这里面发出去。
+            this._dragmanager.trigger(item, exEvent);
+        }, _this));
+    });
+
+};
+
+/**
+ * 设置事件的额外属性已适应ychart的事件响应系统
+ * @param event
+ * @returns {Event}
+ */
+handlers.prototype.extendAndFixEventPackge = function (event) {
+    event = eventUtil.clientToLocal(this.root, event, event);
+    //目标形状
+    event.targetEle = this.getHoverElement(event);
+    return event;
+};
+
+/**
+ * 事件分发。
+ * @param element  某个元素
+ * @param eventName  事件名称
+ * @param event  事件对象
+ */
+handlers.prototype.triggerProxy = function (element, eventName, exEvent) {
+    element.trigger &amp;&amp; element.trigger(eventName, exEvent);
+};
+
+/**
+ * 获取当前鼠标所在位置覆盖的最上层元素
+ * @param event  包含有ycX和ycY属性的事件对象
+ */
+handlers.prototype.getHoverElement = function (exEvent) {
+    var shapes = this.__storage.getDisplayableShapeList();
+    var sp;
+    for (var i = 0, len = shapes.length; i &lt; len; i++) {
+        sp = shapes[i];
+        if (sp.contain({
+                x: exEvent.ycX,
+                y: exEvent.ycY
+            })) {
+            return sp;
+        }
+    }
+    return null;
+};
+
+
+export default handlers;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

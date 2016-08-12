@@ -1,5 +1,6 @@
 /**
  * 全局事件处理程序，负责绑定事件到canvas元素上以及分发下去
+ * @module ychart/Handler
  */
 
 

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/graphic/contextView.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/graphic/contextView.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 绘制在canvas上的元素基类模块
+ * @module ychart/core/graphic/contextview
+ */
+
+import View from "./view"
+import Transform from "./mixin/transform"
+import Eventful from "./mixin/eventful"
+import Moveable from "./mixin/moveable"
+import OptionProxy from "../config/OptionProxy"
+import text from "./helper/text"
+
+import {mixin} from "../../tool/klass"
+import {isPtInPath} from "./helper/shapeutil"
+
+/**
+ * 绘制在canvas上的图形的基类
+ * @class
+ */
+class ContextView extends View{
+    constructor(type = "ContextView" ,option={}){
+        super(type , option);
+
+        this.configProxy = new OptionProxy(option);
+
+        /**
+         * 当前元素的层级。层级决定了当前元素将被绘制在第几层canvas上
+         * @member {Number}
+         * @default 0
+         */
+        this.zLevel = 0;
+
+        /**
+         * 当前元素是否可以拖动
+         * @member {boolean}
+         * @default false
+         */
+        this.draggable = option.draggable == undefined ? true :  option.draggable;
+
+        /**
+         * 绘图实例，用于调用实例的刷新方法
+         * @member {object}
+         * @private
+         */
+        this.__yh = null;
+
+        Transform.call(this, option);
+        Eventful.call(this);
+    }
+
+    /**
+     * 绘图元素在把内容绘制到context之前调用的函数
+     * @method
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    BeforeBrush(ctx) {
+        ctx.save();
+
+        this.SetShapeTransform(ctx);
+
+        this.configProxy.bindContext(ctx);
+    }
+
+    /**
+     * 设置绘图变换
+     * @method
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    SetShapeTransform(ctx) {
+        this.updateTransform();
+        this.setTransform(ctx);
+    }
+
+    /**
+     * 绘图元素在把内容绘制到context之后调用的函数
+     * @method
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    AfterBrush(ctx) {
+        var tp = this.configProxy.getBrushType();
+        switch (tp) {
+            case "both":
+            case "all":
+                ctx.fill();
+                ctx.stroke();
+                break;
+            case "stroke":
+                ctx.stroke();
+                break;
+            case "fill":
+                ctx.fill();
+                break;
+            case "none":
+                break;
+            default :
+                ctx.fill();
+                break;
+        }
+        ctx.restore();
+    }
+
+    /**
+     * 具体绘制路径的接口函数。 具体绘图子类必须实现该方法
+     * @abstract
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {object} config --配置。
+     */
+    BuildPath(ctx, config) {
+        //设置合适的填充方法
+        throw new Error(" unsurported operation -- can't build shape path");
+    }
+
+    /**
+     * 绘制的接口。 绘制该元素必须调用该方法
+     * @method
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    Brush(ctx) {
+        var config = this.configProxy.getConfig();
+        if (!config.ignore) {
+            //设置样式
+            this.BeforeBrush(ctx, config);
+            //具体图形自己的定制
+            this.BuildPath(ctx, config);
+            this.DrawText(ctx, config);
+            //恢复事故现场
+            this.AfterBrush(ctx, config);
+        }
+    }
+
+    /**
+     * 设置元素配置项。 调用该方法会导致该元素被标记为脏，下一次重新页面刷新时将清楚该元素所在层并且重新绘制
+     * @param {object} option
+     */
+    setOption(option) {
+        this.configProxy.update(option);
+        this.__dirty = true;
+    }
+
+    /**
+     * 判断点是否在当前元素内
+     * @param {object}  point  包含x,y两个属性的点
+     */
+    contain(point) {
+        var local = [point.x, point.y];
+        return isPtInPath(this, this.configProxy.getConfig(), local[0], local[1]);
+    }
+
+    /**
+     * 绘制文字
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {object} config --绘制配置
+     */
+    DrawText(ctx, config) {
+        if (!config.text) {
+            return;
+        }
+
+        var beginpt = this.GetContainRect();
+
+        var x = beginpt[0][0];
+        var y = beginpt[0][1];
+        var height = beginpt[2][1] - beginpt[0][1];
+        y = y + height / 2;
+
+        ctx.save();
+        var st = this.configProxy.getStyle();
+        //文字颜色
+        if (!st.textColor) {
+            ctx.fillStyle = st.textColor;
+        }
+
+        //文字的变换与图形不一样，默认情况下就是正向的，特别处理
+        this.updateTransform();
+        var m = this.transform;
+        ctx.setTransform(m[0], m[1], m[2], -m[3], m[4], m[5]);
+
+        text.fillText(ctx, config.text, x, m[5] - y, st.font,
+            st.textAlign, st.textBaseline);
+
+        ctx.restore();
+    }
+}
+
+mixin(ContextView, Transform, true);
+mixin(ContextView, Eventful, true);
+mixin(ContextView, Moveable, true);
+
+export default ContextView</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

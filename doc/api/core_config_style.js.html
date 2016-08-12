@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/config/style.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/config/style.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ *
+ * @module ychart/core/config/style
+ *
+ */
+
+var styleMap = {
+
+    fillStyle: "fillStyle",
+    fillColor: "fillStyle",
+    color: "fillStyle",
+
+    strokeStyle: "strokeStyle",
+    lineColor: "strokeStyle",
+    lineWidth: "lineWidth",
+    lineCap: "lineCap",
+    lineJoin: "lineJoin",
+    font: "font",
+
+    textAlign: "textAlign",
+    textBaseline: "textBaseline",
+
+    shadowColor: "shadowColor",
+    shadowOffsetX: 'shadowOffsetX',
+    shadowOffsetY: 'shadowOffsetY',
+    shadowBlur: 'shadowBlur',
+    shadowx: "shadowOffsetX",
+    shadowy: "shadowOffsetY",
+
+    globalAlpha: "globalAlpha",
+    alpha: "globalAlpha",
+    globalCompositionOperation: "globalCompositionOperation",
+    overlaystyle: "globalCompositionOperation"
+};
+
+
+/**
+ * 全局默认样式。 所有形状或者路劲的样式都基于这个样式。
+ * 负责为所有模块提供默认样式及自定义样式名到标准样式名的转换
+ * 映射配置属性名到canvas属性.
+ * 应该包含默认的属性名
+ * 新加一个属性在这个映射和下面CONFIG中的style中同时添加
+ * @class
+ * @param opt  初始化样式
+ * @private
+ */
+var _style = function () {
+};
+
+
+_style.prototype = {
+    /**
+     * 线条颜色，用于任意路劲绘制中线条样式的控制。
+     * 值可以是任意十六进制颜色或者英文单词
+     */
+    strokeStyle: "blue",
+
+    /**
+     * 填充颜色，用于任意路劲中fill方法的填充样式
+     * 值可以是任意十六进制颜色或者英文单词
+     */
+    fillStyle: "#dcd5d9",
+
+    /**
+     * 线宽。
+     * @type number
+     */
+    lineWidth: 1,
+
+    /**
+     * 线条两端样式. butt、round、square
+     * @type string
+     */
+    lineCap: "round",
+
+    /**
+     * bevel,miter线条相交的方式. 园交,斜交还是斜接.
+     * @type string
+     */
+    lineJoin: "round",
+
+    /**
+     * 文字
+     * @type string
+     */
+    font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
+
+    /**
+     * 文字颜色。 strokeStyle
+     * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
+     * @type string
+     */
+    textColor: "black", //文字样式。 非标准canvas属性
+
+    /**
+     * 文本对齐方式
+     * @type string
+     */
+    textAlign: "start",
+
+    /**
+     * 文本基线
+     * @type string
+     */
+    textBaseline: "bottom",
+
+    /**
+     * 默认阴影颜色
+     * @type string
+     */
+    shadowColor: "#EA9090",
+
+    /**
+     * 阴影X偏移
+     * @type number
+     */
+    shadowOffsetX: 0,
+
+    /**
+     * 阴影Y偏移
+     * @type number
+     */
+    shadowOffsetY: 0,
+
+    /**
+     * 像素的模糊数
+     * @type number
+     */
+    shadowBlur: 0,
+
+    /**
+     * 透明度。  0为透明
+     * @type number
+     */
+    globalAlpha: 1,
+
+    /**
+     * 透明重叠情况
+     * @type string
+     */
+    globalCompositionOperation: "source-over"
+
+};
+
+
+export default {
+    _style: _style,
+    _styleMap: styleMap
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

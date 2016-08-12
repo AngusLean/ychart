@@ -1,5 +1,7 @@
 /**
- * 提供变换扩展
+ * 元素的事件分发、变换模块.
+ * 所有事件都由handler.js分发下来。 自定义的事件也是在里面定义
+ * @module ychart/core/graphic/mixin
  */
 
 import matrix from './helper/matrix'
@@ -13,7 +15,9 @@ function isNotAroundZero(val) {
 }
 
 /**
- * @constructor
+ * 元素变换相关功能实现。 混入类
+ * @class
+ * @mixin
  */
 var Transformable = function (opts) {
     opts = opts || this;

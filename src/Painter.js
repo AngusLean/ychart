@@ -1,4 +1,7 @@
-
+/**
+ * 绘图中绘制控制器模块
+ * @module ychart/painter
+ */
     import Layer from "./Layer"
     import guid from "./tool/guid"
     import Group from "./Group"
@@ -30,22 +33,22 @@
 
         this.updateLayerState(shapeList);
         var i,shape,layer,zlevel ,lastZlevel=-1;
+
         for(i=0 ;i<shapeList.length ;i++){
             shape = shapeList[i];
             zlevel = shape.zLevel || 0;
             layer = this.getLayer(zlevel);
-            
-            //有改变的元素所在的layer需要清除画布过后重新绘制
-            if(zlevel != lastZlevel && layer.__needClear){
+            //脏元素所在的layer需要清除画布过后重新绘制
+            if(lastZlevel != zlevel && layer.__needClear){
                 layer.clear();
                 lastZlevel = zlevel;
                 layer.__needClear = false;
-
-                this.preProcessShapeInLayer(shape, layer);
-                shape.Brush(layer.getContext());
-
-                this.afterProcessShapeInLayer(shape ,layer);
             }
+            this.preProcessShapeInLayer(shape, layer);
+
+            shape.Brush(layer.getContext());
+
+            this.afterProcessShapeInLayer(shape ,layer);
         }
     };
 
@@ -66,7 +69,6 @@
 
             //如果图像为脏，则需要清除当前画布
             !layer.__needClear && (layer.__needClear = shape.__dirty);
-
         }
     };
 

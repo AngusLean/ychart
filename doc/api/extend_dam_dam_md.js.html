@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: extend/dam/dam_md.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: extend/dam/dam_md.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 水库模型。
+ */
+define(function(require){
+
+    var util = require("../../tool/util");
+
+    //basic dam module, any dam can extend from this
+    var baseDamEntity = {
+        name : "",
+        /**
+        * 按结构形式分为 重力坝/土石坝/拱坝/支墩坝
+        */
+        DMTP:{
+            DMTPA: "土石坝",
+            DMTPB:  "心墙坝",
+            DMTPC:  "沥青混凝土心墙"
+        },
+
+        //最大坝高
+        MAXDMHG : 0,
+        //坝顶宽度
+        DMTPWD : 0,
+        //坝底宽度. 基本上用不到。 使用坝顶和坡度可以计算
+        // DMBTWD : 0,
+        //坝顶长度
+        DMTPLN : 0,
+        //坝顶高程
+        DMTPEL : 0,
+
+        //上游坝坡
+        UPDMSL :{
+            //可能有两段坡面
+            UPDMSL1: 0,
+            UPDMSL2: 0
+        },
+        //下游坝坡
+        DWDMSL :{
+            DWDMSL1: 0,
+            DWDMSL2: 0
+        },
+
+        //心墙
+        CDREWALL:{
+            //心墙材料
+            MT: "沥青混凝土",
+            //心墙宽度
+            WIDTH: 0,
+            //心墙上游坡度
+            UPSL:{
+                //可能是组合式心墙
+                UPSL1: 0,
+                UPSL2: 0
+            },
+            //心墙下游坡度
+            DWSL:{
+                DWSL1: 0,
+                DWSL2: 0
+            }
+        },
+
+        //水位特征值
+        HYCH :{
+            //死水位
+            DDWL: 0,
+            //正常蓄水位
+            NRPLLV : 0,
+            //汛限水位
+            FLSSCNWL: 0,
+            //设计洪水位
+            DSFLLV: 0,
+            //校核洪水位
+            CHFLLV :0,
+
+            //当前水位
+            Z :0
+        }
+    };
+
+    var tsb = util.merge({
+        DMTP : "土石坝",
+        UPDMSL: 0,
+        DWDMSL: 0,
+        CDREWALL : null,
+        HYCH: null
+    },baseDamEntity ,false);
+
+    return {
+        basedammd: baseDamEntity,
+        tsb : tsb
+    };
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

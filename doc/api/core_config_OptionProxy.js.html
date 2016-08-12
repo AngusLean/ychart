@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/config/OptionProxy.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/config/OptionProxy.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 配置代理类。 内部依赖 {@link module:ychart/core/config/styleProxy}
+ * @module ychart/core/config/optionProxy
+ */
+
+
+import styleProxy from "./StyleProxy"
+import {checkNull} from "../../tool/util"
+/**
+ * 选项代理类
+ * 每个可绘制元素的配置项管理类。 该类将管理每个元素绘制需要的各项属性，其中，
+ * 样式采用styleProxy代理管理。 应该为样式有别名及默认样式。
+ *
+ * @class
+ * @param config
+ */
+var OptionProxy = function (config) {
+
+    this.styleProxy = null;
+
+    //每个绘图元素的所有配置项。 其中 style 这个项表示所有样式相关。 独立处理
+    this.config = {
+        style: {}
+    };
+
+    this.init(config);
+};
+
+
+var item;
+/**
+ * 初始化样式管理类。 设置该元素绘制必须的样式
+ * @param config
+ */
+OptionProxy.prototype.init = function (config) {
+    for (item in config) {
+        if (!checkNull(config[item])) {
+            if (item != "style") {
+                this.config[item] = config[item];
+            } else {
+                this.styleProxy = new styleProxy(config[item]);
+            }
+        }
+    }
+    if (this.styleProxy == null) {
+        this.styleProxy = new styleProxy();
+    }
+    this.config.style = this.styleProxy.getStyle();
+};
+
+/**
+ * 获取所有配置
+ * @returns {object} config
+ */
+OptionProxy.prototype.getConfig = function () {
+    return this.config;
+};
+
+/**
+ * 获取样式
+ * @returns {OptionProxy.config.style|{}}
+ */
+OptionProxy.prototype.getStyle = function () {
+    return this.config.style || {};
+};
+
+/**
+ * 绑定当前样式到指定的上下文
+ * @param context
+ */
+OptionProxy.prototype.bindContext = function (context) {
+    this.styleProxy.bindContext(context);
+};
+
+/**
+ * 获取画刷类型。 自动基于属性选择是填充还是描边
+ * @param context
+ */
+OptionProxy.prototype.getBrushType = function (context) {
+    return this.styleProxy.getBrushType();
+};
+
+/**
+ * 更新数据
+ * @param option
+ */
+OptionProxy.prototype.update = function (config) {
+    for (item in config) {
+        if (!checkNull(config[item])) {
+            if (item != "style") {
+                this.config[item] = config[item];
+            } else {
+                this.styleProxy.update(config[item]);
+            }
+        }
+    }
+    this.config.style = this.styleProxy.getStyle();
+};
+
+
+export default OptionProxy;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

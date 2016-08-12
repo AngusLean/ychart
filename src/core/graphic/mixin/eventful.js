@@ -1,8 +1,14 @@
 /**
- * 事件分发模型。用于页面上不同对象之间事件绑定及分发。
- * 与具体的DOM事件，比如dom2级事件无实际关系
+ * @module ychart/core/graphic/mixin
  */
 
+
+/**
+ * 事件分发模型。用于页面上不同对象之间事件绑定及分发。
+ * 与具体的DOM事件，比如dom2级事件无实际关系
+ * @class
+ * @mixin
+ */
 var Eventful = function () {
     this._handlers = {};
 };

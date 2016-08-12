@@ -1,28 +1,45 @@
-import { merge} from "./tool/util"
-import {inherit} from "./tool/klass"
-import element from "./core/graphic/Element"
+/**
+ * 元素容器类
+ * @module ychart/Group
+ */
+import {merge} from "./tool/util"
+import {mixin} from "./tool/klass"
+import Transform from "./core/graphic/mixin/transform"
+import Element from "./core/graphic/element"
 
-var Group = function (opt) {
+/**
+ * 元素容器类。 该类可以包含任何继承于 {@link ./core/graphic/view} 的类
+ * 容器类的所有元素目前不会响应同一事件
+ * todo 是否响应同一事件？
+ * @class
+ */
+class Group extends Element{
+    constructor(options){
+        super("group");
 
-    this.children = [];
+        this.children = [];
 
-    merge(this, opt, false, null);
-    element.call(this, opt);
-};
+        merge(this, options, false, null);
 
-Group.prototype.type = "group";
+        Transform.call(this);
+    }
 
-Group.prototype.addChild = function (child) {
-    if (child == this)
-        return;
-    //子形状或者group的父类。 继承变换以及样式
-    child.parent = this;
+    /**
+     * 添加一个子元素
+     * @param child
+     * @returns {*}
+     */
+    addChild (child) {
+        if (child == this)
+            return;
+        //子形状或者group的父类。 继承变换以及样式
+        child.parent = this;
 
-    this.children.push(child);
-    return this;
-};
+        this.children.push(child);
+        return this;
+    };
+}
 
-inherit(Group, element);
-
+mixin(Group ,Transform , true);
 
 export default Group;

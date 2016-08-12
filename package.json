@@ -27,7 +27,8 @@
     "test": "npm run lint && npm run cover && npm run build && npm run e2e",
     "build": "node build/build.js",
     "install-hook": "ln -s ../../build/git-hooks/pre-commit .git/hooks/pre-commit",
-    "dev": "webpack --watch --config build/webpack.dev.config.js & npm run serve-test",
+    "dev": "webpack --watch --config build/webpack.dev.config.js",
+    "devtest": "webpack --watch --config build/webpack.dev.config.js & npm run serve-test",
     "serve-test": "webpack-dev-server --config build/webpack.test.config.js --host 0.0.0.0",
     "build-test": "webpack --config build/webpack.test.config.js",
     "lint": "eslint src test/e2e test/unit/specs build",
@@ -63,7 +64,6 @@
     "karma-firefox-launcher": "^0.1.6",
     "karma-ie-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.1",
     "karma-safari-launcher": "^0.1.1",
     "karma-sauce-launcher": "^0.3.0",
     "karma-sourcemap-loader": "^0.3.7",
@@ -75,6 +75,7 @@
     "rollup-plugin-replace": "^1.1.0",
     "uglify-js": "^2.4.24",
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1"
+    "webpack-dev-server": "^1.12.1",
+    "jsdoc" : "3.4.0"
   }
 }

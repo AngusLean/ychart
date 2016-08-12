@@ -1,6 +1,5 @@
 var path = require('path')
 var webpack = require('webpack')
-
 module.exports = {
   entry: './test/unit/specs/index.js',
   output: {

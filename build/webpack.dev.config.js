@@ -1,6 +1,5 @@
 var path = require('path')
 var webpack = require('webpack')
-
 module.exports = {
   entry: './src/index',
   output: {
@@ -22,7 +21,7 @@ module.exports = {
       'process.env': {
         NODE_ENV: '"development"'
       }
-    })
+    }),
   ],
   devtool: 'source-map'
 }

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: shape/Bezier.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: shape/Bezier.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 贝塞尔曲线
+ * @module ychart/shape/besier
+ */
+import debugs from "../tool/debug"
+import ShapeBuilder from "../core/viewBuilder"
+
+var warn = debugs.warn;
+var insiderange = function (val, rg1, rg2) {
+    return val &lt; rg1 || val > rg2;
+};
+var sqrt = function (val) {
+    return Math.sqrt(val);
+};
+var abs = function (val) {
+    return Math.abs(val);
+};
+var atan = function (val) {
+    return Math.atan(val);
+};
+var sin = function (val) {
+    return Math.sin(val);
+};
+var cos = function (val) {
+    return Math.cos(val);
+};
+var floor = function (val) {
+    return Math.floor(val);
+};
+var radian2angle = function (radian) {
+    return radian * 180 / Math.PI;
+};
+
+/**
+ * 绘制一条曲线路径. 调用此方法后当前的context将包含一条路径.
+ * @class Bezier
+ * @property {Array.number} beginpt x,y  开始点坐标
+ * @property {Array.number} endpt    x,y 结束点坐标
+ * @property {number} compact 0-10  表示该波浪线的紧凑程度,即每个弯曲的距离比例
+ * @property {number} systole 0-4 波浪的起伏程度, 表现为上下波动程度. 1为标准.小于1就是缩放.1-4就是放大
+ * @constructor
+ */
+export default ShapeBuilder.baseContextViewExtend({
+
+    type: "BezierPath",
+
+    BuildPath: function (ctx, config) {
+        var beginpt = config.beginpt, endpt = config.endpt, compact = config.compact || 5, systole = config.systole;
+
+        var linequadrant = function () {
+            if (beginpt[0] &lt; endpt[0] &amp;&amp; beginpt[1] >= endpt[1]) return 1;
+            if (beginpt[0] >= endpt[0] &amp;&amp; beginpt[1] > endpt[1]) return 2;
+            if (beginpt[0] > endpt[0] &amp;&amp; beginpt[1] &lt;= endpt[1]) return 3;
+            if (beginpt[0] &lt;= endpt[0] &amp;&amp; beginpt[1] &lt; endpt[1]) return 4;
+        }();
+        var nextx = function (x, dis) {
+            return beginpt[0] &lt;= endpt[0] ? x + dis : x - dis;
+        };
+        var nexty = function (y, dis) {
+            return beginpt[1] &lt;= endpt[1] ? y + dis : y - dis;
+        };
+        var nexpt_ct = function (pt, dispt, leftorright) {
+            var getrs = function (disx, disy) {
+                if (leftorright === 0) {
+                    return {
+                        x: pt[0] + disx,
+                        y: pt[1] + disy
+                    };
+                } else if (leftorright == 1) {
+                    return {
+                        x: pt[0] - disx,
+                        y: pt[1] - disy
+                    };
+                } else {
+                    warn("通过距离获取控制点坐标出错");
+                    return null;
+                }
+            };
+            switch (linequadrant) {
+                case 1:
+                    return getrs(-dispt[0], -dispt[1]);
+                case 2:
+                    return getrs(-dispt[0], dispt[1]);
+                case 3:
+                    return getrs(dispt[0], dispt[1]);
+                case 4:
+                    return getrs(dispt[0], -dispt[1]);
+            }
+        };
+        if (insiderange(compact, 1, 10) || insiderange(systole, 0, 4)) {
+            warn("绘制曲线路径中输入的参数错误");
+            return;
+        }
+        var piece = 2 * compact;
+        var dispiece = sqrt(this.getDistance(beginpt, endpt) / piece);
+        var h = dispiece / 2 * systole;
+        var linevert_angleor = atan(abs(endpt[0] - beginpt[0]) / abs(endpt[1] - beginpt[1]));
+
+        var linectx_dis = abs(endpt[0] - beginpt[0]) / piece;
+        var linecty_dis = abs(endpt[1] - beginpt[1]) / piece;
+
+        var allctpt = [];
+        var allctinlinept = [];
+        var alllinectpt = [];
+        alllinectpt.push({
+            x: beginpt[0],
+            y: beginpt[1]
+        }, {
+            x: nextx(beginpt[0], linectx_dis),
+            y: nexty(beginpt[1], linecty_dis)
+        });
+        allctinlinept.push({
+            x: nextx(beginpt[0], linectx_dis / 2),
+            y: nexty(beginpt[1], linecty_dis / 2)
+        }, {
+            x: nextx(nextx(beginpt[0], linectx_dis / 2), linectx_dis),
+            y: nexty(nexty(beginpt[1], linecty_dis / 2), linecty_dis)
+        });
+        var dispt = {
+            x: cos(linevert_angleor) * h,
+            y: sin(linevert_angleor) * h
+        };
+        allctpt.push(nexpt_ct(allctinlinept[0], dispt, 0), nexpt_ct(allctinlinept[1], dispt, 1));
+        var i;
+        for (i = 2; i &lt; piece; i++) {
+            allctinlinept.push({
+                x: nextx(allctinlinept[i - 1][0], linectx_dis),
+                y: nexty(allctinlinept[i - 1][1], linecty_dis)
+            });
+            alllinectpt.push({
+                x: nextx(alllinectpt[i - 1][0], linectx_dis),
+                y: nexty(alllinectpt[i - 1][1], linecty_dis)
+            });
+            allctpt.push(nexpt_ct(allctinlinept[i], dispt, i % 2));
+        }
+        //最后一个点需要特殊处理
+        alllinectpt.push({
+            x: nextx(alllinectpt[i - 1][0], linectx_dis),
+            y: nexty(alllinectpt[i - 1][1], linecty_dis)
+        });
+
+        ctx.beginPath();
+        ctx.moveTo(beginpt[0], beginpt[1]);
+        for (i = 1; i &lt; allctpt.length; i++) {
+            ctx.quadraticCurveTo(allctpt[i - 1][0], allctpt[i - 1][1], alllinectpt[i][0], alllinectpt[i][1]);
+        }
+        ctx.quadraticCurveTo(allctpt[i - 1][0], allctpt[i - 1][1], alllinectpt[i][0], alllinectpt[i][1]);
+
+        config.style.brushType = "stroke";
+
+    }
+})
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

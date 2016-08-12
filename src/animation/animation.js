@@ -1,6 +1,7 @@
 /**
+ *动画效果模块
+ * @module ychart/animation
  *
- * Created by Administrator on 2016/7/28.
  */
 
 var requestAnimFrame = (window !== undefined &&
@@ -16,6 +17,10 @@ var Nop = function () {
     return true
 };
 
+/**
+ * @function 动画控制函数
+ * @param option
+ */
 var animate = function (option) {
     var onBegin = option.onBegin || Nop,
         onChanging = option.onChanging || Nop,

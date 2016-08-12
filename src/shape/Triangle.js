@@ -1,15 +1,19 @@
-import ShapeBuilder from "../core/ShapeBuilder"
+/**
+ * 三角形
+ * @module ychart/shape/Triangle
+ */
+import ShapeBuilder from "../core/viewBuilder"
 
     /**
      * 三角形
-     * @typedef {Object} ICircleStyle
+     * @class Triangle
      * @property {number} beginpt 开始座标
      * @property {number} width  三角形的宽
      * @property {number} height 三角形的高
      * @property {number} direction bottom 为向下。 默认向上
      * @constructor
      */
-    export default ShapeBuilder.extend({
+    export default ShapeBuilder.baseContextViewExtend({
 
         type: "triangle",
 

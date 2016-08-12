@@ -1,6 +1,5 @@
 /**
- * 元素可以拖动的实现.
- * 所有事件都由handler.js分发下来。 自定义的事件也是在里面定义
+ * @module ychart/core/graphic/mixin
  */
 
 
@@ -8,6 +7,12 @@ import EventUtil from "./eventful"
 import {mixin} from "../../../tool/klass"
 
 var target;
+
+/**
+ * 拖动的实现类。 由于该类仅需要一个实例，所以没有做成混合类
+ * @class
+ * @constructor
+ */
 var Draggable = function () {
     EventUtil.call(this);
 
@@ -25,6 +30,11 @@ Draggable.prototype = {
 
     _lastClickTime: null,
 
+    /**
+     * 开始拖动
+     * @param {event} exEvent  加入了自定义项的扩展事件对象
+     * @private
+     */
     _dragStart: function (exEvent) {
         target = exEvent.targetEle;
         this._lastClickTime = new Date();
@@ -36,6 +46,11 @@ Draggable.prototype = {
         }
     },
 
+    /**
+     * 拖动中
+     * @param {event} exEvent  加入了自定义项的扩展事件对象
+     * @private
+     */
     _dragIng: function (exEvent) {
         target = this._dragingTarget;
         var crt = new Date();
@@ -55,6 +70,12 @@ Draggable.prototype = {
             target.__yh && target.__yh.update();
         }
     },
+
+    /**
+     * 拖动完成
+     * @param {event} exEvent  加入了自定义项的扩展事件对象
+     * @private
+     */
     _dragEnd: function (exEvent) {
         // exEvent.target.style.cursor = "default";
         target = this._dragingTarget;

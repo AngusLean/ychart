@@ -1,3 +1,7 @@
+/**
+ * 绘图核心控制模块
+ * @module ychart/Ychart
+ */
 import Storage from "./Storage"
 import Painter from "./Painter"
 import Handler from "./Handler"

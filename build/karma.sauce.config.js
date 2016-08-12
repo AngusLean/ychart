@@ -71,7 +71,7 @@ module.exports = function (config) {
     customLaunchers: batch,
     reporters: ['progress', 'saucelabs'],
     sauceLabs: {
-      testName: 'Vue.js unit tests',
+      testName: 'ycharts.js unit tests',
       recordScreenshots: false,
       build: process.env.CIRCLE_BUILD_NUM || process.env.SAUCE_BUILD_ID || Date.now()
     },

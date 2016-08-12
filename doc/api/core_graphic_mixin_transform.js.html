@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/graphic/mixin/transform.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/graphic/mixin/transform.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 元素的事件分发、变换模块.
+ * 所有事件都由handler.js分发下来。 自定义的事件也是在里面定义
+ * @module ychart/core/graphic/mixin
+ */
+
+import matrix from './helper/matrix'
+import vector from './helper/vector'
+var mIdentity = matrix.identity;
+
+var EPSILON = 5e-5;
+
+function isNotAroundZero(val) {
+    return val > EPSILON || val &lt; -EPSILON;
+}
+
+/**
+ * 元素变换相关功能实现。 混入类
+ * @class
+ * @mixin
+ */
+var Transformable = function (opts) {
+    opts = opts || this;
+    // If there are no given position, rotation, scale
+    if (!opts.position) {
+        /**
+         * 平移
+         * @type {Array.&lt;number>}
+         * @default [0, 0]
+         */
+        this.position = [0, 0];
+    } else {
+        this.position = opts.position;
+    }
+    if (!opts.rotation) {
+        /**
+         * 旋转
+         * @type {Array.&lt;number>}
+         * @default 0
+         */
+        this.rotation = 0;
+    } else {
+        this.rotation = opts.rotation;
+    }
+    if (!opts.scale) {
+        /**
+         * 缩放
+         * @type {Array.&lt;number>}
+         * @default [1, 1]
+         */
+        this.scale = [1, 1];
+    } else {
+        this.scale = opts.scale;
+    }
+    /**
+     * 旋转和缩放的原点
+     * @type {Array.&lt;number>}
+     * @default null
+     */
+    this.origin = this.origin || null;
+
+};
+
+/**
+ * 默认的变换矩阵
+ */
+Transformable.prototype.transform = null;
+
+/**
+ * 判断是否需要有坐标变换
+ * 如果有坐标变换, 则从position, rotation, scale以及父节点的transform计算出自身的transform矩阵
+ */
+Transformable.prototype.needLocalTransform = function () {
+    return isNotAroundZero(this.rotation) || isNotAroundZero(this.position[0]) ||
+        isNotAroundZero(this.position[1]) || isNotAroundZero(this.scale[0] - 1) ||
+        isNotAroundZero(this.scale[1] - 1);
+};
+
+Transformable.prototype.updateTransform = function () {
+    var parent = this.parent;
+    var parentHasTransform = parent &amp;&amp; parent.transform;
+    var needLocalTransform = this.needLocalTransform();
+
+    var m = this.transform;
+    m = m || [];
+    if (!(needLocalTransform || parentHasTransform)) {
+        mIdentity(m);
+        return;
+    }
+
+    m = m || matrix.create();
+
+    if (needLocalTransform) {
+        this.getLocalTransform(m);
+    } else {
+        mIdentity(m);
+    }
+
+    // 应用父节点变换
+    if (parentHasTransform) {
+        if (needLocalTransform) {
+            matrix.mul(m, parent.transform, m);
+        } else {
+            matrix.copy(m, parent.transform);
+        }
+    }
+    // 保存这个变换矩阵
+    this.transform = m;
+
+    this.invTransform = this.invTransform || matrix.create();
+    matrix.invert(this.invTransform, m);
+};
+
+Transformable.prototype.getLocalTransform = function (m) {
+    m = m || [];
+    mIdentity(m);
+
+    var origin = this.origin;
+
+    var scale = this.scale;
+    var rotation = this.rotation;
+    var position = this.position;
+    if (origin) {
+        // Translate to origin
+        m[4] -= origin[0];
+        m[5] -= origin[1];
+    }
+    if (scale) {
+        matrix.scale(m, m, scale);
+    }
+    if (rotation) {
+        matrix.rotate(m, m, rotation);
+    }
+    if (origin) {
+        // Translate back from origin
+        m[4] += origin[0];
+        m[5] += origin[1];
+    }
+
+    m[4] += position[0];
+    m[5] += position[1];
+
+    return m;
+};
+
+/**
+ * 将自己的transform应用到context上
+ * @param {Context2D} ctx
+ */
+Transformable.prototype.setTransform = function (ctx) {
+    var m = this.transform;
+    if (m) {
+        ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+    }
+};
+
+var tmpTransform = [];
+
+/**
+ * 分解`transform`矩阵到`position`, `rotation`, `scale`
+ */
+Transformable.prototype.decomposeTransform = function () {
+    if (!this.transform) {
+        return;
+    }
+    var parent = this.parent;
+    var m = this.transform;
+    if (parent &amp;&amp; parent.transform) {
+        // Get local transform and decompose them to position, scale, rotation
+        matrix.mul(tmpTransform, parent.invTransform, m);
+        m = tmpTransform;
+    }
+    var sx = m[0] * m[0] + m[1] * m[1];
+    var sy = m[2] * m[2] + m[3] * m[3];
+    var position = this.position;
+    var scale = this.scale;
+    if (isNotAroundZero(sx - 1)) {
+        sx = Math.sqrt(sx);
+    }
+    if (isNotAroundZero(sy - 1)) {
+        sy = Math.sqrt(sy);
+    }
+    if (m[0] &lt; 0) {
+        sx = -sx;
+    }
+    if (m[3] &lt; 0) {
+        sy = -sy;
+    }
+    position[0] = m[4];
+    position[1] = m[5];
+    scale[0] = sx;
+    scale[1] = sy;
+    this.rotation = Math.atan2(-m[1] / sy, m[0] / sx);
+};
+
+/**
+ * 变换坐标位置到 shape 的局部坐标空间
+ * @method
+ * @param {number} x
+ * @param {number} y
+ * @return {Array.&lt;number>}
+ */
+Transformable.prototype.transformCoordToLocal = function (x, y) {
+    var v2 = [x, y];
+    var invTransform = this.invTransform;
+    if (invTransform) {
+        vector.applyTransform(v2, v2, invTransform);
+    }
+    return v2;
+};
+
+/**
+ * 变换局部坐标位置到全局坐标空间
+ * @method
+ * @param {number} x
+ * @param {number} y
+ * @return {Array.&lt;number>}
+ */
+Transformable.prototype.transformCoordToGlobal = function (x, y) {
+    var v2 = [x, y];
+    var transform = this.transform;
+    if (transform) {
+        vector.applyTransform(v2, v2, transform);
+    }
+    return v2;
+};
+
+export default Transformable;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 19:10:13 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,21 +1,26 @@
-    import ShapeBuilder from "../core/ShapeBuilder"
-    /**
-     * 圆形
-     * @typedef {Object} ICircleStyle
-     * @property {number} x 圆心x坐标
-     * @property {number} y 圆心y坐标
-     * @property {number} r 半径
-     * @constructor
-     */
-    export default ShapeBuilder.extend({
+/**
+ * 圆形
+ * @module ychart/shape/Circle
+ */
 
-        type: "circle",
+import ShapeBuilder from "../core/viewBuilder"
+/**
+ * 圆形
+ * @class Circle
+ * @property {number} x 圆心x坐标
+ * @property {number} y 圆心y坐标
+ * @property {number} r 半径
+ * @constructor
+ */
+export default ShapeBuilder.baseContextViewExtend({
 
-        BuildPath: function (ctx, config) {
-            ctx.beginPath();
-            ctx.arc(config.x, config.y, config.r, Math.PI * 2,
-                    config.startangel || 0, config.endangel || Math.PI * 2);
-        }
-    })
+    type: "circle",
+
+    BuildPath: function (ctx, config) {
+        ctx.beginPath();
+        ctx.arc(config.x, config.y, config.r, Math.PI * 2,
+            config.startangel || 0, config.endangel || Math.PI * 2);
+    }
+})
 
 

@@ -1,15 +1,20 @@
+/**
+ * 文字
+ * @module ychart/shape/Text
+ */
 import {checkNull} from "../tool/util"
 import utext from "../core/graphic/helper/text"
-import ShapeBuilder from "../core/ShapeBuilder"
+import ShapeBuilder from "../core/viewBuilder"
 /**
  * 文本
  * 由于文本显示与图像刚好是竖向完全相反的两个方向，所以对文本绘制特殊处理。
  * 某区域文本是直角座标系，但是文字实际上还是默认的座标系，不过Y被改成负数了
+ * @class Text
  * @property {string} text 显示的文字
- * @property {arrar[number]} beginpt 开始座标
+ * @property {Array.number} beginpt 开始座标
  * @constructor
  */
-export default ShapeBuilder.extend({
+export default ShapeBuilder.baseContextViewExtend({
 
     type: "Text",
 

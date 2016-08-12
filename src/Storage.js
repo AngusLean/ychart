@@ -1,9 +1,15 @@
+/**
+ * 绘图中绘制存储器模块。 负责处理不同绘图层、统一绘图层不同显示级别的关系
+ * @module ychart/storage
+ *
+ */
 import {isArr} from "./tool/util"
 import Group from "./Group"
 
 /**
- * ycharts存储组件。
- * 该组件存储了绘图相关的实例。 负责处理不同绘图层、统一绘图层不同显示级别的关系
+ *
+ * 存储器
+ * @class
  * @param yh
  * @constructor
  */
@@ -54,7 +60,7 @@ Storage.prototype.getDisplayableShapeList = function () {
     };
 
     _getList(this._roots);
-``
+
     return list;
 };
 
