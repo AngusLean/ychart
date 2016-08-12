@@ -5,7 +5,7 @@
 
 
 import EventUtil from "./eventful"
-import {ClassUtil} from "../../../tool/util"
+import {mixin} from "../../../tool/klass"
 
 var target;
 var Draggable = function () {
@@ -68,6 +68,6 @@ Draggable.prototype = {
 };
 
 
-ClassUtil.mixin(Draggable, EventUtil, true);
+mixin(Draggable, EventUtil, true);
 
 export default Draggable;

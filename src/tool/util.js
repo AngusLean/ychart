@@ -7,62 +7,6 @@ function parseInt10(val) {
     return parseInt(val, 10);
 }
 
-export var DomUtil = {
-    getPosition: function (id) {
-        var element = typeof id == "string" ? document.getElementById(id) : id;
-        var st = document.defaultView.getComputedStyle(element);
-
-        var rect = element.getBoundingClientRect();
-        var scrollTop = document.documentElement.scrollTop ?
-            document.documentElement.scrollTop : document.body.scrollTop;
-        var scrollLeft = document.documentElement.scrollLeft ?
-            document.documentElement.scrollLeft : document.body.scrollLeft;
-        return {
-            width: (element.clientWidth || parseInt10(st.width) || parseInt10(element.style.width) -
-            (parseInt10(st.paddingLeft) || 0) -
-            (parseInt10(st.paddingRight))) || 0,
-
-            height: (element.clientHeight || parseInt10(st.height) || parseInt10(element.style.height) -
-            (parseInt10(st.paddingTop) || 0) -
-            (parseInt10(st.paddingBottom))) || 0,
-            top: rect.top + scrollTop,
-            left: rect.left + scrollLeft
-        };
-    }
-};
-
-export var ClassUtil = {
-    inherit: function (clazz, baseClazz) {
-        var clazzPrototype = clazz.prototype;
-
-        function F() {
-        }
-
-        F.prototype = baseClazz.prototype;
-        clazz.prototype = new F();
-
-        for (var prop in clazzPrototype) {
-            clazz.prototype[prop] = clazzPrototype[prop];
-        }
-        clazz.constructor = clazz;
-    },
-
-    //组合两个类。 仅组合原型的属性
-    mixin: function (target, source, overlay) {
-        source = "prototype" in source ? source.prototype : source;
-        target = "prototype" in target ? target.prototype : target;
-        _over(target, source, overlay);
-        function _over(target, source, overlay) {
-            for (var ele in source) {
-                if (source.hasOwnProperty(ele) &&
-                    (overlay ? (source[ele] !== null) : (target[ele] === null))) {
-                    target[ele] = source[ele];
-                }
-            }
-            return target;
-        }
-    }
-};
 
 export function checkNull(which) {
     return !which || typeof which == 'undefined' || which == 'null';

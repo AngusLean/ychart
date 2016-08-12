@@ -1,4 +1,4 @@
-import {ClassUtil} from "../../tool/util"
+import {mixin} from "../../tool/klass"
 import guid from "../../tool/guid"
 import Transform from "./mixin/transform"
 import Eventful from "./mixin/eventful"
@@ -43,7 +43,7 @@ Elements.prototype.init = function () {
 };
 
 
-ClassUtil.mixin(Elements, Transform, true);
-ClassUtil.mixin(Elements, Eventful, true);
+mixin(Elements, Transform, true);
+mixin(Elements, Eventful, true);
 export default Elements;
 

@@ -1,5 +1,6 @@
 
-import {checkNull, ClassUtil} from "../../tool/util"
+import {checkNull} from "../../tool/util"
+import {inherit ,mixin} from "../../tool/klass"
 import debugs from "../../tool/debug"
 import text from "./helper/text"
 import Elements from "./Element"
@@ -145,13 +146,12 @@ baseShape.prototype.setOption = function (option) {
 
 
 baseShape.prototype.contain = function (point) {
-    // var local = this.transformCoordToLocal(point.x , point.y);
     var local = [point.x, point.y];
     return isPtInPath(this, this.configProxy.getConfig(), local[0], local[1]);
 };
 
 
-ClassUtil.inherit(baseShape, Elements, true);
-ClassUtil.mixin(baseShape, Moveable, true);
+inherit(baseShape, Elements, true);
+mixin(baseShape, Moveable, true);
 
 export default baseShape;

@@ -11,10 +11,11 @@
     
     var _ctx = null;
 
+    function createCanvas(){
+        return document.createElement("canvas");
+    }
+
     export var getContext = function(){
-        function createCanvas(){
-            return document.createElement("canvas");
-        }
         if(!_ctx){
             _ctx = createCanvas().getContext("2d");
         }

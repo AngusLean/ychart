@@ -1,4 +1,5 @@
-import {ClassUtil, merge} from "./tool/util"
+import { merge} from "./tool/util"
+import {inherit} from "./tool/klass"
 import element from "./core/graphic/Element"
 
 var Group = function (opt) {
@@ -21,7 +22,7 @@ Group.prototype.addChild = function (child) {
     return this;
 };
 
-ClassUtil.inherit(Group, element);
+inherit(Group, element);
 
 
 export default Group;

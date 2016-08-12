@@ -1,7 +1,8 @@
 
 
     import baseShape from "./graphic/BaseShape"
-    import {isObj,isType,ClassUtil} from "../tool/util"
+    import {isObj,isType} from "../tool/util"
+    import {inherit} from "../tool/klass"
     import debugs from "../tool/debug"
 
     var REQUIRED_CHILD = {
@@ -42,7 +43,7 @@
             baseShape.call(this ,opt);
         }
 
-        ClassUtil.inherit(sub ,baseShape);
+        inherit(sub ,baseShape);
 
         return sub;
     };

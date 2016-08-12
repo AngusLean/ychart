@@ -3,7 +3,8 @@
  */
 
 
-import  eventUtil from "./tool/event"
+import eventUtil from "./tool/event"
+import {doc} from "./tool/dom"
 import Draggable from "./core/graphic/mixin/draggable"
 
 function bind1Arg(handler, context) {
@@ -52,10 +53,6 @@ var DEFAULT_HANDLERS = {
             this.triggerProxy(this._lastHovered, "globalout", ev);
         }
     }
-};
-
-var doc = function (eleid) {
-    return document.getElementById(eleid);
 };
 
 var handlers = function (root, painter, storage) {
@@ -122,7 +119,6 @@ handlers.prototype.initHandlers = function () {
  * @returns {Event}
  */
 handlers.prototype.extendAndFixEventPackge = function (event) {
-    event = eventUtil.getEvent(event);
     event = eventUtil.clientToLocal(this.root, event, event);
     //目标形状
     event.targetEle = this.getHoverElement(event);

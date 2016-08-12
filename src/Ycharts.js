@@ -21,7 +21,7 @@ var YCharts = function (eleid, opt) {
     //绘图具体操作类。 与storage交互
     this.__painter = new Painter(this, this.__storage);
     //事件相关操作
-    this.__handler = new Handler(this.domid, this.painter, this.storage);
+    this.__handler = new Handler(this.domid, this.__painter, this.__storage);
 };
 
 
@@ -49,7 +49,7 @@ YCharts.prototype.setId = function (id) {
 };
 
 
-var ycharts = {};
+var ychart = {};
 var instances = {};
 var i = 1000;
 
@@ -59,14 +59,14 @@ var i = 1000;
  * @param config 相关配置
  * @returns {YCharts}
  */
-ycharts.init = function (id, config) {
+ychart.init = function (id, config) {
     var _charts = new YCharts(id, config);
     _charts.setId("ycharts-" + i++);
     instances[id] = _charts;
     return _charts;
 };
 
-ycharts.depose = function (id) {
+ychart.depose = function (id) {
     if (instances[id]) {
         instances[id].clean();
         instances[id] = null;
@@ -74,4 +74,4 @@ ycharts.depose = function (id) {
 };
 
 
-export default ycharts;
+export default ychart;

@@ -54,7 +54,7 @@ Storage.prototype.getDisplayableShapeList = function () {
     };
 
     _getList(this._roots);
-
+``
     return list;
 };
 

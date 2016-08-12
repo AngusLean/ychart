@@ -2,7 +2,8 @@
     import Layer from "./Layer"
     import guid from "./tool/guid"
     import Group from "./Group"
-    import {DomUtil,checkNull} from "./tool/util"
+    import {getPosition} from "./tool/dom"
+
     /**
      * 绘图组件。
      * 该组件控制所有元素绘制相关的处理，包括各个元素之间的层级关系、属性继承等
@@ -15,7 +16,7 @@
         this.__yh = yh;
 
         this.container = document.getElementById(yh.domid);
-        var temp = DomUtil.getPosition(this.container);
+        var temp = getPosition(this.container);
         this.width = temp.width;
         this.height = temp.height;
         this.left = temp.left;
@@ -79,7 +80,7 @@
     Painter.prototype.preProcessShapeInLayer = function(shape ,layer){
 
         var _preProcessShapeInLayer = function(_shape){
-            if(checkNull(_shape.parent)){
+            if(_shape.parent == null){
                 _shape.parent = layer;
             }else if(_shape.parent instanceof Group){
                 _groupPreProcess(_shape.parent ,layer);
