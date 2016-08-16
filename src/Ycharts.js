@@ -52,7 +52,12 @@ YCharts.prototype.setId = function (id) {
     this.id = id;
 };
 
-
+/**
+ * ychart全局入口对象。
+ * @global
+ * @class
+ * @type {{}}
+ */
 var ychart = {};
 var instances = {};
 var i = 1000;

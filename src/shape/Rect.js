@@ -19,7 +19,6 @@ export default ShapeBuilder.baseContextViewExtend({
     type: "Rect",
 
     BuildPath: function (ctx, config) {
-        ctx.beginPath();
         ctx.moveTo(config.allpt[0][0], config.allpt[0][1]);
         for (var i = 1; i < config.allpt.length; i++) {
             ctx.lineTo(config.allpt[i][0], config.allpt[i][1]);

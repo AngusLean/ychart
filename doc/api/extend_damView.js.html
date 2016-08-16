@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: extend/damView.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: extend/damView.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+//自定义的大坝水位图示
+
+(function (global) {
+    var YH = global.ychart;
+    var baseDamEntity = {
+        name : "",
+        /**
+         * 按结构形式分为 重力坝/土石坝/拱坝/支墩坝
+         */
+        DMTP:{
+            DMTPA: "土石坝",
+            DMTPB:  "心墙坝",
+            DMTPC:  "沥青混凝土心墙"
+        },
+
+        //最大坝高
+        MAXDMHG : 0,
+        //坝顶宽度
+        DMTPWD : 0,
+        //坝底宽度. 基本上用不到。 使用坝顶和坡度可以计算
+        // DMBTWD : 0,
+        //坝顶长度
+        DMTPLN : 0,
+        //坝顶高程
+        DMTPEL : 0,
+
+        //上游坝坡
+        UPDMSL :{
+            //可能有两段坡面
+            UPDMSL1: 0,
+            UPDMSL2: 0
+        },
+        //下游坝坡
+        DWDMSL :{
+            DWDMSL1: 0,
+            DWDMSL2: 0
+        },
+
+        //心墙
+        CDREWALL:{
+            //心墙材料
+            MT: "沥青混凝土",
+            //心墙宽度
+            WIDTH: 0,
+            //心墙上游坡度
+            UPSL:{
+                //可能是组合式心墙
+                UPSL1: 0,
+                UPSL2: 0
+            },
+            //心墙下游坡度
+            DWSL:{
+                DWSL1: 0,
+                DWSL2: 0
+            }
+        },
+
+        //水位特征值
+        HYCH :{
+            //死水位
+            DDWL: 0,
+            //正常蓄水位
+            NRPLLV : 0,
+            //汛限水位
+            FLSSCNWL: 0,
+            //设计洪水位
+            DSFLLV: 0,
+            //校核洪水位
+            CHFLLV :0,
+
+            //当前水位
+            Z :0
+        }
+    };
+
+    function merge(target, source, overwrite) {
+        function mergeItem(target, source, key, overwrite) {
+            if (source.hasOwnProperty(key) &amp;&amp; !(source[key] == null)) {
+                var targetProp = target[key];
+                if (typeof targetProp == 'object') {
+                    // 如果需要递归覆盖，就递归调用merge
+                    merge(
+                        target[key],
+                        source[key],
+                        overwrite
+                    );
+                } else if (overwrite || !(key in target)) {
+                    // 否则只处理overwrite为true，或者在目标对象中没有此属性的情况
+                    target[key] = source[key];
+                }
+            }
+        }
+        if(target){
+            for (var i in source) {
+                mergeItem(target, source, i, overwrite);
+            }
+        }
+
+        return target;
+    }
+    function warn(msg) {
+        console.log(msg);
+    }
+    var damModule = merge({
+        DMTP : "土石坝",
+        UPDMSL: 0,
+        DWDMSL: 0,
+        CDREWALL : null,
+        HYCH: null
+    },baseDamEntity ,false);
+
+    var generatorDam = function (dam) {
+        var config = merge(dam,damModule,false);
+        var damView = new YH.Group();
+        var damgroup = generatorDamGroup([0,0],config),
+            wlgroup = generatorWaterLevel([0,0] ,config ,100);
+        damView.addChild(damgroup).addChild(wlgroup);
+        return damView;
+    };
+    global.damview = generatorDam;
+
+    /**
+     * 生成大坝图
+     */
+    function generatorDamGroup(beginpt ,damModule) {
+        var damGroup= new YH.Group({
+            position: beginpt
+        });
+        var damPts = [], pt;
+        //大坝左上第一个点
+        if(typeof damModule.UPDMSL == 'Object'){
+            warn("上游坝坡尚未实现");
+            return
+        }else{
+            pt = [];
+            pt[0] = damModule.UPDMSL * damModule.MAXDMHG;
+            pt[1] = damModule.MAXDMHG;
+            damPts.push(pt);
+        }
+        //大坝右上角第一个点
+        pt = [];
+        pt[0] =  damModule.UPDMSL * damModule.MAXDMHG + damModule.DMTPWD;
+        pt[1] =  damModule.MAXDMHG;
+        damPts.push(pt);
+        //大坝右下角最后一个点
+        if (typeof damModule.DWDMSL=="Object") {
+            warn("下游坝坡面多折线未实现");
+            return;
+        } else {
+            pt = [];
+            pt[0] = damModule.UPDMSL * damModule.MAXDMHG + damModule.DMTPWD + damModule.DWDMSL * damModule.MAXDMHG;
+            pt[1] = 0;
+            damPts.push(pt);
+        }
+
+        //大坝
+        var damShape = new YH.shape.Rect({
+            allpt: damPts,
+            style: {
+                lineColor: "red",
+                textColor: "black",
+                fillColor: "#DDBB88",
+                // fillColor: "red",
+                brushType: "fill"
+            },
+            text: damModule.name
+        });
+        damGroup.addChild(damShape);
+        if (damModule.CDREWALL) {
+            var cdrect = [],damrect=[];
+            var tmp = (damModule.DMTPWD - damModule.CDREWALL.WTDTH) / 2; //坝顶宽度减去心墙宽度，即心墙左侧位置
+            var pt1 = [];
+            //心墙第一个点
+            pt1[0] = damrect[1][0] + tmp;
+            pt1[1] = damrect[0][1];
+            if (!damModule.CDREWALL.UPSL) {
+                if (typeof damModule.CDREWALL.UPSL == "Object") {
+                    warn("心墙上游坡面多折线尚未实现");
+                    return;
+                } else {
+                    //心墙上游坡面向上倾斜。
+                    pt1[0] = damrect[1][0] + tmp - damModule.MAXDMHG * damModule.CDREWALL.UPSL;
+                }
+            }
+            cdrect.push(pt1);
+
+            //心墙第二个点
+            pt1 = [];
+            pt1[0] = damrect[1][0] + tmp;
+            pt1[1] =  damModule.MAXDMHG;
+            cdrect.push(pt1);
+
+            //心墙第三个点（右上角）
+            pt1 = [];
+            pt1[0] = damrect[1][0] + tmp + damModule.CDREWALL.WTDTH;
+            pt1[1] =  damModule.MAXDMHG;
+            cdrect.push(pt1);
+
+            //心墙第四个点(右下角)
+            pt1 = [];
+            pt1[0] = damrect[1][0] + tmp + damModule.CDREWALL.WTDTH;
+            pt1[1] = damrect[0][1];
+            if (damModule.CDREWALL.DWSL) {
+                if (damModule.CDREWALL.DWSL) {
+                    warn("心墙下游坡面多折线尚未实现");
+                    return;
+                } else {
+                    pt1[0] = damrect[1][0] + tmp + damModule.CDREWALL.WTDTH + damModule.MAXDMHG * damModule.CDREWALL.DWSL;
+                }
+            }
+            cdrect.push(pt1);
+            //绘制心墙
+            var heartShape = new YH.shape.Rect({
+                allpt: cdrect,
+                style: {
+                    fillStyle: "#8B7E6C",
+                    textColor: "red",
+                    brushType: "fill"
+                }
+            });
+            damGroup.addChild(heartShape);
+        }
+    }
+
+    function generatorWaterLevel(begin ,damModule , maxwaterwidth) {
+        //三角形的宽度和高度
+        var triangleWidth= 13,
+            triangleHeight= 8,
+            //三角形下方对应的水位刻度线最长值
+            scalelinewh= 5,
+            //刻度线的缩短值
+            scalelinepd= 2,
+            //刻度线竖向间距
+            scalelinetp= 3,
+            //水尺的宽度
+            rulerwh= 9,
+            //水尺分为多少部分
+            rulersplitnm= 10;
+        var wlGroup = new YH.Group({
+            position: beginpt
+        });
+        if (damModule.HYCH) {
+            var pt = [];
+            var hych =damModule.HYCH;
+
+            var beginpt = [2];
+            beginpt[0] = 0;
+            beginpt[1] = 0;
+
+            //坝底高程()
+            var DMBTEL = !damModule.DMTPEL ? 0 : (damModule.DMTPEL -damModule.MAXDMHG);
+            //当前水位对应的海水
+            var crtwl = [];
+            var crtz = hych.Z - DMBTEL;
+
+            crtwl.push(beginpt);
+            crtwl.push([beginpt[0], beginpt[1] + crtz]);
+            crtwl.push([beginpt[0] + maxwaterwidth, beginpt[1] + crtz]);
+            crtwl.push([beginpt[0] + maxwaterwidth, beginpt[1]]);
+            //当前水对应的海水背景
+            wlGroup.addChild(new YH.shape.Rect({
+                allpt: crtwl,
+                style: {
+                    fillColor: '#1C6BA0',
+                    brushType: "fill",
+                    gradient: {
+                        beginpt: [beginpt[0] + maxwaterwidth / 2, beginpt[1] + crtz],
+                        endpt: [beginpt[0] + maxwaterwidth / 2, beginpt[1]],
+                        beginColor: "#83ADF5",
+                        endColor: "#1C6BA0"
+                    }
+                }
+            }));
+
+            //竖向水尺划分为多少部分
+            var splitnum = rulersplitnm;
+            //水尺宽度
+            var rulerwidth = rulerwh;
+            var eachlen =damModule.MAXDMHG / splitnum;
+            //水尺
+            var waterruler = [];
+            waterruler.push(beginpt);
+            waterruler.push([beginpt[0],
+                [beginpt[1] +damModule.MAXDMHG]
+            ]);
+            waterruler.push([beginpt[0] + rulerwidth, [beginpt[1] +damModule.MAXDMHG]]);
+            waterruler.push([beginpt[0] + rulerwidth, beginpt[1]]);
+            //水尺本身
+            wlGroup.addChild(new YH.shape.Rect({
+                allpt: waterruler,
+                style: {
+                    fillColor: "#4B86AD",
+                    // fillColor: "#2E6FE5",
+                    brushType: "fill"
+                }
+            }));
+            //水尺上的横线和数字
+            var y, tt;
+            for (var i = 0; i &lt; splitnum; i++) {
+                y = beginpt[1] + eachlen * i;
+                //处理水位标识和分段之前的关系
+                tt = DMBTEL + eachlen * (i + 1);
+                wlGroup.addChild(new YH.shape.Line({
+                    beginpt: [beginpt[0], y],
+                    endpt: [beginpt[0] + rulerwidth, y],
+                    style: {
+                        lineColor: "white",
+                        brushType: "stroke"
+                    }
+                }));
+                wlGroup.addChild(new YH.shape.YText({
+                    beginpt: [beginpt[0] - 25, y + 5],
+                    text: tt,
+                    style: {
+                        textColor: "black"
+                    }
+                }));
+            }
+            // 水位标识
+            var nrpllvtext = "正常蓄水位" + hych.NRPLLV ;
+
+            wlGroup.addChild(buildWaterLevelLine({
+                beginpt: [beginpt[0] + this.rulerwh + 2, beginpt[1] + hych.NRPLLV - DMBTEL],
+                endpt: [beginpt[0] + this.rulerwh + 120, beginpt[1] + hych.NRPLLV - DMBTEL],
+                text: nrpllvtext ,
+                leftMargin: 10
+            }));
+           /* var textrect = textutil.getTextRect(nrpllvtext ,0,0);
+            if(hych.NRPLLV - hych.DDWL &lt; textrect.height){
+                console.log("死水位和正常蓄水位之间间距过小");
+            }*/
+            wlGroup.addChild(buildWaterLevelLine({
+                beginpt: [beginpt[0] + this.rulerwh + 2, beginpt[1] + hych.DDWL - DMBTEL],
+                endpt: [beginpt[0] + this.rulerwh + 120, beginpt[1] + hych.DDWL - DMBTEL],
+                text: "死水位" + hych.DDWL,
+                leftMargin: 25
+            }));
+        }
+        function buildWaterLevelLine(param) {
+            var Triangle =YH.shape.Triangle;
+            var wlline = new YH.Group();
+            wlline.addChild(new YH.shape.Line({
+                beginpt: param.beginpt,
+                endpt: param.endpt,
+                splitnum: 20,
+                style:{
+                    lineColor: "#003d8f"
+                }
+            }));
+            //水位标识中的三角形
+            param.leftMargin = param.leftMargin || 0;
+            wlline.addChild(new Triangle({
+                beginpt: [param.beginpt[0] + param.leftMargin, param.beginpt[1] + triangleHeight],
+                width: triangleWidth,
+                height: triangleHeight,
+                direction: "bottom",
+                style: {
+                    lineColor: "black"
+                }
+            }));
+            //水位标识中的文字
+            wlline.addChild(new YH.shape.YText({
+                beginpt: [param.beginpt[0] + param.leftMargin + triangleWidth + 3, param.beginpt[1]],
+                text: param.text,
+                style: {
+                    textColor: "black",
+                    textBaseline: "bottom"
+                }
+            }));
+            //水位标识倒三角下方的三条横线
+            for (var i = 0; i &lt; 3; i++) {
+                wlline.addChild(new YH.shape.Line({
+                    beginpt: [param.beginpt[0] + param.leftMargin + i * scalelinepd, param.beginpt[1] - scalelinetp * (i + 1)],
+                    endpt: [param.beginpt[0] + param.leftMargin + i * scalelinepd + (3 - i) * scalelinewh,
+                        param.beginpt[1] - scalelinetp * (i + 1)
+                    ],
+                    style: {
+                        lineColor: "black"
+                    },
+                }));
+            }
+            return wlline;
+        }
+
+    }
+})(window);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Aug 15 2016 12:10:55 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

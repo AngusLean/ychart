@@ -16,7 +16,6 @@ export default ShapeBuilder.baseContextViewExtend({
         type: "Line",
 
         BuildPath: function (ctx, config) {
-            ctx.beginPath();
             if(config.splitnum){
                 var splitnum = config.splitnum || 1;
                 var splitlen_x = (config.endpt[0] - config.beginpt[0])/splitnum/2;

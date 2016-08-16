@@ -27,7 +27,6 @@ export default ShapeBuilder.baseContextViewExtend({
             return;
         }
 
-
         var pt = config.beginpt;
         ctx.save();
         //文字颜色

@@ -2,7 +2,7 @@
     //使用默认样式
 
     import Style from "../../config/style"
-    import {getContext} from "./shapeutil"
+    import {getContext} from "./viewutil"
 
     var st = new Style._style();
 

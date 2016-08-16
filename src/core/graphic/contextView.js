@@ -11,7 +11,7 @@ import OptionProxy from "../config/OptionProxy"
 import text from "./helper/text"
 
 import {mixin} from "../../tool/klass"
-import {isPtInPath} from "./helper/shapeutil"
+import {isPtInPath} from "./helper/viewutil"
 
 /**
  * 绘制在canvas上的图形的基类
@@ -59,6 +59,8 @@ class ContextView extends View{
         this.SetShapeTransform(ctx);
 
         this.configProxy.bindContext(ctx);
+
+        ctx.beginPath();
     }
 
     /**

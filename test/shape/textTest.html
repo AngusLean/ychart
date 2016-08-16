@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group测试</title>
+    <script type="text/javascript" src="../../dist/ychart.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+</div>
+
+<script>
+    var $= function (id) {
+        return document.getElementById(id);
+    };
+
+    var ycharts = ychart,Line = ychart.shape.Line ,Ytext = ychart.shape.YText;
+    var Group = ychart.Group;
+    var Rect= ychart.shape.Rect;
+    yh = ycharts.init("drawing");
+    var line1 =new Line({
+        beginpt: [0,0],
+        endpt: [15,150],
+        style:{
+            lineColor: "blue",
+            lineWidth: 5
+        }
+    });
+    var line2 = new Line({
+        beginpt: [150, 0],
+        endpt: [10, 100],
+        zLevel: 1,
+        style: {
+            lineColor: "red",
+            lineWidth: 15
+        }
+    });
+    var text = new Ytext({
+        text: "我是测试文字",
+        beginpt: [20,20],
+        style:{
+            textColor: "green"
+        }
+    });
+    var gp = new Group({
+        style: {
+            lineColor: "blue"
+        }
+    });
+
+    gp.addChild(line1);
+    gp.addChild(line2);
+    gp.addChild(text);
+    yh.add(gp);
+    <!-- yh.add(rect); -->
+    yh.BrushAll();
+    </script>
+</body>
+</html>

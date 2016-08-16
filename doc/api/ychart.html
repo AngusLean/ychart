@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: shape/Line.js</title>
+    <title>JSDoc: Class: ychart</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,53 +17,129 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: shape/Line.js</h1>
+    <h1 class="page-title">Class: ychart</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * 直线
- * @module ychart/shape/Line
- */
-import ShapeBuilder from "../core/viewBuilder"
+        <h2>ychart</h2>
+        
+    
+</header>
 
-/**
- * 直线形状类
- * @class Line
- * @property {Array.number} beginpt 开始点
- * @property {Array.number} endpt 结束点
- * @constructor
- */
-export default ShapeBuilder.baseContextViewExtend({
+<article>
+    <div class="container-overview">
+    
+        
 
-        type: "Line",
+    
 
-        BuildPath: function (ctx, config) {
-            if(config.splitnum){
-                var splitnum = config.splitnum || 1;
-                var splitlen_x = (config.endpt[0] - config.beginpt[0])/splitnum/2;
-                var splitlen_y = (config.endpt[1] - config.beginpt[1])/splitnum/2;
-                for(var i=0 ;i&lt;splitnum ; i++){
-                    ctx.moveTo(config.beginpt[0]+i*2*splitlen_x ,config.beginpt[1]+i*2*splitlen_y);
-                    ctx.lineTo(config.beginpt[0]+i*2*splitlen_x+splitlen_x ,config.beginpt[1]+i*2*splitlen_y+splitlen_y);
-                }
-            }else{
-                ctx.moveTo(config.beginpt[0],config.beginpt[1]);
-                ctx.lineTo(config.endpt[0],config.endpt[1]);
-            }
-        }
+    <h4 class="name" id="ychart"><span class="type-signature"></span>new ychart<span class="signature">()</span><span class="type-signature"></span></h4>
 
-    })
+    
 
 
-</code></pre>
-        </article>
-    </section>
+
+<div class="description">
+    <p>ychart全局入口对象。</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Ycharts.js.html">Ycharts.js</a>, <a href="Ycharts.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

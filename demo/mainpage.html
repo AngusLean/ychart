@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <title>canvas测试</title>
-<script type="text/javascript" src="../require/require.js"></script>
+<script type="text/javascript" src="../dist/ychart.js"></script>
+<script type="text/javascript" src="../src/extend/damView.js"></script>
 </head>
 
 <body>
@@ -15,18 +16,7 @@
 </body>
 <script type="text/javascript" charset="utf-8">
 
-require.config({
-    packages: [
-        {
-            name: "ychart",
-            location: '../src',
-            main: "Base"
-        }
-    ]
-});
 
-require(["ychart/tool/debug","ychart/extend/dam/dam","ychart/Ycharts","ychart/shape/Rect"],
-            function(debug,damview,Ychart,Rect){
     var newdam={
         type: "土石坝",
         DMTPWD :35,
@@ -41,19 +31,17 @@ require(["ychart/tool/debug","ychart/extend/dam/dam","ychart/Ycharts","ychart/sh
             DWSL: 0.04
         },
         HYCH: {
-            Z : 555,
+            Z : 550,
             NRPLLV : 557,
-            DDWL: 540
+            DDWL: 500
         }
     };
 
-    var damview = new damview(newdam);
+    var crtdam =  damview(newdam);
 
-    dam = Ychart.init("drawing");
-    damview.setBeginPt([150,40]);
+    var dam = ychart.init("drawing");
 
-    dam.add(damview.getData())
+    dam.add(crtdam)
     dam.BrushAll();
-});
 </script>
 </html>

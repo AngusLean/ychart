@@ -11,6 +11,8 @@ import Triangle from "./shape/Triangle"
 import YText from "./shape/YText"
 import Group from "./Group"
 import Animation from "./animation/animation"
+import ShapeBuilder from "./core/viewBuilder"
+import debugs from "./tool/debug"
 
 
 ychart.shape = {Bezier ,Circle ,Line ,Rect ,Triangle ,YText};
@@ -20,5 +22,14 @@ ychart.Group = Group;
 ychart.version =1.0;
 
 ychart.Animation = Animation;
+
+ychart.extendView = function (config) {
+    //自定义视图时一定要校验是否传入全部必须的参数
+    var isDebug = debugs.open;
+    debugs.open = true;
+    var customView = ShapeBuilder.baseContextViewExtend(config);
+    debugs.open = isDebug;
+    return customView;
+};
 
 export default ychart

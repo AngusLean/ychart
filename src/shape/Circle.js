@@ -17,7 +17,6 @@ export default ShapeBuilder.baseContextViewExtend({
     type: "circle",
 
     BuildPath: function (ctx, config) {
-        ctx.beginPath();
         ctx.arc(config.x, config.y, config.r, Math.PI * 2,
             config.startangel || 0, config.endangel || Math.PI * 2);
     }

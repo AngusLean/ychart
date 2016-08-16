@@ -18,7 +18,6 @@ import ShapeBuilder from "../core/viewBuilder"
         type: "triangle",
 
         BuildPath: function (ctx, config) {
-            ctx.beginPath();
             ctx.moveTo(config.beginpt[0],config.beginpt[1]);
             ctx.lineTo(config.beginpt[0]+config.width,config.beginpt[1]);
             var pt = [config.beginpt[0]+config.width/2 , config.beginpt[1]+config.height];

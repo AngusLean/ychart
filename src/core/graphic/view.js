@@ -44,7 +44,7 @@ class View extends Element{
      * @param {object} option -- 绘图参数
      * @throws Error
      */
-    draw(option){
+    Brush(option){
         throw new Error("绘图单元必须实现该方法");
     }
 }

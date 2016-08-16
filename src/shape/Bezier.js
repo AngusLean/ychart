@@ -139,7 +139,6 @@ export default ShapeBuilder.baseContextViewExtend({
             y: nexty(alllinectpt[i - 1][1], linecty_dis)
         });
 
-        ctx.beginPath();
         ctx.moveTo(beginpt[0], beginpt[1]);
         for (i = 1; i < allctpt.length; i++) {
             ctx.quadraticCurveTo(allctpt[i - 1][0], allctpt[i - 1][1], alllinectpt[i][0], alllinectpt[i][1]);
