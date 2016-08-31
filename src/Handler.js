@@ -40,7 +40,6 @@ var DEFAULT_HANDLERS = {
             this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
             //分发该元素的鼠标移动事件
             this.triggerProxy(obj, "mousemove", ev);
-
         } else {
             //默认样式
             this.root.style.cursor = this._DEFAULT_CURSOR;
