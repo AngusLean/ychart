@@ -56,14 +56,23 @@ var DEFAULT_HANDLERS = {
     }
 };
 
+/**
+ * @class
+ * @classdesc 事件reactor ,管理一个ychart实例的所有事件捕获及其分发
+ * @param root {HTMLElement}  实际容器ID
+ * @param painter {module:ychart/painter} 绘图器实例
+ * @param storage {module:ychart/storage} 存储器实例
+ */
 var handlers = function (root, painter, storage) {
+    //存储器
+    this.__storage = storage;
+
+    //绘图器
+    this.__painter = painter;
 
     //实际事件响应容器
     this.root = doc(root);
-    //存储器
-    this.__storage = storage;
-    //绘图器
-    this.__painter = painter;
+
     //事件处理程序
     this._handlers = [];
 
@@ -115,9 +124,9 @@ handlers.prototype.initHandlers = function () {
 };
 
 /**
- * 设置事件的额外属性已适应ychart的事件响应系统
- * @param event
- * @returns {Event}
+ * 自定义事件对象
+ * @param event {Event} 原始事件对象
+ * @returns {exEvent}
  */
 handlers.prototype.extendAndFixEventPackge = function (event) {
     event = eventUtil.clientToLocal(this.root, event, event);
@@ -127,10 +136,10 @@ handlers.prototype.extendAndFixEventPackge = function (event) {
 };
 
 /**
- * 事件分发。
- * @param element  某个元素
- * @param eventName  事件名称
- * @param event  事件对象
+ * 事件分发代理器。 该方法会把事件分发到某个元素中，然后由元素自身分发到注册的事件处理函数并且调用。
+ * @param element {module:ychart/core/graphic/element}  响应事件的元素
+ * @param eventName {string}  事件名称
+ * @param exEvent  {exEvent} 扩充的事件对象
  */
 handlers.prototype.triggerProxy = function (element, eventName, exEvent) {
     element.trigger && element.trigger(eventName, exEvent);
@@ -138,7 +147,8 @@ handlers.prototype.triggerProxy = function (element, eventName, exEvent) {
 
 /**
  * 获取当前鼠标所在位置覆盖的最上层元素
- * @param event  包含有ycX和ycY属性的事件对象
+ * @param exEvent  {exEvent} 扩充的自定义事件对象
+ * @return {module:ychart/core/graphic/element || null} 元素对象或者null
  */
 handlers.prototype.getHoverElement = function (exEvent) {
     var shapes = this.__storage.getDisplayableShapeList();

@@ -8,8 +8,9 @@ import Handler from "./Handler"
 
 
 /**
- * 简单的基于Html5 canvas的绘图库， 使用MVC思想封装绘图代码，使得开发者可以很方便的使用本库
+ * @classdesc简单的基于Html5 canvas的绘图库， 使用MVC思想封装绘图代码，使得开发者可以很方便的使用本库
  * 封装的canvas API绘图。
+ * @class
  * @param eleid  放置canvas的容器。 不能是canvas元素， 必须设置宽度和高度
  * @param opt
  * @constructor

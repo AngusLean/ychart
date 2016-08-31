@@ -23,3 +23,27 @@ export var getPosition = function (id) {
 export var doc = function (id) {
     return document.getElementById(id);
 };
+
+
+export var createDOM = function (id, type, width, height, left, top) {
+    var newdom = document.createElement(type);
+
+    var st = newdom.style;
+    st.position = "absolute";
+    st.left = left;
+    st.top = top;
+    st.width = width + "px";
+    st.height = height + "px";
+    newdom.width = width;
+    newdom.height = height;
+    newdom.setAttribute("ychart-layer", id);
+    return newdom;
+};
+
+
+export var getContext = function (drawing) {
+    if (drawing && drawing.getContext) {
+        return drawing.getContext("2d");
+    }
+    return null;
+};

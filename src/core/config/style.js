@@ -35,14 +35,15 @@ var styleMap = {
 
 
 /**
- * 全局默认样式。 所有形状或者路劲的样式都基于这个样式。
+ * @classdesc 全局默认样式。 所有形状或者路劲的样式都基于这个样式。
  * 负责为所有模块提供默认样式及自定义样式名到标准样式名的转换
  * 映射配置属性名到canvas属性.
  * 应该包含默认的属性名
  * 新加一个属性在这个映射和下面CONFIG中的style中同时添加
  * @class
  * @param opt  初始化样式
- * @private
+ * @constructor
+ * @protected
  */
 var _style = function () {
 };

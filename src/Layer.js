@@ -3,34 +3,17 @@
  * @module ychart/layer
  */
 import {checkNull} from "./tool/util"
-function getContext(drawing) {
-    if (drawing && drawing.getContext) {
-        return drawing.getContext("2d");
-    }
-    return null;
-}
+import {createDOM,getContext} from "./tool/dom"
 
-function createDOM(id, type, width, height, left, top) {
-    var newdom = document.createElement(type);
-
-    var st = newdom.style;
-    st.position = "absolute";
-    st.left = left;
-    st.top = top;
-    st.width = width + "px";
-    st.height = height + "px";
-    newdom.width = width;
-    newdom.height = height;
-    newdom.setAttribute("ychart-layer", id);
-    return newdom;
-}
 
 /**
- * 一个绘图层。 对应DOM上一个canvas元素。
- * 每一个layer都有自己独立和样式。 不同layer之间的前后关系由Storage模块处理。 layer的具体绘制由
- * Painter处理
- * @param id
- * @param opts
+ *
+ * @class
+ * @classdesc 一个绘图层。 对应DOM上一个canvas元素。
+ *   每一个layer都有自己独立和样式。 不同layer之间的前后关系由Storage模块处理。 layer的具体绘制由Painter处理
+ * @param id {string} Layer的ID
+ * @param zLevel {string}  所属的zLevel，决定了该层的显示位置
+ * @param opts {object}
  * @constructor
  */
 var Layer = function (id, zLevel, opts) {

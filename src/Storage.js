@@ -10,7 +10,8 @@ import Group from "./Group"
  *
  * 存储器
  * @class
- * @param yh
+ * @classdesc 存储器类。 负责存储整个ychart实例中所有信息。
+ * @param yh {module:ychart/Ychart} ychart实例
  * @constructor
  */
 var Storage = function (yh) {
@@ -22,7 +23,10 @@ var Storage = function (yh) {
     this._roots = [];
 };
 
-
+/**
+ * 添加一个子元素
+ * @param element {module:ychart/core/graphic/element} 元素实例
+ */
 Storage.prototype.addEle = function (element) {
     if (!element || element.getId() === null) {
         return;
@@ -41,7 +45,7 @@ Storage.prototype.addEle = function (element) {
 
 /**
  * 获取所有可绘制的图形列表。 组的所有子元素被提取出来。
- * @returns {Array}
+ * @returns {Array.<module:ychart/core/graphic/element>}
  */
 Storage.prototype.getDisplayableShapeList = function () {
     var list = [];
@@ -64,6 +68,9 @@ Storage.prototype.getDisplayableShapeList = function () {
     return list;
 };
 
+/**
+ * 清楚存储器
+ */
 Storage.prototype.clean = function () {
     this._roots = [];
 };

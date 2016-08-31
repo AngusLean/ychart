@@ -31,6 +31,34 @@
 
 (function (global) {
     var YH = global.ychart;
+    function merge(target, source, overwrite) {
+        function mergeItem(target, source, key, overwrite) {
+            if (source.hasOwnProperty(key) &amp;&amp; !(source[key] == null)) {
+                var targetProp = target[key];
+                if (typeof targetProp == 'object') {
+                    // 如果需要递归覆盖，就递归调用merge
+                    merge(
+                        target[key],
+                        source[key],
+                        overwrite
+                    );
+                } else if (overwrite || !(key in target)) {
+                    // 否则只处理overwrite为true，或者在目标对象中没有此属性的情况
+                    target[key] = source[key];
+                }
+            }
+        }
+        if(target){
+            for (var i in source) {
+                mergeItem(target, source, i, overwrite);
+            }
+        }
+
+        return target;
+    }
+    function warn(msg) {
+        console.log(msg);
+    }
     var baseDamEntity = {
         name : "",
         /**
@@ -102,34 +130,7 @@
         }
     };
 
-    function merge(target, source, overwrite) {
-        function mergeItem(target, source, key, overwrite) {
-            if (source.hasOwnProperty(key) &amp;&amp; !(source[key] == null)) {
-                var targetProp = target[key];
-                if (typeof targetProp == 'object') {
-                    // 如果需要递归覆盖，就递归调用merge
-                    merge(
-                        target[key],
-                        source[key],
-                        overwrite
-                    );
-                } else if (overwrite || !(key in target)) {
-                    // 否则只处理overwrite为true，或者在目标对象中没有此属性的情况
-                    target[key] = source[key];
-                }
-            }
-        }
-        if(target){
-            for (var i in source) {
-                mergeItem(target, source, i, overwrite);
-            }
-        }
 
-        return target;
-    }
-    function warn(msg) {
-        console.log(msg);
-    }
     var damModule = merge({
         DMTP : "土石坝",
         UPDMSL: 0,
@@ -138,24 +139,63 @@
         HYCH: null
     },baseDamEntity ,false);
 
+    var containerWh = 800,containerht=400;
+
     var generatorDam = function (dam) {
         var config = merge(dam,damModule,false);
-        var damView = new YH.Group();
-        var damgroup = generatorDamGroup([0,0],config),
-            wlgroup = generatorWaterLevel([0,0] ,config ,100);
-        damView.addChild(damgroup).addChild(wlgroup);
+
+        var size = damSizeAdapter(config,containerWh,containerht);
+        var damView = new YH.Group({
+            scale: size.globalScale
+        });
+        var damgroup = generatorDamGroup(size.damBeginPt,config),
+            wlgroup = generatorWaterLevel(size.wlBeginPt ,config ,size.wlWidth);
+        damView.addChild(wlgroup).addChild(damgroup);
         return damView;
     };
     global.damview = generatorDam;
+
+    /**
+     * 整个图形尺寸适应
+     * @param maxwidth
+     * @param maxheight
+     */
+    function damSizeAdapter(damconfig ,maxwidth, maxheight) {
+        var damwh;
+        var rs={
+            globalScale:[1,1],
+            damBeginPt: [200,0],
+            wlBeginPt: [50,0],
+            wlWidth: 230
+        };
+        if(typeof damconfig.UPDMSL == "Array"){
+            warn("上游坡面多折线的适配暂未实现");
+        }else{
+            damwh = damconfig.UPDMSL * damconfig.MAXDMHG + damconfig.DMTPWD + damconfig.DWDMSL * damconfig.MAXDMHG;
+            var x1 = damwh/maxwidth ,y1=damconfig.MAXDMHG/maxheight ,max=Math.max(x1,y1);
+            console.log("宽度： "+damwh+" "+x1+" "+y1+" ");
+            if(max &lt; 0.5){
+                rs.globalScale[0]=rs.globalScale[1] = 1+max;
+            }else{
+                max = 1
+            }
+
+            // rs.damBeginPt[0] =
+            rs.wlWidth = (maxwidth - damwh)/(rs.globalScale[0]);
+            rs.damBeginPt[0] = (rs.wlWidth - 50)/(rs.globalScale[0]);
+            rs.wlBeginPt = [50,0];
+        }
+        return rs;
+    }
 
     /**
      * 生成大坝图
      */
     function generatorDamGroup(beginpt ,damModule) {
         var damGroup= new YH.Group({
-            position: beginpt
+            position:beginpt
         });
-        var damPts = [], pt;
+        var damPts = [[0,0]], pt;
         //大坝左上第一个点
         if(typeof damModule.UPDMSL == 'Object'){
             warn("上游坝坡尚未实现");
@@ -185,6 +225,7 @@
         //大坝
         var damShape = new YH.shape.Rect({
             allpt: damPts,
+            draggable: false,
             style: {
                 lineColor: "red",
                 textColor: "black",
@@ -196,7 +237,8 @@
         });
         damGroup.addChild(damShape);
         if (damModule.CDREWALL) {
-            var cdrect = [],damrect=[];
+
+            var cdrect = [],damrect=damPts;
             var tmp = (damModule.DMTPWD - damModule.CDREWALL.WTDTH) / 2; //坝顶宽度减去心墙宽度，即心墙左侧位置
             var pt1 = [];
             //心墙第一个点
@@ -230,7 +272,7 @@
             pt1[0] = damrect[1][0] + tmp + damModule.CDREWALL.WTDTH;
             pt1[1] = damrect[0][1];
             if (damModule.CDREWALL.DWSL) {
-                if (damModule.CDREWALL.DWSL) {
+                if (typeof damModule.CDREWALL.DWSL == "Object") {
                     warn("心墙下游坡面多折线尚未实现");
                     return;
                 } else {
@@ -241,6 +283,7 @@
             //绘制心墙
             var heartShape = new YH.shape.Rect({
                 allpt: cdrect,
+                draggable: false,
                 style: {
                     fillStyle: "#8B7E6C",
                     textColor: "red",
@@ -249,24 +292,29 @@
             });
             damGroup.addChild(heartShape);
         }
+        return damGroup;
     }
 
-    function generatorWaterLevel(begin ,damModule , maxwaterwidth) {
+    var GlobalConfig={
         //三角形的宽度和高度
-        var triangleWidth= 13,
-            triangleHeight= 8,
-            //三角形下方对应的水位刻度线最长值
-            scalelinewh= 5,
-            //刻度线的缩短值
-            scalelinepd= 2,
-            //刻度线竖向间距
-            scalelinetp= 3,
-            //水尺的宽度
-            rulerwh= 9,
-            //水尺分为多少部分
-            rulersplitnm= 10;
+        triangleWidth : 13,
+        triangleHeight: 8,
+        //三角形下方对应的水位刻度线最长值
+        scalelinewh: 5,
+        //刻度线的缩短值
+        scalelinepd: 2,
+        //刻度线竖向间距
+        scalelinetp: 3,
+        //水尺的宽度
+        rulerwh : 9,
+        //水尺分为多少部分
+        rulersplitnm : 10
+    };
+
+    function generatorWaterLevel(begin ,damModule , maxwaterwidth) {
+
         var wlGroup = new YH.Group({
-            position: beginpt
+            position: begin
         });
         if (damModule.HYCH) {
             var pt = [];
@@ -289,6 +337,7 @@
             //当前水对应的海水背景
             wlGroup.addChild(new YH.shape.Rect({
                 allpt: crtwl,
+                draggable: false,
                 style: {
                     fillColor: '#1C6BA0',
                     brushType: "fill",
@@ -302,9 +351,9 @@
             }));
 
             //竖向水尺划分为多少部分
-            var splitnum = rulersplitnm;
+            var splitnum = GlobalConfig.rulersplitnm;
             //水尺宽度
-            var rulerwidth = rulerwh;
+            var rulerwidth = GlobalConfig.rulerwh;
             var eachlen =damModule.MAXDMHG / splitnum;
             //水尺
             var waterruler = [];
@@ -317,6 +366,7 @@
             //水尺本身
             wlGroup.addChild(new YH.shape.Rect({
                 allpt: waterruler,
+                draggable: false,
                 style: {
                     fillColor: "#4B86AD",
                     // fillColor: "#2E6FE5",
@@ -332,6 +382,7 @@
                 wlGroup.addChild(new YH.shape.Line({
                     beginpt: [beginpt[0], y],
                     endpt: [beginpt[0] + rulerwidth, y],
+                    draggable: false,
                     style: {
                         lineColor: "white",
                         brushType: "stroke"
@@ -340,77 +391,94 @@
                 wlGroup.addChild(new YH.shape.YText({
                     beginpt: [beginpt[0] - 25, y + 5],
                     text: tt,
+                    draggable: false,
                     style: {
                         textColor: "black"
                     }
                 }));
             }
-            // 水位标识
-            var nrpllvtext = "正常蓄水位" + hych.NRPLLV ;
 
+            // 水位标识
             wlGroup.addChild(buildWaterLevelLine({
-                beginpt: [beginpt[0] + this.rulerwh + 2, beginpt[1] + hych.NRPLLV - DMBTEL],
-                endpt: [beginpt[0] + this.rulerwh + 120, beginpt[1] + hych.NRPLLV - DMBTEL],
-                text: nrpllvtext ,
+                beginpt: [beginpt[0] +rulerwidth + 2, beginpt[1] + hych.NRPLLV - DMBTEL],
+                endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.NRPLLV - DMBTEL],
+                text: "正常蓄水位" + hych.NRPLLV ,
                 leftMargin: 10
             }));
-           /* var textrect = textutil.getTextRect(nrpllvtext ,0,0);
-            if(hych.NRPLLV - hych.DDWL &lt; textrect.height){
-                console.log("死水位和正常蓄水位之间间距过小");
-            }*/
             wlGroup.addChild(buildWaterLevelLine({
-                beginpt: [beginpt[0] + this.rulerwh + 2, beginpt[1] + hych.DDWL - DMBTEL],
-                endpt: [beginpt[0] + this.rulerwh + 120, beginpt[1] + hych.DDWL - DMBTEL],
+                beginpt: [beginpt[0] +rulerwidth + 2, beginpt[1] + hych.Z - DMBTEL],
+                endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.Z - DMBTEL],
+                text: "当前水位" + hych.Z ,
+                leftMargin: 10
+            }));
+            /*var textrect = textutil.getTextRect(nrpllvtext ,0,0);
+            if(hych.NRPLLV - hych.DDWL &lt; textrect.height){
+                warn("死水位和正常蓄水位之间间距过小");
+            }*/
+
+            wlGroup.addChild(buildWaterLevelLine({
+                beginpt: [beginpt[0] + rulerwidth + 2, beginpt[1] + hych.DDWL - DMBTEL],
+                endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.DDWL - DMBTEL],
                 text: "死水位" + hych.DDWL,
                 leftMargin: 25
             }));
+            return wlGroup;
         }
         function buildWaterLevelLine(param) {
-            var Triangle =YH.shape.Triangle;
             var wlline = new YH.Group();
             wlline.addChild(new YH.shape.Line({
                 beginpt: param.beginpt,
                 endpt: param.endpt,
                 splitnum: 20,
+                draggable: false,
                 style:{
                     lineColor: "#003d8f"
                 }
             }));
-            //水位标识中的三角形
-            param.leftMargin = param.leftMargin || 0;
-            wlline.addChild(new Triangle({
-                beginpt: [param.beginpt[0] + param.leftMargin, param.beginpt[1] + triangleHeight],
-                width: triangleWidth,
-                height: triangleHeight,
-                direction: "bottom",
-                style: {
-                    lineColor: "black"
-                }
-            }));
+
+            wlline.addChild(gereratorWlTag([param.beginpt[0] + param.leftMargin, param.beginpt[1] + GlobalConfig.triangleHeight],
+                GlobalConfig.triangleWidth ,GlobalConfig.triangleHeight));
             //水位标识中的文字
             wlline.addChild(new YH.shape.YText({
-                beginpt: [param.beginpt[0] + param.leftMargin + triangleWidth + 3, param.beginpt[1]],
+                beginpt: [param.beginpt[0] + param.leftMargin + GlobalConfig.triangleWidth + 3, param.beginpt[1]],
                 text: param.text,
+                draggable: false,
                 style: {
                     textColor: "black",
                     textBaseline: "bottom"
                 }
             }));
-            //水位标识倒三角下方的三条横线
-            for (var i = 0; i &lt; 3; i++) {
-                wlline.addChild(new YH.shape.Line({
-                    beginpt: [param.beginpt[0] + param.leftMargin + i * scalelinepd, param.beginpt[1] - scalelinetp * (i + 1)],
-                    endpt: [param.beginpt[0] + param.leftMargin + i * scalelinepd + (3 - i) * scalelinewh,
-                        param.beginpt[1] - scalelinetp * (i + 1)
-                    ],
-                    style: {
-                        lineColor: "black"
-                    },
-                }));
-            }
+
             return wlline;
         }
 
+        //生成水位标识
+        function gereratorWlTag(toplefttp ,width,height) {
+            var wlTag = new YH.Group();
+            wlTag.addChild(new YH.shape.Triangle({
+                beginpt:toplefttp,
+                width:width,
+                height:height,
+                direction: "bottom",
+                draggable: false,
+                style: {
+                    lineColor: "black"
+                }
+            }));
+            for (var i = 0; i &lt; 2; i++) {
+                wlTag.addChild(new YH.shape.Line({
+                    beginpt: [toplefttp[0] + i * GlobalConfig.scalelinepd, toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)],
+                    endpt: [toplefttp[0] + toplefttp + i * GlobalConfig.scalelinepd + (3 - i) * GlobalConfig.scalelinewh,
+                        toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)
+                    ],
+                    draggable: false,
+                    style: {
+                        lineColor: "black"
+                    }
+                }));
+            }
+            return wlTag;
+        }
     }
 })(window);</code></pre>
         </article>
@@ -422,13 +490,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Aug 15 2016 12:10:55 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 31 2016 10:54:22 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

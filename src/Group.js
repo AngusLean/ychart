@@ -10,7 +10,7 @@ import Element from "./core/graphic/element"
 /**
  * 元素容器类。 该类可以包含任何继承于 {@link ./core/graphic/view} 的类
  * 容器类的所有元素目前不会响应同一事件
- * todo 是否响应同一事件？
+ * TODO 是否响应同一事件？
  * @class
  */
 class Group extends Element{
@@ -27,7 +27,7 @@ class Group extends Element{
     /**
      * 添加一个子元素
      * @param child
-     * @returns {*}
+     * @returns {Group}
      */
     addChild (child) {
         if (child == this)
