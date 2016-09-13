@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image测试</title>
+    <script type="text/javascript" src="../../dist/ychart.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:800px "> </div>
+</div>
+<div style="display: none;">
+    <img src="sth.jpg" id="img" alt="">
+</div>
+<script>
+    var $= function (id) {
+        return document.getElementById(id);
+    };
+
+    var ycharts = ychart,Line = ychart.shape.Line ,YImage = ychart.shape.Image;
+    yh = ycharts.init("drawing");
+    var img = document.images[0];
+    var imgs =new YImage({
+        image: img,
+        transform: [1,0,0,1,0,0],
+        position: [50,50]
+    });
+    yh.add(imgs);
+    <!-- yh.add(rect); -->
+    yh.BrushAll();
+    </script>
+</body>
+</html>

@@ -19,7 +19,7 @@ function isNotAroundZero(val) {
  * @class
  * @mixin
  */
-var Transformable = function (opts) {
+var Transformable1 = function (opts) {
     opts = opts || this;
     // If there are no given position, rotation, scale
     if (!opts.position) {
@@ -52,6 +52,18 @@ var Transformable = function (opts) {
     } else {
         this.scale = opts.scale;
     }
+
+    if (!opts.transform) {
+        /**
+         * 缩放
+         * @type {Array.<number>}
+         * @default [1, 1]
+         */
+        this.transform = null;
+    } else {
+        this.transform = opts.transform;
+    }
+
     /**
      * 旋转和缩放的原点
      * @type {Array.<number>}
@@ -61,10 +73,13 @@ var Transformable = function (opts) {
 
 };
 
+var Transformable = function (opts) {
+};
+
 /**
  * 默认的变换矩阵
  */
-Transformable.prototype.transform = null;
+// Transformable.prototype.transform = null;
 
 /**
  * 判断是否需要有坐标变换
@@ -82,15 +97,14 @@ Transformable.prototype.updateTransform = function () {
     var needLocalTransform = this.needLocalTransform();
 
     var m = this.transform;
-    m = m || [];
     if (!(needLocalTransform || parentHasTransform)) {
-        mIdentity(m);
+        !m && mIdentity(m);
         return;
     }
 
     m = m || matrix.create();
-
     if (needLocalTransform) {
+        // this.decomposeTransform();
         this.getLocalTransform(m);
     } else {
         mIdentity(m);
@@ -114,7 +128,6 @@ Transformable.prototype.updateTransform = function () {
 Transformable.prototype.getLocalTransform = function (m) {
     m = m || [];
     mIdentity(m);
-
     var origin = this.origin;
 
     var scale = this.scale;
@@ -139,7 +152,6 @@ Transformable.prototype.getLocalTransform = function (m) {
 
     m[4] += position[0];
     m[5] += position[1];
-
     return m;
 };
 

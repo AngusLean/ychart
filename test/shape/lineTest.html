@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Group测试</title>
-    <script type="text/javascript" src="../dist/ychart.js"></script>
+    <title>Line测试</title>
+    <script type="text/javascript" src="../../dist/ychart.js"></script>
 
 </head>
 <body>
@@ -16,14 +16,12 @@
         return document.getElementById(id);
     };
 
-
-    var ycharts = ychart,Line = ychart.shape.Line ,Ytext = ychart.shape.YText;
-    var Group = ychart.Group;
-    var Rect= ychart.shape.Rect;
+    var ycharts = ychart,Line = ychart.shape.Line;
     yh = ycharts.init("drawing");
     var line1 =new Line({
         beginpt: [0,0],
         endpt: [15,150],
+//        position: [100,100],
         style:{
             lineColor: "blue",
             lineWidth: 5
@@ -38,14 +36,9 @@
             lineWidth: 15
         }
     });*/
-    var gp = new Group({
-        style: {
-            lineColor: "blue"
-        }
-    });
-    gp.addChild(line1);
-//    gp.addChild(line2);
-    yh.add(gp);
+
+
+    yh.add(line1);
     <!-- yh.add(rect); -->
     yh.BrushAll();
     </script>

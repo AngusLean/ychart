@@ -1,5 +1,6 @@
 /**
  *
+ * 默认样式数据
  * @module ychart/core/config/style
  *
  */

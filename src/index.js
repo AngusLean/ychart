@@ -9,13 +9,14 @@ import Line from "./shape/Line"
 import Rect from "./shape/Rect"
 import Triangle from "./shape/Triangle"
 import YText from "./shape/YText"
+import Image from "./shape/Image"
 import Group from "./Group"
 import Animation from "./animation/animation"
 import ShapeBuilder from "./core/viewBuilder"
 import debugs from "./tool/debug"
 import textUtil from "./core/graphic/helper/text.js"
 
-ychart.shape = {Bezier ,Circle ,Line ,Rect ,Triangle ,YText};
+ychart.shape = {Bezier ,Circle ,Line ,Rect ,Triangle ,YText,Image};
 
 ychart.Group = Group;
 

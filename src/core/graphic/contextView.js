@@ -44,7 +44,7 @@ class ContextView extends View{
          */
         this.__yh = null;
 
-        Transform.call(this, option);
+        // Transform.call(this, option);
         Eventful.call(this);
     }
 
@@ -53,10 +53,10 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    BeforeBrush(ctx) {
+    BeforeBrush(ctx,config) {
         ctx.save();
 
-        this.SetShapeTransform(ctx);
+        this.SetShapeTransform(ctx,config);
 
         this.configProxy.bindContext(ctx);
 
@@ -68,9 +68,22 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    SetShapeTransform(ctx) {
+    SetShapeTransform(ctx,config) {
+
+        this._SetShapeLocalTransform(config);
+
         this.updateTransform();
+
         this.setTransform(ctx);
+    }
+
+
+    _SetShapeLocalTransform(config){
+        var _this = this;
+        var keyWords = ["rotation","position","scale","transform","origin"];
+        keyWords.forEach(function (item) {
+            !_this[item] && (_this[item] = config[item]);
+        })
     }
 
     /**
@@ -117,8 +130,9 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    Brush(ctx) {
-        var config = this.configProxy.getConfig();
+    Brush(ctx ,width ,height) {
+        var config = this.configProxy.getConfig(width,height);
+
         if (!config.ignore) {
             //设置样式
             this.BeforeBrush(ctx, config);

@@ -33,9 +33,9 @@ export default ShapeBuilder.baseContextViewExtend({
         if (!checkNull(config.style.textColor)) {
             ctx.fillStyle = config.style.textColor;
         }
-        this.updateTransform();
-        var m = this.transform;
-        ctx.setTransform(m[0], m[1], m[2], -m[3], m[4], m[5]);
+        // this.updateTransform();
+        // var m = this.transform;
+        // ctx.setTransform(m[0], m[1], m[2], -m[3], m[4], m[5]);
         utext.fillText(ctx, config.text, pt[0], -pt[1],
             config.style.font, config.style.textAlign, config.style.textBaseline);
         ctx.restore();

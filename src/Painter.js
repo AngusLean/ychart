@@ -37,10 +37,8 @@ var Painter = function (yh, storage) {
  */
 Painter.prototype.refresh = function () {
     var shapeList = this.__storage.getDisplayableShapeList();
-
     this.updateLayerState(shapeList);
     var i, shape, layer, zlevel, lastZlevel = -1;
-
     for (i = 0; i < shapeList.length; i++) {
         shape = shapeList[i];
         zlevel = shape.zLevel || 0;
@@ -52,9 +50,7 @@ Painter.prototype.refresh = function () {
             layer.__needClear = false;
         }
         this.preProcessShapeInLayer(shape, layer);
-
-        shape.Brush(layer.getContext());
-
+        shape.Brush(layer.getContext() ,this.getWidth(), this.getHeight());
         this.afterProcessShapeInLayer(shape, layer);
     }
 };
@@ -86,7 +82,6 @@ Painter.prototype.updateLayerState = function (shapeList) {
  * @param layer {module:ychart/layer} 绘图层
  */
 Painter.prototype.preProcessShapeInLayer = function (shape, layer) {
-
     var _preProcessShapeInLayer = function (_shape) {
         if (_shape.parent == null) {
             _shape.parent = layer;
@@ -124,7 +119,7 @@ Painter.prototype.preProcessShapeInLayer = function (shape, layer) {
             }
             before = item;
             //更新组的变换
-            item.updateTransform();
+            // item.updateTransform();
         });
     };
 
@@ -169,6 +164,7 @@ Painter.prototype.getLayer = function (zLevel) {
 Painter.prototype.getWidth = function () {
     return this.width;
 };
+
 /**
  * 获取容器高度
  * @returns {integer} 容器高

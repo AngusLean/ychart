@@ -16,7 +16,7 @@ export var isPtInPath = function (shape, config, x, y) {
     var ctx = getContext();
     ctx.save();
     //设置变换
-    shape.BeforeBrush(ctx);
+    shape.BeforeBrush(ctx, config);
     //建立路径
     shape.BuildPath(ctx, config);
     var rs;

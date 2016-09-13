@@ -5,9 +5,12 @@
 
 
 import styleProxy from "./StyleProxy"
+
+import {DEFAULT_CONFIG,useRectangularCoordinateSystem} from "./config"
+
 import {checkNull} from "../../tool/util"
 /**
- * 选项代理类
+ * 每个可绘制元素的配置代理类
  * 每个可绘制元素的配置项管理类。 该类将管理每个元素绘制需要的各项属性，其中，
  * 样式采用styleProxy代理管理。 应该为样式有别名及默认样式。
  *
@@ -17,7 +20,7 @@ import {checkNull} from "../../tool/util"
 var OptionProxy = function (config) {
 
     /**
-     * 样式代理
+     * 配置代理
      * @member {boolean}
      * @default null
      */
@@ -44,6 +47,7 @@ var item;
  * @param config
  */
 OptionProxy.prototype.init = function (config) {
+    var item;
     for (item in config) {
         if (!checkNull(config[item])) {
             if (item != "style") {
@@ -52,6 +56,11 @@ OptionProxy.prototype.init = function (config) {
                 this.styleProxy = new styleProxy(config[item]);
             }
         }
+    }
+    //设置默认设置
+    for (item in DEFAULT_CONFIG){
+        this.config[item] = typeof this.config[item] != "undefined" ? this.config[item] :
+            DEFAULT_CONFIG[item];
     }
     if (this.styleProxy == null) {
         this.styleProxy = new styleProxy();
@@ -63,7 +72,10 @@ OptionProxy.prototype.init = function (config) {
  * 获取所有配置
  * @returns {object} config
  */
-OptionProxy.prototype.getConfig = function () {
+OptionProxy.prototype.getConfig = function (width , height) {
+    if(checkNull(this.config["transform"]) && useRectangularCoordinateSystem){
+        this.config["transform"] = [1, 0, 0, -1, 0, height]
+    }
     return this.config;
 };
 
