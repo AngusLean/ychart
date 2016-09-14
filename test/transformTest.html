@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group测试</title>
+    <script type="text/javascript" src="../dist/ychart.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <canvas id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </canvas>
+</div>
+<div style="width :800px; margin: 0 auto;">
+    <button onclick="DrawLine()">画直线</button>
+    <button onclick="transformDrawline()">画直线</button>
+    <button onclick="transformDrawline1()">transform</button>
+</div>
+<script>
+    function $(id) {
+        return document.getElementById(id);
+    }
+
+    var ctx = $("drawing").getContext("2d");
+    function DrawLine() {
+        clean();
+        ctx.beginPath();
+        ctx.moveTo(30,30);
+        ctx.lineTo(300,300);
+        ctx.stroke();
+    }
+    function clean() {
+        ctx.clearRect(0,0,800,400)
+    }
+    function transformDrawline() {
+        clean();
+        var begin =[400,200];
+        ctx.beginPath();
+        ctx.translate(begin[0],begin[1]);
+        ctx.rotate(Math.PI/4);
+        ctx.moveTo(0,0);
+
+        ctx.lineTo(100,50);
+        ctx.stroke();
+    }
+    function transformDrawline1() {
+//        clean();
+        ctx.beginPath();
+        ctx.transform(1,0,0,-1,0,400);
+        ctx.moveTo(50,50);
+        ctx.lineTo(100,50);
+        ctx.stroke();
+    }
+    </script>
+</body>
+</html>

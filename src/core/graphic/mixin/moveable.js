@@ -28,7 +28,7 @@ Moveable.prototype = {
         }
 
         this.position[0] += dx;
-        this.position[1] -= dy;
+        this.position[1] += dy;
 
         this.__dirty = true;
     },

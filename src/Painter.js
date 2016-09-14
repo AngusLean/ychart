@@ -119,7 +119,7 @@ Painter.prototype.preProcessShapeInLayer = function (shape, layer) {
             }
             before = item;
             //更新组的变换
-            // item.updateTransform();
+            item.updateTransform();
         });
     };
 

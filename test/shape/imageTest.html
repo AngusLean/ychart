@@ -8,27 +8,66 @@
 </head>
 <body>
 <div style="width :800px; margin: 0 auto;">
-    <div id="drawing" style="border:blue solid 1px ;width :800px;height:800px "> </div>
+    <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div>
+</div>
+<div style="width :800px; margin: 0 auto;margin-top:10px;">
+    <div id="drawing2" style="border:blue solid 1px ;width :900px;height:800px "> </div>
+</div>
+<div style="width :800px; margin: 0 auto;display: none;">
+    <canvas id="drawing1" style="border:blue solid 1px ;width :800px;height:800px "> </canvas>
+</div>
+<div style="width:800px;margin:0 auto;margin-top:10px;">
+    <button onclick="zoomOut()">放大</button>
 </div>
 <div style="display: none;">
     <img src="sth.jpg" id="img" alt="">
+    <img src="sth1.png" id="img1" alt="">
 </div>
 <script>
     var $= function (id) {
         return document.getElementById(id);
     };
 
-    var ycharts = ychart,Line = ychart.shape.Line ,YImage = ychart.shape.Image;
+    var ycharts = ychart,Line = ychart.shape.Line ,YImage = ychart.shape.Image, Circle = ycharts.shape.Circle;
     yh = ycharts.init("drawing");
+    yh1 = ycharts.init("drawing2");
     var img = document.images[0];
     var imgs =new YImage({
         image: img,
-        transform: [1,0,0,1,0,0],
-        position: [50,50]
+        dWidth: 738,
+        dHeight: 664,
+    });
+    var circle1 = new Circle({
+        x: 100,
+        y: 130,
+        r: 5,
+        style:{
+            color: "red"
+        }
+    });
+    var circle2 = new Circle({
+        x: 150,
+        y: 80,
+        r: 5,
+        style:{
+            color: "red"
+        }
     });
     yh.add(imgs);
-    <!-- yh.add(rect); -->
+    yh.add(circle1);
+    yh.add(circle2);
     yh.BrushAll();
+
+    yh1.add(imgs);
+    yh1.add(circle1);
+    yh1.add(circle2);
+    yh1.BrushAll();
+    1
+    function zoomOut() {
+
+    }
+//    var ctx = $("drawing1").getContext("2d");
+//    ctx.drawImage(img,0,0);
     </script>
 </body>
 </html>

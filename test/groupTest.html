@@ -29,7 +29,7 @@
             lineWidth: 5
         }
     });
-/*    var line2 = new Line({
+    var line2 = new Line({
         beginpt: [150, 0],
         endpt: [10, 100],
         zLevel: 1,
@@ -37,14 +37,14 @@
             lineColor: "red",
             lineWidth: 15
         }
-    });*/
+    });
     var gp = new Group({
         style: {
             lineColor: "blue"
         }
     });
     gp.addChild(line1);
-//    gp.addChild(line2);
+    gp.addChild(line2);
     yh.add(gp);
     <!-- yh.add(rect); -->
     yh.BrushAll();

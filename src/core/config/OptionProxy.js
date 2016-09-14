@@ -73,9 +73,6 @@ OptionProxy.prototype.init = function (config) {
  * @returns {object} config
  */
 OptionProxy.prototype.getConfig = function (width , height) {
-    if(checkNull(this.config["transform"]) && useRectangularCoordinateSystem){
-        this.config["transform"] = [1, 0, 0, -1, 0, height]
-    }
     return this.config;
 };
 

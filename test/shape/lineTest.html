@@ -9,6 +9,7 @@
 <body>
 <div style="width :800px; margin: 0 auto;">
     <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+    <button id="moveBtn" onclick="move()">移动</button>
 </div>
 
 <script>
@@ -20,14 +21,15 @@
     yh = ycharts.init("drawing");
     var line1 =new Line({
         beginpt: [0,0],
-        endpt: [15,150],
-//        position: [100,100],
+        endpt: [-15,-150],
+//        position: [10,200],
+        rotation: 91,
         style:{
             lineColor: "blue",
             lineWidth: 5
         }
     });
-/*    var line2 = new Line({
+    var line2 = new Line({
         beginpt: [150, 0],
         endpt: [10, 100],
         zLevel: 1,
@@ -35,12 +37,17 @@
             lineColor: "red",
             lineWidth: 15
         }
-    });*/
+    });
 
 
     yh.add(line1);
+    yh.add(line2);
     <!-- yh.add(rect); -->
     yh.BrushAll();
+    function move() {
+        line1.drift(10,10);
+        yh.BrushAll();
+    }
     </script>
 </body>
 </html>

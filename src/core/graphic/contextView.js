@@ -12,6 +12,8 @@ import text from "./helper/text"
 
 import {mixin} from "../../tool/klass"
 import {isPtInPath} from "./helper/viewutil"
+import {noOp} from "../../tool/lang"
+
 
 /**
  * 绘制在canvas上的图形的基类
@@ -44,21 +46,27 @@ class ContextView extends View{
          */
         this.__yh = null;
 
-        // Transform.call(this, option);
+        Transform.call(this, option);
         Eventful.call(this);
     }
+
+    BeforeBrush(ctx,config){}
+    AfterBrush(ctx,config){}
+    Brush(ctx ,width ,height) {}
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    BeforeBrush(ctx,config) {
+    __BeforeBrush(ctx, config) {
         ctx.save();
 
-        this.SetShapeTransform(ctx,config);
+        this.__SetShapeTransform(ctx,config);
 
         this.configProxy.bindContext(ctx);
+
+        this.BeforeBrush(ctx,config);
 
         ctx.beginPath();
     }
@@ -68,9 +76,7 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    SetShapeTransform(ctx,config) {
-
-        this._SetShapeLocalTransform(config);
+    __SetShapeTransform(ctx, config) {
 
         this.updateTransform();
 
@@ -78,20 +84,12 @@ class ContextView extends View{
     }
 
 
-    _SetShapeLocalTransform(config){
-        var _this = this;
-        var keyWords = ["rotation","position","scale","transform","origin"];
-        keyWords.forEach(function (item) {
-            !_this[item] && (_this[item] = config[item]);
-        })
-    }
-
     /**
      * 绘图元素在把内容绘制到context之后调用的函数
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    AfterBrush(ctx) {
+    __AfterBrush(ctx ,config) {
         var tp = this.configProxy.getBrushType();
         switch (tp) {
             case "both":
@@ -112,6 +110,8 @@ class ContextView extends View{
                 break;
         }
         ctx.restore();
+
+        this.AfterBrush(ctx ,config);
     }
 
     /**
@@ -135,12 +135,12 @@ class ContextView extends View{
 
         if (!config.ignore) {
             //设置样式
-            this.BeforeBrush(ctx, config);
+            this.__BeforeBrush(ctx, config);
             //具体图形自己的定制
             this.BuildPath(ctx, config);
             this.DrawText(ctx, config);
             //恢复事故现场
-            this.AfterBrush(ctx, config);
+            this.__AfterBrush(ctx, config);
         }
     }
 
@@ -197,6 +197,7 @@ class ContextView extends View{
         ctx.restore();
     }
 }
+
 
 mixin(ContextView, Transform, true);
 mixin(ContextView, Eventful, true);
