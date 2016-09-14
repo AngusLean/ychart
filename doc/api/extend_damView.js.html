@@ -38,10 +38,10 @@
                 if (typeof targetProp == 'object') {
                     // 如果需要递归覆盖，就递归调用merge
                     merge(
-                        target[key],
-                        source[key],
-                        overwrite
-                    );
+                          target[key],
+                          source[key],
+                          overwrite
+                         );
                 } else if (overwrite || !(key in target)) {
                     // 否则只处理overwrite为true，或者在目标对象中没有此属性的情况
                     target[key] = source[key];
@@ -149,7 +149,7 @@
             scale: size.globalScale
         });
         var damgroup = generatorDamGroup(size.damBeginPt,config),
-            wlgroup = generatorWaterLevel(size.wlBeginPt ,config ,size.wlWidth);
+        wlgroup = generatorWaterLevel(size.wlBeginPt ,config ,size.wlWidth);
         damView.addChild(wlgroup).addChild(damgroup);
         return damView;
     };
@@ -161,7 +161,8 @@
      * @param maxheight
      */
     function damSizeAdapter(damconfig ,maxwidth, maxheight) {
-        var damwh;
+        var damwh,
+            leftMargin = 50;
         var rs={
             globalScale:[1,1],
             damBeginPt: [200,0],
@@ -174,16 +175,17 @@
             damwh = damconfig.UPDMSL * damconfig.MAXDMHG + damconfig.DMTPWD + damconfig.DWDMSL * damconfig.MAXDMHG;
             var x1 = damwh/maxwidth ,y1=damconfig.MAXDMHG/maxheight ,max=Math.max(x1,y1);
             console.log("宽度： "+damwh+" "+x1+" "+y1+" ");
+            var percent;
             if(max &lt; 0.5){
                 rs.globalScale[0]=rs.globalScale[1] = 1+max;
+                percent = 2;
             }else{
+                percent = 1 / max;
                 max = 1
             }
-
-            // rs.damBeginPt[0] =
-            rs.wlWidth = (maxwidth - damwh)/(rs.globalScale[0]);
-            rs.damBeginPt[0] = (rs.wlWidth - 50)/(rs.globalScale[0]);
-            rs.wlBeginPt = [50,0];
+            rs.wlWidth = damwh*percent;
+            rs.damBeginPt[0] = rs.wlWidth;
+            rs.wlBeginPt = [leftMargin,0];
         }
         return rs;
     }
@@ -359,7 +361,7 @@
             var waterruler = [];
             waterruler.push(beginpt);
             waterruler.push([beginpt[0],
-                [beginpt[1] +damModule.MAXDMHG]
+                            [beginpt[1] +damModule.MAXDMHG]
             ]);
             waterruler.push([beginpt[0] + rulerwidth, [beginpt[1] +damModule.MAXDMHG]]);
             waterruler.push([beginpt[0] + rulerwidth, beginpt[1]]);
@@ -399,22 +401,14 @@
             }
 
             // 水位标识
+            var nrpllvtext = "正常蓄水位" + hych.NRPLLV ;
             wlGroup.addChild(buildWaterLevelLine({
                 beginpt: [beginpt[0] +rulerwidth + 2, beginpt[1] + hych.NRPLLV - DMBTEL],
                 endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.NRPLLV - DMBTEL],
-                text: "正常蓄水位" + hych.NRPLLV ,
+                text: nrpllvtext,
                 leftMargin: 10
             }));
-            wlGroup.addChild(buildWaterLevelLine({
-                beginpt: [beginpt[0] +rulerwidth + 2, beginpt[1] + hych.Z - DMBTEL],
-                endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.Z - DMBTEL],
-                text: "当前水位" + hych.Z ,
-                leftMargin: 10
-            }));
-            /*var textrect = textutil.getTextRect(nrpllvtext ,0,0);
-            if(hych.NRPLLV - hych.DDWL &lt; textrect.height){
-                warn("死水位和正常蓄水位之间间距过小");
-            }*/
+            var nrptextrect = YH.textutil.getTextRect(nrpllvtext ,0,0);
 
             wlGroup.addChild(buildWaterLevelLine({
                 beginpt: [beginpt[0] + rulerwidth + 2, beginpt[1] + hych.DDWL - DMBTEL],
@@ -422,22 +416,35 @@
                 text: "死水位" + hych.DDWL,
                 leftMargin: 25
             }));
+            //处理当前水位的提示位置
+            var zx = beginpt[0] +rulerwidth + 2;
+            if(nrptextrect.width &lt; maxwaterwidth/2){
+                zx += nrptextrect.width+30;
+            }
+            wlGroup.addChild(buildWaterLevelLine({
+                beginpt: [zx, beginpt[1] + hych.Z - DMBTEL],
+                endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.Z - DMBTEL],
+                text: "当前水位" + hych.Z ,
+                leftMargin: 10
+            },true));
+
             return wlGroup;
         }
-        function buildWaterLevelLine(param) {
+        function buildWaterLevelLine(param ,noline) {
             var wlline = new YH.Group();
-            wlline.addChild(new YH.shape.Line({
-                beginpt: param.beginpt,
-                endpt: param.endpt,
-                splitnum: 20,
-                draggable: false,
-                style:{
-                    lineColor: "#003d8f"
-                }
-            }));
-
+            if(!noline){
+                wlline.addChild(new YH.shape.Line({
+                    beginpt: param.beginpt,
+                    endpt: param.endpt,
+                    splitnum: 20,
+                    draggable: false,
+                    style:{
+                        lineColor: "#003d8f"
+                    }
+                }));
+            }
             wlline.addChild(gereratorWlTag([param.beginpt[0] + param.leftMargin, param.beginpt[1] + GlobalConfig.triangleHeight],
-                GlobalConfig.triangleWidth ,GlobalConfig.triangleHeight));
+                                           GlobalConfig.triangleWidth ,GlobalConfig.triangleHeight));
             //水位标识中的文字
             wlline.addChild(new YH.shape.YText({
                 beginpt: [param.beginpt[0] + param.leftMargin + GlobalConfig.triangleWidth + 3, param.beginpt[1]],
@@ -469,7 +476,7 @@
                 wlTag.addChild(new YH.shape.Line({
                     beginpt: [toplefttp[0] + i * GlobalConfig.scalelinepd, toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)],
                     endpt: [toplefttp[0] + toplefttp + i * GlobalConfig.scalelinepd + (3 - i) * GlobalConfig.scalelinewh,
-                        toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)
+                    toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)
                     ],
                     draggable: false,
                     style: {
@@ -480,7 +487,8 @@
             return wlTag;
         }
     }
-})(window);</code></pre>
+})(window);
+</code></pre>
         </article>
     </section>
 
@@ -490,13 +498,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Image.html">ychart/shape/Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_graphic_viewBuilder-BaseContextView.html">BaseContextView</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Circle-Init.html">Init</a></li><li><a href="module-ychart_shape_Image-Image.html">Image</a></li><li><a href="module-ychart_shape_Image-Init.html">Init</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 31 2016 10:54:22 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Sep 14 2016 17:39:35 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

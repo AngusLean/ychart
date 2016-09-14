@@ -20,7 +20,7 @@ ychart.shape = {Bezier ,Circle ,Line ,Rect ,Triangle ,YText,Image};
 
 ychart.Group = Group;
 
-ychart.version =1.0;
+ychart.version = 1.0;
 
 ychart.Animation = Animation;
 

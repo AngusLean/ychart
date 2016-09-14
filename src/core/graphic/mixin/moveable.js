@@ -52,10 +52,27 @@ Moveable.prototype = {
         if (!isArr(this.origin)) {
             this.origin = [0, 0];
         }
-        this.origin[0] = x;
-        this.origin[1] = y;
-        this.rotation = angle;
+        if(!this.rotation){
+            this.rotation = 0;
+        }
+        this.origin[0] += x;
+        this.origin[1] += y;
+        this.rotation += angle;
 
+        this.__dirty = true;
+    },
+
+    /**
+     * 缩放
+     * 注意该缩放必须是相对于某个点的. 默认情况下是[0,0] 这个肯定不是想要的结果,
+     * 必须在shape指定origin为缩放的原点
+     *
+     * @param {number}  x X方向放大比例
+     * @param {number}  y y方向放大比例
+     */
+    zoom: function (x, y) {
+        this.scale[0] += x;
+        this.scale[1] += y;
         this.__dirty = true;
     }
 };

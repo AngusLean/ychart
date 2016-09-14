@@ -10,14 +10,13 @@
 <div style="width :800px; margin: 0 auto;">
     <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div>
 </div>
-<div style="width :800px; margin: 0 auto;margin-top:10px;">
-    <div id="drawing2" style="border:blue solid 1px ;width :900px;height:800px "> </div>
-</div>
+
 <div style="width :800px; margin: 0 auto;display: none;">
     <canvas id="drawing1" style="border:blue solid 1px ;width :800px;height:800px "> </canvas>
 </div>
 <div style="width:800px;margin:0 auto;margin-top:10px;">
     <button onclick="zoomOut()">放大</button>
+    <button onclick="zoomIn()">缩小</button>
 </div>
 <div style="display: none;">
     <img src="sth.jpg" id="img" alt="">
@@ -28,14 +27,15 @@
         return document.getElementById(id);
     };
 
+
     var ycharts = ychart,Line = ychart.shape.Line ,YImage = ychart.shape.Image, Circle = ycharts.shape.Circle;
     yh = ycharts.init("drawing");
-    yh1 = ycharts.init("drawing2");
+
     var img = document.images[0];
     var imgs =new YImage({
         image: img,
         dWidth: 738,
-        dHeight: 664,
+        dHeight: 664
     });
     var circle1 = new Circle({
         x: 100,
@@ -57,17 +57,22 @@
     yh.add(circle1);
     yh.add(circle2);
     yh.BrushAll();
-
-    yh1.add(imgs);
-    yh1.add(circle1);
-    yh1.add(circle2);
-    yh1.BrushAll();
-    1
+    circle1.on("click",function () {
+        console.log("curcle1 click!");
+    });
+    circle2.on("click",function () {
+        console.log("curcle2 click!");
+    });
     function zoomOut() {
-
+//        circle2.zoom(2,2);
+        imgs.zoom(2,2);
+        yh.BrushAll();
     }
-//    var ctx = $("drawing1").getContext("2d");
-//    ctx.drawImage(img,0,0);
+    function zoomIn() {
+//        circle2.zoom(-2,-2);
+        imgs.zoom(-2,-2);
+        yh.BrushAll();
+    }
     </script>
 </body>
 </html>

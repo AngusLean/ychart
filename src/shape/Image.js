@@ -4,6 +4,7 @@
  */
 import ShapeBuilder from "../core/viewBuilder"
 
+
 /**
  * 图形形状类
  * @class Image
@@ -25,7 +26,24 @@ import ShapeBuilder from "../core/viewBuilder"
 export default
 ShapeBuilder.baseContextViewExtend({
 
+        /**
+         * 构造函数 。 在构造函数中指定该图像的中心点
+         * @param {object} option  绘制形状的配置
+         * @method
+         */
+        Init: function (config) {
+            this.origin = this.origin || [];
+            if(config.dWidth && config.dHeight){
+                this.origin[0] = config.dx || 0 + config.dWidth / 2;
+                this.origin[1] = config.dy || 0 + config.dHeight / 2;
+            }else{
+                this.origin[0] = config.dx || 0 + config.image.width / 2;
+                this.origin[1] = config.dy || 0 + config.image.height / 2;
+            }
+        },
+
         type: "Image",
+
         BeforeBrush:function (ctx) {
             var x0 = this.parent.transform[0];
             var x1 = this.parent.transform[1];
@@ -49,7 +67,27 @@ ShapeBuilder.baseContextViewExtend({
             }
         },
 
+        GetContainRect: function(){
+
+            var config = this.config;
+            if(!this.rect){
+                this.rect = [];
+                if(config.dWidth && config.dHeight){
+                    this.rect[0] = config.dx || 0;
+                    this.rect[1] = config.dy || 0;
+                    this.rect[2] = this.rect[0] + config.dWidth ;
+                    this.rect[3] = this.rect[1] + config.dHeight;
+                }else{
+                    this.rect[0] = config.dx || 0;
+                    this.rect[1] = config.dy || 0;
+                    this.rect[2] = this.rect[0] + config.image.width ;
+                    this.rect[3] = this.rect[1] + config.image.height;
+                }
+            }
+            return this.rect;
+        }
     }
-)
+);
+
 
 

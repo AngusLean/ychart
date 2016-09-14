@@ -4,6 +4,8 @@
  */
 
 import ShapeBuilder from "../core/viewBuilder"
+import BaseShape from "./BaseShape"
+
 /**
  * 圆形
  * @class Circle
@@ -14,12 +16,21 @@ import ShapeBuilder from "../core/viewBuilder"
  */
 export default ShapeBuilder.baseContextViewExtend({
 
+    /**
+     * 构造函数 。 在构造函数中指定该图像的中心点
+     * @param {object} option  绘制形状的配置
+     * @constructor
+     */
+    Init: function (config) {
+        this.origin = [config.x,config.y];
+    },
+
     type: "circle",
 
     BuildPath: function (ctx, config) {
         ctx.arc(config.x, config.y, config.r, Math.PI * 2,
             config.startangel || 0, config.endangel || Math.PI * 2);
     }
-})
 
+})
 

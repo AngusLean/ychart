@@ -11,6 +11,13 @@ export var getContext = function () {
     return _ctx;
 };
 
+export var isPtInRect = function (rect, x, y) {
+    return rect && (rect[0] <= x &&
+        rect[1] >= x &&
+        rect[2] <= y &&
+        rect[3] >= y);
+};
+
 //todo 这种方式判断鼠标是否在形状内效率不高。改进
 export var isPtInPath = function (shape, config, x, y) {
     var ctx = getContext();
@@ -29,5 +36,5 @@ export var isPtInPath = function (shape, config, x, y) {
     }
     ctx.restore();
     return rs;
-};
+}
 

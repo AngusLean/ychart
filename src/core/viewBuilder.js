@@ -3,7 +3,7 @@
  * @module  ychart/graphic/viewBuilder
  */
 import ContextView from "./graphic/contextView"
-import {isObj, isType} from "../tool/util"
+import {isObj, isType ,isFunc} from "../tool/util"
 import debugs from "../tool/debug"
 
 var REQUIRED_CHILD = {
@@ -29,16 +29,22 @@ var baseContextViewExtend = function (defaults) {
         }
     }
 
+    /**
+     * @class
+     * @classdesc ychart自带形状的构造类.
+     */
     class BaseContextView extends ContextView {
         constructor(baseOption) {
             super(defaults.type, baseOption);
-            if (isObj(defaults)) {
-                for (var attr in defaults) {
-                    this[attr] = defaults[attr];
-                }
+            if(isFunc(defaults["Init"])){
+                defaults["Init"].call(this,baseOption);
             }
         }
     }
+    Object.assign(BaseContextView.prototype,defaults);
+
+
+
     return BaseContextView;
 };
 

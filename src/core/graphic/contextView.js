@@ -11,7 +11,8 @@ import OptionProxy from "../config/OptionProxy"
 import text from "./helper/text"
 
 import {mixin} from "../../tool/klass"
-import {isPtInPath} from "./helper/viewutil"
+import {isPtInPath,isPtInRect} from "./helper/viewutil"
+
 import {noOp} from "../../tool/lang"
 
 
@@ -46,17 +47,43 @@ class ContextView extends View{
          */
         this.__yh = null;
 
+
         Transform.call(this, option);
         Eventful.call(this);
     }
 
-    BeforeBrush(ctx,config){}
-    AfterBrush(ctx,config){}
-    Brush(ctx ,width ,height) {}
+    /**
+     * @property {Object} 获取当前shapa的配置项
+     * @returns {Object}
+     */
+    get config(){
+        return this.configProxy.getConfig();
+    }
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
      * @method
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    BeforeBrush(ctx,config){}
+
+    /**
+     * 绘图元素在把内容绘制到context之后调用的函数
+     * @method
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    AfterBrush(ctx,config){}
+
+    /**
+     * 获取当前元素的包围圈。
+     * @return {Array.<Number>} 返回rect数组
+     */
+    GetContainRect(){}
+
+    /**
+     * 绘图元素在把内容绘制到context之前调用的函数
+     * @method
+     * @private
      * @param {CanvasRenderingContext2D} ctx
      */
     __BeforeBrush(ctx, config) {
@@ -74,6 +101,7 @@ class ContextView extends View{
     /**
      * 设置绘图变换
      * @method
+     * @private
      * @param {CanvasRenderingContext2D} ctx
      */
     __SetShapeTransform(ctx, config) {
@@ -87,6 +115,7 @@ class ContextView extends View{
     /**
      * 绘图元素在把内容绘制到context之后调用的函数
      * @method
+     * @private
      * @param {CanvasRenderingContext2D} ctx
      */
     __AfterBrush(ctx ,config) {
@@ -131,7 +160,7 @@ class ContextView extends View{
      * @param {CanvasRenderingContext2D} ctx
      */
     Brush(ctx ,width ,height) {
-        var config = this.configProxy.getConfig(width,height);
+        var config = this.config;
 
         if (!config.ignore) {
             //设置样式
@@ -144,6 +173,8 @@ class ContextView extends View{
         }
     }
 
+
+
     /**
      * 设置元素配置项。 调用该方法会导致该元素被标记为脏，下一次重新页面刷新时将清楚该元素所在层并且重新绘制
      * @param {object} option
@@ -155,11 +186,13 @@ class ContextView extends View{
 
     /**
      * 判断点是否在当前元素内
-     * @param {object}  point  包含x,y两个属性的点
+     * @param {Number} x   x座标
+     * @param {Number} y   y座标
      */
-    contain(point) {
-        var local = [point.x, point.y];
-        return isPtInPath(this, this.configProxy.getConfig(), local[0], local[1]);
+    contain(x, y) {
+        var isContain =  isPtInPath(this, this.config, x, y)
+            || isPtInRect(this.GetContainRect() ,x,y);
+        return isContain;
     }
 
     /**

@@ -154,10 +154,10 @@ handlers.prototype.getHoverElement = function (exEvent) {
     var sp;
     for (var i = 0, len = shapes.length; i < len; i++) {
         sp = shapes[i];
-        if (sp.contain({
-                x: exEvent.ycX,
-                y: exEvent.ycY
-            })) {
+        if (sp.contain(
+                exEvent.ycX,
+                exEvent.ycY
+            )) {
             return sp;
         }
     }
