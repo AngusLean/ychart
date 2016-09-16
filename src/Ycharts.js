@@ -15,9 +15,10 @@ import Handler from "./Handler"
  * @param opt
  * @constructor
  */
+var i=1000;
 var YCharts = function (eleid, opt) {
     //当前实例ID
-    this.id = null;
+    this.id = "Ychart-"+i++;
     //当前实例绑定的页面元素ID
     this.domid = eleid;
 
@@ -35,6 +36,10 @@ YCharts.prototype.clear = function () {
     this.__storage.clean();
 };
 
+YCharts.prototype.cleanPainter = function(){
+    this.__painter.cleanPainter();
+};
+
 YCharts.prototype.add = function (el) {
     this.__storage.addEle(el);
     return this;
@@ -49,9 +54,6 @@ YCharts.prototype.update = function () {
     this.BrushAll();
 };
 
-YCharts.prototype.setId = function (id) {
-    this.id = id;
-};
 
 /**
  * ychart全局入口对象。
@@ -71,7 +73,6 @@ var i = 1000;
  */
 ychart.init = function (id, config) {
     var _charts = new YCharts(id, config);
-    _charts.setId("ycharts-" + i++);
     instances[id] = _charts;
     return _charts;
 };

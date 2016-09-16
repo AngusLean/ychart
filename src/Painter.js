@@ -185,6 +185,12 @@ Painter.prototype.clean = function () {
     this.container = null;
 };
 
+Painter.prototype.cleanPainter = function(){
+    this.layer.forEach(function(la){
+        la.clear();
+    });
+}
+
 /**
  * 在文档中插入指定的layer节点
  * @param zLevel {string} 绘图所在层级， 整数

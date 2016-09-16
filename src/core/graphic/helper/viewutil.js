@@ -37,4 +37,3 @@ export var isPtInPath = function (shape, config, x, y) {
     ctx.restore();
     return rs;
 }
-

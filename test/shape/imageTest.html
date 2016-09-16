@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Image测试</title>
-    <script type="text/javascript" src="../../dist/ychart.js"></script>
+<meta charset="UTF-8">
+<title>Image测试</title>
+<script type="text/javascript" src="../../dist/ychart.js"></script>
 
 </head>
 <body>
 <div style="width :800px; margin: 0 auto;">
-    <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div>
+    <!-- <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div> -->
+    <div id="drawing" style="border:blue solid 1px ;width :1200px;height:900px "> </div>
 </div>
 
 <div style="width :800px; margin: 0 auto;display: none;">
@@ -23,56 +24,65 @@
     <img src="sth1.png" id="img1" alt="">
 </div>
 <script>
-    var $= function (id) {
-        return document.getElementById(id);
-    };
+
+var $= function (id) {
+    return document.getElementById(id);
+};
 
 
-    var ycharts = ychart,Line = ychart.shape.Line ,YImage = ychart.shape.Image, Circle = ycharts.shape.Circle;
-    yh = ycharts.init("drawing");
+var ycharts = ychart,Line = ychart.shape.Line ,YImage = ychart.shape.Image, Circle = ycharts.shape.Circle;
+var Group = ychart.Group;
+yh = ycharts.init("drawing");
 
-    var img = document.images[0];
-    var imgs =new YImage({
-        image: img,
-        dWidth: 738,
-        dHeight: 664
-    });
-    var circle1 = new Circle({
-        x: 100,
-        y: 130,
-        r: 5,
-        style:{
-            color: "red"
-        }
-    });
-    var circle2 = new Circle({
-        x: 150,
-        y: 80,
-        r: 5,
-        style:{
-            color: "red"
-        }
-    });
-    yh.add(imgs);
-    yh.add(circle1);
-    yh.add(circle2);
+var img = document.images[0];
+var imgs =new YImage({
+    image: img,
+    dWidth: 738,
+    dHeight: 664
+});
+var circle1 = new Circle({
+    x: 100,
+    y: 530,
+    r: 5,
+    style:{
+        color: "red"
+    }
+});
+var circle2 = new Circle({
+    x: 150,
+    y: 580,
+    r: 5,
+    style:{
+        color: "red"
+    }
+});
+
+var gp = new Group({
+    scale: [1.5,1.5]
+})
+gp.add(imgs);
+gp.add(circle1);
+gp.add(circle2);
+yh.add(gp);
+yh.BrushAll();
+circle1.on("click",function () {
+    console.log("curcle1 click!");
+});
+circle2.on("click",function () {
+    console.log("curcle2 click!");
+});
+imgs.on("click",function(){
+    console.log("click img");
+})
+function zoomOut() {
+    gp.zoom(0.5,0.5);
     yh.BrushAll();
-    circle1.on("click",function () {
-        console.log("curcle1 click!");
-    });
-    circle2.on("click",function () {
-        console.log("curcle2 click!");
-    });
-    function zoomOut() {
-//        circle2.zoom(2,2);
-        imgs.zoom(2,2);
-        yh.BrushAll();
-    }
-    function zoomIn() {
-//        circle2.zoom(-2,-2);
-        imgs.zoom(-2,-2);
-        yh.BrushAll();
-    }
-    </script>
+}
+function zoomIn() {
+    yh.cleanPainter();
+    gp.zoom(-0.5,-0.5);
+    yh.BrushAll();
+}
+</script>
 </body>
 </html>

@@ -28,13 +28,13 @@ var Storage = function (yh) {
  * @param element {module:ychart/core/graphic/element} 元素实例
  */
 Storage.prototype.addEle = function (element) {
-    if (!element || element.getId() === null) {
+    if (!element || element.id === null) {
         return;
     }
     var index, i;
     for (index = 0; index < this._roots.length; index++) {
         i = this._roots[index];
-        if (i.getId() == element.getId()) {
+        if (i.id == element.getId()) {
             return;
         }
     }
@@ -76,4 +76,3 @@ Storage.prototype.clean = function () {
 };
 
 export default Storage;
-

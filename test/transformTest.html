@@ -13,6 +13,7 @@
 <div style="width :800px; margin: 0 auto;">
     <button onclick="DrawLine()">画直线</button>
     <button onclick="transformDrawline()">画直线</button>
+    <button onclick="DrawText()">画Text</button>
     <button onclick="zoom()">缩放</button>
     <button onclick="transformDrawline1()">transform</button>
 </div>
@@ -20,13 +21,26 @@
     function $(id) {
         return document.getElementById(id);
     }
-
-    var ctx = $("drawing").getContext("2d");
+    var canvas =$("drawing");
+    var ctx = canvas.getContext("2d");
     function DrawLine() {
         clean();
         ctx.beginPath();
-        ctx.moveTo(30,30);
+        ctx.translate(0,canvas.height);
+        ctx.scale(1,-1);
+        ctx.moveTo(0,20);
         ctx.lineTo(100,100);
+        ctx.stroke();
+    }
+    <!-- DrawLine(); -->
+    function DrawText() {
+        clean();
+        ctx.beginPath();
+        <!-- ctx.translate(0,canvas.height); -->
+        <!-- ctx.scale(1,-1); -->
+        ctx.moveTo(0,0);
+        ctx.fillText("hah im text",10,canvas.height-20);
+        <!-- ctx.scale(1,-1); -->
         ctx.stroke();
     }
 

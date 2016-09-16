@@ -3,6 +3,7 @@
  * @module ychart/shape/Text
  */
 import {checkNull} from "../tool/util"
+import {getRectByCtx} from "../tool/dom.js"
 import utext from "../core/graphic/helper/text"
 import ShapeBuilder from "../core/viewBuilder"
 /**
@@ -15,6 +16,9 @@ import ShapeBuilder from "../core/viewBuilder"
  * @constructor
  */
 export default ShapeBuilder.baseContextViewExtend({
+    Init: function(config){
+        this.coordinate = 1;
+    },
 
     type: "Text",
 
@@ -33,12 +37,9 @@ export default ShapeBuilder.baseContextViewExtend({
         if (!checkNull(config.style.textColor)) {
             ctx.fillStyle = config.style.textColor;
         }
-        // this.updateTransform();
-        // var m = this.transform;
-        // ctx.setTransform(m[0], m[1], m[2], -m[3], m[4], m[5]);
-        utext.fillText(ctx, config.text, pt[0], -pt[1],
-            config.style.font, config.style.textAlign, config.style.textBaseline);
+        var rect = getRectByCtx(ctx);
+        utext.fillText(ctx, config.text, pt[0], rect[1]-pt[1],
+                       config.style.font, config.style.textAlign, config.style.textBaseline);
         ctx.restore();
     }
 });
-

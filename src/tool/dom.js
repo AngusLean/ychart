@@ -20,6 +20,17 @@ export var getPosition = function (id) {
     }
 };
 
+var CACHE = {};
+
+export var getRectByCtx = function(context){
+    if(CACHE[context]){
+        return CACHE[context];
+    }
+    var ps = getPosition(context);
+    CACHE[context] = [ps.width ,ps.height];
+    return CACHE[context];
+}
+
 export var doc = function (id) {
     return document.getElementById(id);
 };

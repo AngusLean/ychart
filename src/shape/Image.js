@@ -40,11 +40,14 @@ ShapeBuilder.baseContextViewExtend({
                 this.origin[0] = config.dx || 0 + config.image.width / 2;
                 this.origin[1] = config.dy || 0 + config.image.height / 2;
             }
+
+            this.coordinate = 1;
         },
 
         type: "Image",
 
         BeforeBrush:function (ctx) {
+            return;
             var x0 = this.parent.transform[0];
             var x1 = this.parent.transform[1];
             var x2 = this.parent.transform[2];
@@ -88,6 +91,3 @@ ShapeBuilder.baseContextViewExtend({
         }
     }
 );
-
-
-

@@ -37,8 +37,8 @@ var Layer = function (id, zLevel, opts) {
     this.ctxHeight = this.ctx.canvas.height;
 
     //默认变换。即已当前层的左下角为原点的直角座标系
-    this.transform = [1, 0, 0, -1, 0, this.ctxHeight];
-    this.invTransform = [1, 0, 0, -1, 0, this.ctxHeight];
+    // this.transform = [1, 0, 0, -1, 0, this.ctxHeight];
+    // this.invTransform = [1, 0, 0, -1, 0, this.ctxHeight];
     //当前画布由于包含的图形有变化需要清除后重新绘制
     this.__needClear = false;
 };
@@ -68,4 +68,3 @@ Layer.prototype.clear = function () {
 };
 
 export default Layer;
-

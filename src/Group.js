@@ -5,6 +5,7 @@
 import {merge} from "./tool/util"
 import {mixin} from "./tool/klass"
 import Transform from "./core/graphic/mixin/transform"
+import Moveable from "./core/graphic/mixin/moveable.js"
 import Element from "./core/graphic/element"
 
 /**
@@ -29,7 +30,7 @@ class Group extends Element{
      * @param child
      * @returns {Group}
      */
-    addChild (child) {
+    add(child) {
         if (child == this)
             return;
         //子形状或者group的父类。 继承变换以及样式
@@ -38,8 +39,11 @@ class Group extends Element{
         this.children.push(child);
         return this;
     };
+
 }
 
 mixin(Group ,Transform , true);
+mixin(Group ,Moveable, true);
+
 
 export default Group;

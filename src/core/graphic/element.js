@@ -18,10 +18,12 @@ class Element{
      * 获取元素id
      * @returns {string}  该元素的唯一ID
      */
-    getId(){
+    get id(){
         return this.id
     }
-
+    set id(val){
+        throw new Error("can't change element id . the id is :"+this.id);
+    }
 }
 
 export default Element

@@ -14,7 +14,7 @@ import {mixin} from "../../tool/klass"
 import {isPtInPath,isPtInRect} from "./helper/viewutil"
 
 import {noOp} from "../../tool/lang"
-
+import {getRectByCtx} from "../../tool/dom.js"
 
 /**
  * 绘制在canvas上的图形的基类
@@ -47,6 +47,7 @@ class ContextView extends View{
          */
         this.__yh = null;
 
+        this.coordinate = 0;
 
         Transform.call(this, option);
         Eventful.call(this);
@@ -109,6 +110,12 @@ class ContextView extends View{
         this.updateTransform();
 
         this.setTransform(ctx);
+
+        if(this.coordinate == 0 ){
+            let rct = getRectByCtx(ctx);
+            ctx.translate(0,rct[1]);
+            ctx.scale(1,-1);
+        }
     }
 
 
@@ -220,15 +227,14 @@ class ContextView extends View{
         }
 
         //文字的变换与图形不一样，默认情况下就是正向的，特别处理
-        this.updateTransform();
-        var m = this.transform;
-        ctx.setTransform(m[0], m[1], m[2], -m[3], m[4], m[5]);
+        var rect = getRectByCtx(ctx);
 
-        text.fillText(ctx, config.text, x, m[5] - y, st.font,
+        text.fillText(ctx, config.text, x, rect[1] - y, st.font,
             st.textAlign, st.textBaseline);
 
         ctx.restore();
     }
+
 }
 
 
