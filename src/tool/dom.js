@@ -23,12 +23,12 @@ export var getPosition = function (id) {
 var CACHE = {};
 
 export var getRectByCtx = function(context){
-    if(CACHE[context]){
-        return CACHE[context];
+    let canvas = context.canvas;
+    if(CACHE[canvas]){
+        return CACHE[canvas];
     }
-    var ps = getPosition(context);
-    CACHE[context] = [ps.width ,ps.height];
-    return CACHE[context];
+    CACHE[canvas] = [canvas.width ,canvas.height];
+    return CACHE[canvas];
 }
 
 export var doc = function (id) {

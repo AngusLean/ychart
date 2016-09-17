@@ -8,7 +8,6 @@
 </head>
 <body>
 <div style="width :800px; margin: 0 auto;">
-    <!-- <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div> -->
     <div id="drawing" style="border:blue solid 1px ;width :1200px;height:900px "> </div>
 </div>
 
@@ -37,31 +36,35 @@
     var img = document.images[0];
     var ow = img.width,oh=img.height,
         tw = yh.getWidth(),th=yh.getHeight();
-
+    var pts=[[100,370],[150,320]];
     var imgs =new YImage({
         image: img,
-        dWidth: 738,
-        dHeight: 664
+        dWidth: ow,
+        dHeight: oh
     });
     var circle1 = new Circle({
-        x: 100,
-        y: 370,
+        x: pts[0][0],
+        y: pts[0][1],
+        draggable: false,
         r: 5,
         style:{
             color: "red"
         }
     });
     var circle2 = new Circle({
-        x: 150,
-        y: 320,
+        x: pts[1][0],
+        y: pts[1][1],
+        draggable:false,
         r: 5,
         style:{
             color: "red"
         }
     });
-
+    var scale = [1,1];
+    scale[0] = tw/ow,
+    scale[1] = th/oh;
     var gp = new Group({
-        <!-- scale: [1.5,1.5] -->
+        scale: scale
     })
     gp.add(imgs);
     gp.add(circle1);
@@ -72,7 +75,7 @@
         console.log("curcle1 click!");
     });
     circle2.on("click",function () {
-        console.log("curcle2 click!");
+       console.log("curcle2 click!");
     });
     imgs.on("click",function(){
         console.log("click img");

@@ -47,7 +47,7 @@ class ContextView extends View{
          */
         this.__yh = null;
 
-        this.coordinate = 0;
+        this.coordinate = this.configProxy.getConfig().coordinate;;
 
         Transform.call(this, option);
         Eventful.call(this);

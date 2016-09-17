@@ -71,8 +71,8 @@ Moveable.prototype = {
      * @param {number}  y y方向放大比例
      */
     zoom: function (x, y) {
-        this.scale[0] += x;
-        this.scale[1] += y;
+        this.scale[0] *= x;
+        this.scale[1] *= y;
         this.__dirty = true;
     }
 };

@@ -41,8 +41,8 @@ var baseContextViewExtend = function (defaults) {
             }
         }
     }
-    Object.assign(BaseContextView.prototype,defaults);
 
+    Object.assign(BaseContextView.prototype,defaults);
 
 
     return BaseContextView;

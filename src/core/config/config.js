@@ -11,4 +11,4 @@ export var DEFAULT_CONFIG = {
     transform: null
 };
 
-export var useRectangularCoordinateSystem = true;
+export var useRectangularCoordinateSystem = 0;

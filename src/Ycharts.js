@@ -18,7 +18,7 @@ import Handler from "./Handler"
 var i=1000;
 var YCharts = function (eleid, opt) {
     //当前实例ID
-    this.id = "Ychart-"+i++;
+    // this.id = "Ychart-"+i++;
     //当前实例绑定的页面元素ID
     this.domid = eleid;
 
@@ -54,6 +54,13 @@ YCharts.prototype.update = function () {
     this.BrushAll();
 };
 
+YCharts.prototype.getWidth = function(){
+    return this.__painter.getWidth();
+};
+
+YCharts.prototype.getHeight = function(){
+    return this.__painter.getHeight();
+};
 
 /**
  * ychart全局入口对象。
@@ -63,7 +70,6 @@ YCharts.prototype.update = function () {
  */
 var ychart = {};
 var instances = {};
-var i = 1000;
 
 /**
  * ycharts外部访问接口。 用于统一管理所有用到的ycharts实例

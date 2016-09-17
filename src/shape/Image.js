@@ -46,17 +46,6 @@ ShapeBuilder.baseContextViewExtend({
 
         type: "Image",
 
-        BeforeBrush:function (ctx) {
-            return;
-            var x0 = this.parent.transform[0];
-            var x1 = this.parent.transform[1];
-            var x2 = this.parent.transform[2];
-            var x3 = this.parent.transform[3];
-            var x4 = this.parent.transform[4];
-            var x5 = this.parent.transform[5];
-            ctx.transform(x0,x1,x2,x3,x4,x5);
-        },
-
         BuildPath: function (ctx, config) {
             if(config.dWidth && config.dHeight){
                 if(config.sx && config.sy){

@@ -57,14 +57,10 @@ OptionProxy.prototype.init = function (config) {
             }
         }
     }
-    //设置默认设置
-    for (item in DEFAULT_CONFIG){
-        this.config[item] = typeof this.config[item] != "undefined" ? this.config[item] :
-            DEFAULT_CONFIG[item];
-    }
     if (this.styleProxy == null) {
         this.styleProxy = new styleProxy();
     }
+    this.config["coordinate"] = config.coordinate || useRectangularCoordinateSystem;
     this.config.style = this.styleProxy.getStyle();
 };
 
