@@ -49,7 +49,7 @@ var item;
 OptionProxy.prototype.init = function (config) {
     var item;
     for (item in config) {
-        if (!checkNull(config[item])) {
+        if(item){
             if (item != "style") {
                 this.config[item] = config[item];
             } else {

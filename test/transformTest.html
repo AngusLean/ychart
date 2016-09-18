@@ -12,12 +12,22 @@
 </div>
 <div style="width :800px; margin: 0 auto;">
     <button onclick="DrawLine()">画直线</button>
-    <button onclick="transformDrawline()">画直线</button>
+    <button onclick="isPtInPath()">点是否在直线</button>
+    <button onclick="transformDrawline()">画经过变换的直线</button>
     <button onclick="DrawText()">画Text</button>
     <button onclick="zoom()">缩放</button>
     <button onclick="transformDrawline1()">transform</button>
 </div>
 <script>
+if(typeof CanvasRenderingContext2D.prototype.isPointInStroke == "undefined"){
+    console.log("Pathed CanvasRenderingContext2D with isPointInStroke approximation");
+
+    CanvasRenderingContext2D.prototype.isPointInStroke = function(path, x, y) {
+        return this.isPointInPath(x, y);
+    };
+}
+
+
     function $(id) {
         return document.getElementById(id);
     }
@@ -31,6 +41,9 @@
         ctx.moveTo(0,20);
         ctx.lineTo(100,100);
         ctx.stroke();
+    }
+    function isPtInPath(){
+        console.log(ctx.isPointInStroke(20,10));
     }
     <!-- DrawLine(); -->
     function DrawText() {

@@ -1,3 +1,6 @@
+function parseInt10(val) {
+    return parseInt(val, 10);
+}
 export var getPosition = function (id) {
     var element = typeof id == "string" ? document.getElementById(id) : id;
     var st = document.defaultView.getComputedStyle(element);
@@ -9,12 +12,12 @@ export var getPosition = function (id) {
         document.documentElement.scrollLeft : document.body.scrollLeft;
     return {
         width: (element.clientWidth || parseInt10(st.width) || parseInt10(element.style.width) -
-        (parseInt10(st.paddingLeft) || 0) -
-        (parseInt10(st.paddingRight))) || 0,
+                (parseInt10(st.paddingLeft) || 0) -
+                (parseInt10(st.paddingRight))) || 0,
 
         height: (element.clientHeight || parseInt10(st.height) || parseInt10(element.style.height) -
-        (parseInt10(st.paddingTop) || 0) -
-        (parseInt10(st.paddingBottom))) || 0,
+                 (parseInt10(st.paddingTop) || 0) -
+                 (parseInt10(st.paddingBottom))) || 0,
         top: rect.top + scrollTop,
         left: rect.left + scrollLeft
     }

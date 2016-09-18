@@ -38,35 +38,36 @@ import Moveable from "./mixin/moveable"
 import OptionProxy from "../config/OptionProxy"
 import text from "./helper/text"
 
-import {mixin} from "../../tool/klass"
-import {isPtInPath,isPtInRect} from "./helper/viewutil"
+import {
+    mixin
+} from "../../tool/klass"
+import {
+    isPtInPath,
+    isPtInRect
+} from "./helper/viewutil"
 
-import {noOp} from "../../tool/lang"
-
+import {
+    noOp
+} from "../../tool/lang"
+import {
+    getRectByCtx
+} from "../../tool/dom.js"
 
 /**
  * 绘制在canvas上的图形的基类
  * @class
  */
-class ContextView extends View{
-    constructor(type = "ContextView" ,option={}){
-        super(type , option);
-
+class ContextView extends View {
+    constructor(type = "ContextView", option = {}) {
+        super(type, option);
         this.configProxy = new OptionProxy(option);
-
-        /**
-         * 当前元素的层级。层级决定了当前元素将被绘制在第几层canvas上
-         * @member {Number}
-         * @default 0
-         */
-        this.zLevel = 0;
 
         /**
          * 当前元素是否可以拖动
          * @member {boolean}
          * @default false
          */
-        this.draggable = option.draggable == undefined ? true :  option.draggable;
+        this.draggable = option.draggable == undefined ? true : option.draggable;
 
         /**
          * 绘图实例，用于调用实例的刷新方法
@@ -75,17 +76,43 @@ class ContextView extends View{
          */
         this.__yh = null;
 
-
         Transform.call(this, option);
         Eventful.call(this);
     }
 
     /**
-     * @property {Object} 获取当前shapa的配置项
+     * 是否使用直角座标系，除了图片和文字，其他字体默认都是以
+     * 左下角为原点的座标系
+     * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
+     */
+    get coordinate(){
+        return this.configProxy.getConfig().coordinate;
+    }
+
+    /**
+     * 当前元素的层级。层级决定了当前元素将被绘制在第几层canvas上
+     * @property {Number} zLevel
+     * @default 0
+     */
+    get zLevel(){
+        return this.config.zLevel || 0;
+    }
+
+    /**
+     * @property {Object} config 获取当前shapa的配置项
      * @returns {Object}
      */
-    get config(){
+    get config() {
         return this.configProxy.getConfig();
+    }
+
+    /**
+     * @property {boolean} getable 当前元素是否捕获事件。
+     * @default true
+     * @return boolean
+     */
+    get getable(){
+        return typeof this.config.getable === "undefined" ? true : this.config.getable;
     }
 
     /**
@@ -93,20 +120,20 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    BeforeBrush(ctx,config){}
+    BeforeBrush(ctx, config) {}
 
     /**
      * 绘图元素在把内容绘制到context之后调用的函数
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    AfterBrush(ctx,config){}
+    AfterBrush(ctx, config) {}
 
     /**
      * 获取当前元素的包围圈。
      * @return {Array.&lt;Number>} 返回rect数组
      */
-    GetContainRect(){}
+    GetContainRect() {}
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
@@ -117,11 +144,11 @@ class ContextView extends View{
     __BeforeBrush(ctx, config) {
         ctx.save();
 
-        this.__SetShapeTransform(ctx,config);
+        this.__SetShapeTransform(ctx, config);
 
         this.configProxy.bindContext(ctx);
 
-        this.BeforeBrush(ctx,config);
+        this.BeforeBrush(ctx, config);
 
         ctx.beginPath();
     }
@@ -137,16 +164,28 @@ class ContextView extends View{
         this.updateTransform();
 
         this.setTransform(ctx);
+
+        if (this.coordinate === 0) {
+            let rct = this.getRectByCtx(ctx);
+            ctx.translate(0, rct[1]);
+            ctx.scale(1, -1);
+        }
     }
 
-
     /**
-     * 绘图元素在把内容绘制到context之后调用的函数
-     * @method
-     * @private
+     * 通过上下文获取绘图的canvas尺寸
      * @param {CanvasRenderingContext2D} ctx
      */
-    __AfterBrush(ctx ,config) {
+    getRectByCtx(ctx) {
+            return getRectByCtx(ctx);
+        }
+        /**
+         * 绘图元素在把内容绘制到context之后调用的函数
+         * @method
+         * @private
+         * @param {CanvasRenderingContext2D} ctx
+         */
+    __AfterBrush(ctx, config) {
         var tp = this.configProxy.getBrushType();
         switch (tp) {
             case "both":
@@ -162,13 +201,13 @@ class ContextView extends View{
                 break;
             case "none":
                 break;
-            default :
+            default:
                 ctx.fill();
                 break;
         }
         ctx.restore();
 
-        this.AfterBrush(ctx ,config);
+        this.AfterBrush(ctx, config);
     }
 
     /**
@@ -187,7 +226,7 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    Brush(ctx ,width ,height) {
+    Brush(ctx, width, height) {
         var config = this.config;
 
         if (!config.ignore) {
@@ -214,11 +253,15 @@ class ContextView extends View{
 
     /**
      * 判断点是否在当前元素内
-     * @param {object}  point  包含x,y两个属性的点
+     * @param {Number} x   x座标
+     * @param {Number} y   y座标
      */
     contain(x, y) {
-        return isPtInPath(this, this.configProxy.getConfig(), x, y) ||
-                isPtInRect(this.GetContainRect() ,x,y);
+        var local = this.transformCoordToLocal(x,y);
+        // console.log(local)
+        var isContain = isPtInRect(this.GetContainRect(), local[0], local[1]) ||
+            isPtInPath(this, this.config, x, y);
+        return isContain;
     }
 
     /**
@@ -246,15 +289,14 @@ class ContextView extends View{
         }
 
         //文字的变换与图形不一样，默认情况下就是正向的，特别处理
-        this.updateTransform();
-        var m = this.transform;
-        ctx.setTransform(m[0], m[1], m[2], -m[3], m[4], m[5]);
+        var rect = getRectByCtx(ctx);
 
-        text.fillText(ctx, config.text, x, m[5] - y, st.font,
+        text.fillText(ctx, config.text, x, rect[1] - y, st.font,
             st.textAlign, st.textBaseline);
 
         ctx.restore();
     }
+
 }
 
 
@@ -262,7 +304,8 @@ mixin(ContextView, Transform, true);
 mixin(ContextView, Eventful, true);
 mixin(ContextView, Moveable, true);
 
-export default ContextView</code></pre>
+export default ContextView
+</code></pre>
         </article>
     </section>
 
@@ -272,13 +315,13 @@ export default ContextView</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Image.html">ychart/shape/Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_graphic_viewBuilder-BaseContextView.html">BaseContextView</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Circle-Init.html">Init</a></li><li><a href="module-ychart_shape_Image-Image.html">Image</a></li><li><a href="module-ychart_shape_Image-Init.html">Init</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Image.html">ychart/shape/Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_graphic_viewBuilder-BaseContextView.html">BaseContextView</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Circle-Init.html">Init</a></li><li><a href="module-ychart_shape_Image-Image.html">Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-i.html">i</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Sep 14 2016 17:39:35 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Sep 18 2016 18:58:07 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

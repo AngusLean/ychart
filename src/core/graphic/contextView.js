@@ -10,55 +10,85 @@ import Moveable from "./mixin/moveable"
 import OptionProxy from "../config/OptionProxy"
 import text from "./helper/text"
 
-import {mixin} from "../../tool/klass"
-import {isPtInPath,isPtInRect} from "./helper/viewutil"
+import {
+    mixin
+} from "../../tool/klass"
+import {
+    isPtInPath,
+    isPtInRect
+} from "./helper/viewutil"
 
-import {noOp} from "../../tool/lang"
-import {getRectByCtx} from "../../tool/dom.js"
+import {
+    noOp
+} from "../../tool/lang"
+import {
+    getRectByCtx
+} from "../../tool/dom.js"
 
 /**
  * 绘制在canvas上的图形的基类
  * @class
  */
-class ContextView extends View{
-    constructor(type = "ContextView" ,option={}){
-        super(type , option);
-
+class ContextView extends View {
+    constructor(type = "ContextView", option = {}) {
+        super(type, option);
         this.configProxy = new OptionProxy(option);
 
         /**
-         * 当前元素的层级。层级决定了当前元素将被绘制在第几层canvas上
-         * @member {Number}
-         * @default 0
-         */
-        this.zLevel = 0;
-
-        /**
-         * 当前元素是否可以拖动
-         * @member {boolean}
-         * @default false
-         */
-        this.draggable = option.draggable == undefined ? true :  option.draggable;
-
-        /**
          * 绘图实例，用于调用实例的刷新方法
+         * 在元素被添加到ychart实例的时候设置
          * @member {object}
          * @private
          */
         this.__yh = null;
-
-        this.coordinate = this.configProxy.getConfig().coordinate;;
 
         Transform.call(this, option);
         Eventful.call(this);
     }
 
     /**
-     * @property {Object} 获取当前shapa的配置项
+     * 是否使用直角座标系，除了图片和文字，其他字体默认都是以
+     * 左下角为原点的座标系
+     * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
+     * @default 图片或文字为1，其他元素为0
+     */
+    get coordinate(){
+        return this.configProxy.getConfig().coordinate;
+    }
+
+    /**
+     * 当前元素是否可以拖动
+     * @property {boolean} Draggable
+     * @default true
+     */
+    get draggable(){
+        return this.config.draggable === undefined ? true : option.draggable;
+    }
+
+    /**
+     * 当前元素的层级。层级决定了当前元素将被绘制在第几层canvas上
+     * @property {Number} zLevel
+     * @default 0
+     */
+    get zLevel(){
+        return this.config.zLevel || 0;
+    }
+
+    /**
+     * @property {Object} config 获取当前shapa的配置项
      * @returns {Object}
      */
-    get config(){
+    get config() {
         return this.configProxy.getConfig();
+    }
+
+    /**
+     * @property {boolean} getable 当前元素是否捕获事件。
+     * @default true
+     * @return boolean
+     */
+    get getable(){
+        return typeof this.config.getable === "undefined" ? true : this.config.getable;
     }
 
     /**
@@ -66,20 +96,20 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    BeforeBrush(ctx,config){}
+    BeforeBrush(ctx, config) {}
 
     /**
      * 绘图元素在把内容绘制到context之后调用的函数
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    AfterBrush(ctx,config){}
+    AfterBrush(ctx, config) {}
 
     /**
      * 获取当前元素的包围圈。
      * @return {Array.<Number>} 返回rect数组
      */
-    GetContainRect(){}
+    GetContainRect() {}
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
@@ -90,11 +120,11 @@ class ContextView extends View{
     __BeforeBrush(ctx, config) {
         ctx.save();
 
-        this.__SetShapeTransform(ctx,config);
+        this.__SetShapeTransform(ctx, config);
 
         this.configProxy.bindContext(ctx);
 
-        this.BeforeBrush(ctx,config);
+        this.BeforeBrush(ctx, config);
 
         ctx.beginPath();
     }
@@ -111,21 +141,27 @@ class ContextView extends View{
 
         this.setTransform(ctx);
 
-        if(this.coordinate == 0 ){
-            let rct = getRectByCtx(ctx);
-            ctx.translate(0,rct[1]);
-            ctx.scale(1,-1);
+        if (this.coordinate === 0) {
+            let rct = this.getRectByCtx(ctx);
+            ctx.translate(0, rct[1]);
+            ctx.scale(1, -1);
         }
     }
 
-
     /**
-     * 绘图元素在把内容绘制到context之后调用的函数
-     * @method
-     * @private
+     * 通过上下文获取绘图的canvas尺寸
      * @param {CanvasRenderingContext2D} ctx
      */
-    __AfterBrush(ctx ,config) {
+    getRectByCtx(ctx) {
+            return getRectByCtx(ctx);
+        }
+        /**
+         * 绘图元素在把内容绘制到context之后调用的函数
+         * @method
+         * @private
+         * @param {CanvasRenderingContext2D} ctx
+         */
+    __AfterBrush(ctx, config) {
         var tp = this.configProxy.getBrushType();
         switch (tp) {
             case "both":
@@ -141,13 +177,13 @@ class ContextView extends View{
                 break;
             case "none":
                 break;
-            default :
+            default:
                 ctx.fill();
                 break;
         }
         ctx.restore();
 
-        this.AfterBrush(ctx ,config);
+        this.AfterBrush(ctx, config);
     }
 
     /**
@@ -166,7 +202,7 @@ class ContextView extends View{
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    Brush(ctx ,width ,height) {
+    Brush(ctx, width, height) {
         var config = this.config;
 
         if (!config.ignore) {
@@ -197,8 +233,10 @@ class ContextView extends View{
      * @param {Number} y   y座标
      */
     contain(x, y) {
-        var isContain =  isPtInPath(this, this.config, x, y)
-            || isPtInRect(this.GetContainRect() ,x,y);
+        var local = this.transformCoordToLocal(x,y);
+        // console.log(local)
+        var isContain = isPtInRect(this.GetContainRect(), local[0], local[1]) ||
+            isPtInPath(this, this.config, x, y);
         return isContain;
     }
 

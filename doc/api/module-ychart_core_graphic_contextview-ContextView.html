@@ -92,7 +92,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line23">line 23</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
@@ -173,13 +173,357 @@
 
         <tr>
             
-                <td class="name"><code>获取当前shapa的配置项</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>获取当前shapa的配置项</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line77">line 77</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="coordinate"><span class="type-signature"></span>coordinate<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>是否使用直角座标系，除了图片和文字，其他字体默认都是以
+左下角为原点的座标系</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>coordinate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="getable"><span class="type-signature"></span>getable<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>getable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>当前元素是否捕获事件。</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>true</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="zLevel"><span class="type-signature"></span>zLevel<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>当前元素的层级。层级决定了当前元素将被绘制在第几层canvas上</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>zLevel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
 
 
             
@@ -224,11 +568,16 @@
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>0</li>
+        </ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line59">line 59</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -355,7 +704,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line75">line 75</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -486,7 +835,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line68">line 68</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line95">line 95</a>
     </li></ul></dd>
     
 
@@ -617,7 +966,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line162">line 162</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -771,7 +1120,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line152">line 152</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line191">line 191</a>
     </li></ul></dd>
     
 
@@ -802,7 +1151,7 @@
 
     
 
-    <h4 class="name" id="contain"><span class="type-signature"></span>contain<span class="signature">(point)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="contain"><span class="type-signature"></span>contain<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
 
     
 
@@ -845,13 +1194,13 @@
 
         <tr>
             
-                <td class="name"><code>point</code></td>
+                <td class="name"><code>x</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Number</span>
 
 
             
@@ -861,7 +1210,30 @@
 
             
 
-            <td class="description last"><p>包含x,y两个属性的点</p></td>
+            <td class="description last"><p>x座标</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>y座标</p></td>
         </tr>
 
     
@@ -902,7 +1274,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line191">line 191</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line231">line 231</a>
     </li></ul></dd>
     
 
@@ -1056,7 +1428,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line201">line 201</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line244">line 244</a>
     </li></ul></dd>
     
 
@@ -1138,7 +1510,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line81">line 81</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -1183,6 +1555,137 @@
 </dl>
 
     
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getRectByCtx"><span class="type-signature"></span>getRectByCtx<span class="signature">(ctx)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>通过上下文获取绘图的canvas尺寸</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ctx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line151">line 151</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1291,7 +1794,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line182">line 182</a>
+        <a href="core_graphic_contextView.js.html">core/graphic/contextView.js</a>, <a href="core_graphic_contextView.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
@@ -1333,13 +1836,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Image.html">ychart/shape/Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_graphic_viewBuilder-BaseContextView.html">BaseContextView</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Circle-Init.html">Init</a></li><li><a href="module-ychart_shape_Image-Image.html">Image</a></li><li><a href="module-ychart_shape_Image-Init.html">Init</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_config_styleProxy.html">ychart/core/config/styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Image.html">ychart/shape/Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_config_styleProxy-StyleProxy.html">StyleProxy</a></li><li><a href="module-ychart_core_config_style-_style.html">_style</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_graphic_viewBuilder-BaseContextView.html">BaseContextView</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_besier.html">ychart/shape/besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Circle-Init.html">Init</a></li><li><a href="module-ychart_shape_Image-Image.html">Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-i.html">i</a></li><li><a href="ychart.html">ychart</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Sep 14 2016 17:39:35 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Sep 18 2016 18:58:07 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

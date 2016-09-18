@@ -36,6 +36,7 @@ var DEFAULT_HANDLERS = {
         }
         //某个形状处于焦点中
         if (obj) {
+
             //设置处于焦点时的样式
             this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
             //分发该元素的鼠标移动事件
@@ -95,7 +96,7 @@ handlers.prototype.initHandlers = function () {
             ev = exEvent;
             obj = ev.targetEle;
 
-            //某个形状处于焦点中
+            //某个形状处于焦点中并且可以捕获事件
             if (obj) {
                 //分发该元素的获取焦点事件
                 this.triggerProxy(obj, name, ev);
@@ -141,7 +142,7 @@ handlers.prototype.extendAndFixEventPackge = function (event) {
  * @param exEvent  {exEvent} 扩充的事件对象
  */
 handlers.prototype.triggerProxy = function (element, eventName, exEvent) {
-    element.trigger && element.trigger(eventName, exEvent);
+    element.trigger && element.trigger(eventName, exEvent ,element.config);
 };
 
 /**
@@ -154,7 +155,7 @@ handlers.prototype.getHoverElement = function (exEvent) {
     var sp;
     for (var i = 0, len = shapes.length; i < len; i++) {
         sp = shapes[i];
-        if (sp.contain(
+        if (sp.getable && sp.contain(
                 exEvent.ycX,
                 exEvent.ycY
             )) {

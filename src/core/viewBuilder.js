@@ -42,8 +42,9 @@ var baseContextViewExtend = function (defaults) {
         }
     }
 
-    Object.assign(BaseContextView.prototype,defaults);
-
+    for(var prop in defaults){
+        BaseContextView.prototype[prop] = defaults[prop];
+    }
 
     return BaseContextView;
 };

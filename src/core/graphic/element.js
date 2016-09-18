@@ -11,7 +11,7 @@ import guid from "../../tool/guid"
 class Element{
     constructor(type){
         this.type = type;
-        this.id =  this.type+"--"+guid();
+        this.id =  this.type+"_"+guid();
     }
 
     /**
