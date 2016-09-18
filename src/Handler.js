@@ -5,11 +5,13 @@
 
 
 import eventUtil from "./tool/event"
-import {doc} from "./tool/dom"
+import {
+    doc
+} from "./tool/dom"
 import Draggable from "./core/graphic/mixin/draggable"
 
 function bind1Arg(handler, context) {
-    return function (arg1) {
+    return function(arg1) {
         return handler.call(context, arg1);
     };
 }
@@ -27,7 +29,7 @@ var DEFAULT_HANDLERS = {
     _lastHovered: null,
 
     //鼠标移动事件捕获及分发
-    mousemove: function (exEvent) {
+    mousemove: function(exEvent) {
 
         ev = exEvent, obj = exEvent.targetEle;
         //判断和之前获取焦点的是否是同一个形状
@@ -48,8 +50,8 @@ var DEFAULT_HANDLERS = {
         this._lastHovered = obj;
     },
 
-    mouseout: function (exEvent) {
-        ev = exEvent , obj = ev.targetEle;
+    mouseout: function(exEvent) {
+        ev = exEvent, obj = ev.targetEle;
         if (this._lastHovered != null) {
             this.triggerProxy(this._lastHovered, "globalout", ev);
         }
@@ -63,7 +65,7 @@ var DEFAULT_HANDLERS = {
  * @param painter {module:ychart/painter} 绘图器实例
  * @param storage {module:ychart/storage} 存储器实例
  */
-var handlers = function (root, painter, storage) {
+var handlers = function(root, painter, storage) {
     //存储器
     this.__storage = storage;
 
@@ -89,10 +91,10 @@ var handlers = function (root, painter, storage) {
  * 初始化事件处理程序及绑定事件。
  * this._handlers保存着所有的事件处理函数
  */
-handlers.prototype.initHandlers = function () {
+handlers.prototype.initHandlers = function() {
 
-    var defaultEventProcess = function (name) {
-        return function (exEvent) {
+    var defaultEventProcess = function(name) {
+        return function(exEvent) {
             ev = exEvent;
             obj = ev.targetEle;
 
@@ -104,13 +106,14 @@ handlers.prototype.initHandlers = function () {
         };
     };
 
-    var _this = this, exEvent;
-    ALL_HANDLER_NAMES.forEach(function (item) {
-        var eventHandler = DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item)
-            : DEFAULT_HANDLERS[item];
+    var _this = this,
+        exEvent;
+    ALL_HANDLER_NAMES.forEach(function(item) {
+        var eventHandler = DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item) :
+            DEFAULT_HANDLERS[item];
         //设置所有的事件处理函数
         _this._handlers[item] = eventHandler;
-        eventUtil.addHandler(_this.root, item, bind1Arg(function (event) {
+        eventUtil.addHandler(_this.root, item, bind1Arg(function(event) {
 
             exEvent = this.extendAndFixEventPackge(event);
 
@@ -128,7 +131,7 @@ handlers.prototype.initHandlers = function () {
  * @param event {Event} 原始事件对象
  * @returns {exEvent}
  */
-handlers.prototype.extendAndFixEventPackge = function (event) {
+handlers.prototype.extendAndFixEventPackge = function(event) {
     event = eventUtil.clientToLocal(this.root, event, event);
     //目标形状
     event.targetEle = this.getHoverElement(event);
@@ -141,8 +144,8 @@ handlers.prototype.extendAndFixEventPackge = function (event) {
  * @param eventName {string}  事件名称
  * @param exEvent  {exEvent} 扩充的事件对象
  */
-handlers.prototype.triggerProxy = function (element, eventName, exEvent) {
-    element.trigger && element.trigger(eventName, exEvent ,element.config);
+handlers.prototype.triggerProxy = function(element, eventName, exEvent) {
+    element.trigger && element.trigger(eventName, exEvent, element.config);
 };
 
 /**
@@ -150,7 +153,7 @@ handlers.prototype.triggerProxy = function (element, eventName, exEvent) {
  * @param exEvent  {exEvent} 扩充的自定义事件对象
  * @return {module:ychart/core/graphic/element || null} 元素对象或者null
  */
-handlers.prototype.getHoverElement = function (exEvent) {
+handlers.prototype.getHoverElement = function(exEvent) {
     var shapes = this.__storage.getDisplayableShapeList();
     var sp;
     for (var i = 0, len = shapes.length; i < len; i++) {

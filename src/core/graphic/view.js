@@ -7,7 +7,7 @@ import Element from "./element"
 /**
  * @class 绘图基类。 页面上所有可以显示的绘图最小单元都必须继承该类
  */
-class View extends Element{
+class View extends Element {
 
     /**
      * 构造函数
@@ -15,7 +15,7 @@ class View extends Element{
      * @param {string} type
      * @param {object} option
      */
-    constructor(type = "view" ,option={}){
+    constructor(type = "view", option = {}) {
         super(type);
 
         /**
@@ -44,7 +44,7 @@ class View extends Element{
      * @param {object} option -- 绘图参数
      * @throws Error
      */
-    Brush(option){
+    Brush(option) {
         throw new Error("绘图单元必须实现该方法");
     }
 }

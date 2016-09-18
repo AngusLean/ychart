@@ -153,14 +153,15 @@ class ContextView extends View {
      * @param {CanvasRenderingContext2D} ctx
      */
     getRectByCtx(ctx) {
-            return getRectByCtx(ctx);
-        }
-        /**
-         * 绘图元素在把内容绘制到context之后调用的函数
-         * @method
-         * @private
-         * @param {CanvasRenderingContext2D} ctx
-         */
+        return getRectByCtx(ctx);
+    }
+
+    /**
+     * 绘图元素在把内容绘制到context之后调用的函数
+     * @method
+     * @private
+     * @param {CanvasRenderingContext2D} ctx
+     */
     __AfterBrush(ctx, config) {
         var tp = this.configProxy.getBrushType();
         switch (tp) {
@@ -215,8 +216,6 @@ class ContextView extends View {
             this.__AfterBrush(ctx, config);
         }
     }
-
-
 
     /**
      * 设置元素配置项。 调用该方法会导致该元素被标记为脏，下一次重新页面刷新时将清楚该元素所在层并且重新绘制
