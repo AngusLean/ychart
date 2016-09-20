@@ -102,7 +102,7 @@ OptionProxy.prototype.getBrushType = function (context) {
  */
 OptionProxy.prototype.update = function (config) {
     for (item in config) {
-        if (!checkNull(config[item])) {
+        if (item) {
             if (item != "style") {
                 this.config[item] = config[item];
             } else {
