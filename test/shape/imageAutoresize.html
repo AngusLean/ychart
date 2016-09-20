@@ -10,7 +10,7 @@
 
 <body>
     <div>
-        <div id="drawing" style="border:blue solid 1px ;width :840px;height:650px ">
+        <div id="drawing" style="border:blue solid 1px ;width :1668px;height:847px ">
         </div>
     </div>
 
@@ -22,7 +22,7 @@
         <button onclick="zoomIn()">缩小</button>
     </div>
     <div style="display: none;">
-        <img src="sth.jpg" id="img" alt="">
+        <img src="sth2.jpg" id="img" alt="">
     </div>
     <script>
         var $ = function(id)
@@ -50,8 +50,8 @@
             ico.onload = function()
             {
                 var pts = [
-                    [100, 540],
-                    [150, 590]
+                    [640, 590],
+                    [790, 590]
                 ];
                 var imgs = new YImage(
                 {
@@ -79,8 +79,8 @@
                     image: ico,
                     dx: pts[0][0],
                     dy: pts[0][1],
-                    dWidth: 15,
-                    dHeight: 15
+                    dWidth: 30,
+                    dHeight: 30
                 });
                 var circle2 = new Circle(
                 {

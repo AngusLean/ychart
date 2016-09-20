@@ -8,11 +8,11 @@ import ShapeBuilder from "../core/viewBuilder"
 /**
  * 图形形状类
  * @class Image
- * @classdesc 该元素可以有三种调用方法:
- *  ctx.drawImage(image, dx, dy);
- *  ctx.drawImage(image, dx, dy, dWidth, dHeight);
- *  ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
- * @property {HTMLImage} image 开始点  必须有
+ * 该元素可以有三种调用方法:
+ *  <br>ctx.drawImage(image, dx, dy);
+ *  <br>ctx.drawImage(image, dx, dy, dWidth, dHeight);
+ *  <br>ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+ * @property {HTMLImage} image 图形的HTMLImage对象， 注意不能是通过DOM获取的对象。 可以通过新建一个Image对象
  * @property {number} dx 绘制该图形在画布上的起点X  默认0
  * @property {number} dy 绘制该图形在画布上的起点Y  默认0
  * @property {number} dWidth 绘制该图形在画布上的宽度  默认不指定
@@ -21,7 +21,9 @@ import ShapeBuilder from "../core/viewBuilder"
  * @property {number} sy 绘制该图形在图像上的起点Y  默认不指定
  * @property {number} sWidth 绘制该图形在图像上的宽度  默认不指定
  * @property {number} sHeight 绘制该图形在图像上的宽度  默认不指定
- * @constructor
+ * @property {Object} style 样式。{@link Line}
+ * @constructor Image
+ * @extends ContextView
  */
 export default
 ShapeBuilder.baseContextViewExtend({
@@ -29,7 +31,7 @@ ShapeBuilder.baseContextViewExtend({
     /**
      * 构造函数 。 在构造函数中指定该图像的中心点
      * @param {object} option  绘制形状的配置
-     * @method
+     * @private
      */
     Init: function(config) {
         this.origin = this.origin || [];
@@ -53,6 +55,7 @@ ShapeBuilder.baseContextViewExtend({
      * 但是由于这是通过容器canvas大小和目标图像的高度计算得来，在
      * 和其他形状配合使用时遇到变化可能会出现问题。 此时就需要设置
      * coordinate属性为-1，使得绘图片还是以左上角为原点.
+     * @private
      */
     BuildPath: function(ctx, config) {
         if (this.coordinate == 1) {
@@ -99,7 +102,6 @@ ShapeBuilder.baseContextViewExtend({
                 this.rect[3] = this.rect[1] + config.image.height;
             }
         }
-
         return this.rect;
     }
 });

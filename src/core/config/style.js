@@ -1,10 +1,6 @@
 /**
- *
- * 默认样式数据
- * @module ychart/core/config/style
- *
+ * 样式名映射
  */
-
 var styleMap = {
 
     fillStyle: "fillStyle",
@@ -36,30 +32,28 @@ var styleMap = {
 
 
 /**
- * @classdesc 全局默认样式。 所有形状或者路劲的样式都基于这个样式。
+ * 全局默认样式。 所有形状或者路劲的样式都基于这个样式。
  * 负责为所有模块提供默认样式及自定义样式名到标准样式名的转换
  * 映射配置属性名到canvas属性.
  * 应该包含默认的属性名
  * 新加一个属性在这个映射和下面CONFIG中的style中同时添加
- * @class
- * @param opt  初始化样式
- * @constructor
- * @protected
  */
-var _style = function () {
+var style = function () {
 };
 
 
-_style.prototype = {
+style.prototype = {
     /**
      * 线条颜色，用于任意路劲绘制中线条样式的控制。
      * 值可以是任意十六进制颜色或者英文单词
+     * @type string
      */
     strokeStyle: "blue",
 
     /**
      * 填充颜色，用于任意路劲中fill方法的填充样式
      * 值可以是任意十六进制颜色或者英文单词
+     * @type string
      */
     fillStyle: "#dcd5d9",
 
@@ -146,7 +140,7 @@ _style.prototype = {
 
 
 export default {
-    _style: _style,
-    _styleMap: styleMap
+    style: style,
+    styleMap: styleMap
 };
 

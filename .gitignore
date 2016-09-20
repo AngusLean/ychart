@@ -176,3 +176,5 @@ node_modules
 buildBK/
 dist/
 srcBK/
+*.bk
+sendtoSws.bat

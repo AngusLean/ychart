@@ -8,11 +8,11 @@ import ShapeBuilder from "../core/viewBuilder"
 var minx = 99999, miny = 99999, maxx = -99999, maxy = -99999;
 
 /**
- * 不规则多边形. 需指定所有的点坐标
  * @class Rect
- * @property  {Array.number}  allpt {x:10,y:10} 点的数组
+ * @classdesc 不规则多边形. 需指定所有的点坐标
+ * @property  {Array.number}  allpt [[0,0],[10,10]]这样的点的数组
  * @property  {boolean} notClose 是否是不闭合的多边形.默认闭合
- * @constructor
+ * @constructor Rect
  */
 export default ShapeBuilder.baseContextViewExtend({
 
@@ -45,7 +45,7 @@ export default ShapeBuilder.baseContextViewExtend({
                 maxy = tmp[1];
             }
         }
-        return [[minx, miny], [minx, maxy], [maxx, maxy], [maxx, miny]];
+        return [minx ,miny ,maxx ,maxy];
     }
 
 });

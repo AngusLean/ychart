@@ -9,7 +9,9 @@ import ShapeBuilder from "../core/viewBuilder"
  * @class Line
  * @property {Array.number} beginpt 开始点
  * @property {Array.number} endpt 结束点
- * @constructor
+ * @property {number} splitnum  如果是虚线，分成多少段.
+ *
+ * @constructor Line
  */
 export default ShapeBuilder.baseContextViewExtend({
 

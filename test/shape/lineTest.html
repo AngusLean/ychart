@@ -13,9 +13,6 @@
 </div>
 
 <script>
-    var $= function (id) {
-        return document.getElementById(id);
-    };
 
     var ycharts = ychart,Line = ychart.shape.Line;
     yh = ycharts.init("drawing");
@@ -41,9 +38,10 @@
 
     yh.add(line1);
     yh.add(line2);
-    <!-- yh.add(rect); -->
+
     yh.BrushAll();
     function move() {
+        console.log("元素移动了")
         line1.drift(10,10);
         yh.BrushAll();
     }

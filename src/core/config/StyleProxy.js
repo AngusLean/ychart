@@ -1,15 +1,12 @@
 /**
  * 样式代理类。
- * @module ychart/core/config/styleProxy
  *
  */
-
-
 import {isObj, merge} from "../../tool/util"
 import Style from "./style"
 
-var defaultStyle = Style._style;
-var styleMapper = Style._styleMap;
+var defaultStyle = Style.style;
+var styleMapper = Style.styleMap;
 
 /**
  * 样式代理类 ，在合并样式时会出现覆盖的情况

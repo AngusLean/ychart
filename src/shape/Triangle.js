@@ -11,7 +11,7 @@ import ShapeBuilder from "../core/viewBuilder"
      * @property {number} width  三角形的宽
      * @property {number} height 三角形的高
      * @property {number} direction bottom 为向下。 默认向上
-     * @constructor
+     * @constructor Triangle
      */
     export default ShapeBuilder.baseContextViewExtend({
 

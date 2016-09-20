@@ -1,6 +1,6 @@
 /**
  * 贝塞尔曲线
- * @module ychart/shape/besier
+ * @module ychart/shape/Besier
  */
 import debugs from "../tool/debug"
 import ShapeBuilder from "../core/viewBuilder"
@@ -32,13 +32,14 @@ var radian2angle = function (radian) {
 };
 
 /**
- * 绘制一条曲线路径. 调用此方法后当前的context将包含一条路径.
+ *
  * @class Bezier
+ * @classdesc 绘制一条曲线路径. 调用此方法后当前的context将包含一条路径.
  * @property {Array.number} beginpt x,y  开始点坐标
  * @property {Array.number} endpt    x,y 结束点坐标
  * @property {number} compact 0-10  表示该波浪线的紧凑程度,即每个弯曲的距离比例
  * @property {number} systole 0-4 波浪的起伏程度, 表现为上下波动程度. 1为标准.小于1就是缩放.1-4就是放大
- * @constructor
+ * @constructor Bezier
  */
 export default ShapeBuilder.baseContextViewExtend({
 

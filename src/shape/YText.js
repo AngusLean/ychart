@@ -12,7 +12,7 @@ import ShapeBuilder from "../core/viewBuilder"
  * @class Text
  * @property {string} text 显示的文字
  * @property {Array.number} beginpt 开始座标
- * @constructor
+ * @constructor YText
  */
 export default ShapeBuilder.baseContextViewExtend({
     Init: function(config){

@@ -92,104 +92,19 @@
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
             
+<h4 class="name" id="styleMap"><span class="type-signature"></span>styleMap<span class="type-signature"></span></h4>
 
-    
-
-    <h4 class="name" id="replaceattr"><span class="type-signature"></span>replaceattr<span class="signature">(target, map)</span><span class="type-signature"></span></h4>
-
-    
 
 
 
 <div class="description">
-    <p>用指定的map属性名映射替代目标对象的属性名. 仅仅改变属性的名称
-该方法会直接更改目标对象</p>
+    <p>样式名映射</p>
 </div>
 
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>target</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>要被替换的对象</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>map</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>对象属性名的映射</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -225,7 +140,161 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="tool_util.js.html">tool/util.js</a>, <a href="tool_util.js.html#line63">line 63</a>
+        <a href="core_config_style.js.html">core/config/style.js</a>, <a href="core_config_style.js.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ychart"><span class="type-signature"></span>ychart<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    <p>ychart全局入口对象。</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Ycharts.js.html">Ycharts.js</a>, <a href="Ycharts.js.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="style"><span class="type-signature"></span>style<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>全局默认样式。 所有形状或者路劲的样式都基于这个样式。
+负责为所有模块提供默认样式及自定义样式名到标准样式名的转换
+映射配置属性名到canvas属性.
+应该包含默认的属性名
+新加一个属性在这个映射和下面CONFIG中的style中同时添加</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core_config_style.js.html">core/config/style.js</a>, <a href="core_config_style.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -267,13 +336,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config.html">ychart/core/config</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="ICircleStyle.html">ICircleStyle</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="module-ychart_core_config-optionProxy.html">optionProxy</a></li><li><a href="module-ychart_core_config-styleProxy.html">styleProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li></ul><h3>Global</h3><ul><li><a href="global.html#replaceattr">replaceattr</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ychart_animation.html">ychart/animation</a></li><li><a href="module-ychart_core_config_optionProxy.html">ychart/core/config/optionProxy</a></li><li><a href="module-ychart_core_config_style.html">ychart/core/config/style</a></li><li><a href="module-ychart_core_graphic_contextview.html">ychart/core/graphic/contextview</a></li><li><a href="module-ychart_core_graphic_element.html">ychart/core/graphic/element</a></li><li><a href="module-ychart_core_graphic_mixin.html">ychart/core/graphic/mixin</a></li><li><a href="module-ychart_core_graphic_mixin_helper.html">ychart/core/graphic/mixin/helper</a></li><li><a href="module-ychart_core_graphic_view.html">ychart/core/graphic/view</a></li><li><a href="module-ychart_graphic_viewBuilder.html">ychart/graphic/viewBuilder</a></li><li><a href="module-ychart_Group.html">ychart/Group</a></li><li><a href="module-ychart_Handler.html">ychart/Handler</a></li><li><a href="module-ychart_index.html">ychart/index</a></li><li><a href="module-ychart_layer.html">ychart/layer</a></li><li><a href="module-ychart_painter.html">ychart/painter</a></li><li><a href="module-ychart_shape_Besier.html">ychart/shape/Besier</a></li><li><a href="module-ychart_shape_Circle.html">ychart/shape/Circle</a></li><li><a href="module-ychart_shape_Image.html">ychart/shape/Image</a></li><li><a href="module-ychart_shape_Line.html">ychart/shape/Line</a></li><li><a href="module-ychart_shape_Rect.html">ychart/shape/Rect</a></li><li><a href="module-ychart_shape_Text.html">ychart/shape/Text</a></li><li><a href="module-ychart_shape_Triangle.html">ychart/shape/Triangle</a></li><li><a href="module-ychart_storage.html">ychart/storage</a></li><li><a href="module-ychart_tool_util.html">ychart/tool/util</a></li><li><a href="module-ychart_Ychart.html">ychart/Ychart</a></li></ul><h3>Classes</h3><ul><li><a href="module-ychart_core_config_optionProxy-OptionProxy.html">OptionProxy</a></li><li><a href="module-ychart_core_graphic_contextview-ContextView.html">ContextView</a></li><li><a href="module-ychart_core_graphic_element-Element.html">Element</a></li><li><a href="module-ychart_core_graphic_mixin-Draggable.html">Draggable</a></li><li><a href="module-ychart_core_graphic_view-View.html">View</a></li><li><a href="module-ychart_graphic_viewBuilder-BaseContextView.html">BaseContextView</a></li><li><a href="module-ychart_Group-Group.html">Group</a></li><li><a href="module-ychart_Handler-handlers.html">handlers</a></li><li><a href="module-ychart_layer-Layer.html">Layer</a></li><li><a href="module-ychart_painter-Painter.html">Painter</a></li><li><a href="module-ychart_shape_Besier-Bezier.html">Bezier</a></li><li><a href="module-ychart_shape_Circle-Circle.html">Circle</a></li><li><a href="module-ychart_shape_Image-Image.html">Image</a></li><li><a href="module-ychart_shape_Line-Line.html">Line</a></li><li><a href="module-ychart_shape_Rect-Rect.html">Rect</a></li><li><a href="module-ychart_shape_Text-YText.html">YText</a></li><li><a href="module-ychart_shape_Triangle-Triangle.html">Triangle</a></li><li><a href="module-ychart_storage-Storage.html">Storage</a></li><li><a href="module-ychart_Ychart-YCharts.html">YCharts</a></li><li><a href="StyleProxy.html">StyleProxy</a></li></ul><h3>Mixins</h3><ul><li><a href="module-ychart_core_graphic_mixin-Eventful.html">Eventful</a></li><li><a href="module-ychart_core_graphic_mixin-Moveable.html">Moveable</a></li><li><a href="module-ychart_core_graphic_mixin-Transformable.html">Transformable</a></li></ul><h3>Global</h3><ul><li><a href="global.html#style">style</a></li><li><a href="global.html#styleMap">styleMap</a></li><li><a href="global.html#ychart">ychart</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Aug 12 2016 18:29:48 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Sep 20 2016 15:08:59 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
