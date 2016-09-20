@@ -8,10 +8,10 @@ import ShapeBuilder from "../core/viewBuilder"
 /**
  * 图形形状类
  * @class Image
- * 该元素可以有三种调用方法:
- *  <br>ctx.drawImage(image, dx, dy);
- *  <br>ctx.drawImage(image, dx, dy, dWidth, dHeight);
- *  <br>ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+ * 该元素可以如下三种构造方法:
+ *  <br>(image, dx, dy);
+ *  <br>(image, dx, dy, dWidth, dHeight);
+ *  <br>(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
  * @property {HTMLImage} image 图形的HTMLImage对象， 注意不能是通过DOM获取的对象。 可以通过新建一个Image对象
  * @property {number} dx 绘制该图形在画布上的起点X  默认0
  * @property {number} dy 绘制该图形在画布上的起点Y  默认0

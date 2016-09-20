@@ -1,5 +1,6 @@
 /**
  * 样式名映射
+ * @module ychart/core/config/style
  */
 var styleMap = {
 

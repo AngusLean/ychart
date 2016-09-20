@@ -85,31 +85,37 @@ YCharts.prototype.getHeight = function(){
     return this.__painter.getHeight();
 };
 
-/**
- * ychart全局入口对象。
- * @global
- * @type {{}}
- */
-var ychart = {};
+
 var instances = {};
 
 /**
- * ycharts外部访问接口。 用于统一管理所有用到的ycharts实例
- * @param id  容器ID
- * @param config 相关配置
- * @returns {YCharts}
+ * ychart全局入口对象。
+ * @global
+ * @class
  */
-ychart.init = function (id, config) {
-    var _charts = new YCharts(id, config);
-    instances[id] = _charts;
-    return _charts;
-};
+const ychart = {
+    /**
+     * ycharts外部访问接口。 用于统一管理所有用到的ycharts实例
+     * @param id  容器ID
+     * @param config 相关配置
+     * @returns {YCharts}
+     */
+    init: function(id, config) {
+        var _charts = new YCharts(id, config);
+        instances[id] = _charts;
+        return _charts;
+    };
 
-ychart.depose = function (id) {
-    if (instances[id]) {
-        instances[id].clean();
-        instances[id] = null;
-    }
+    /**
+     * 销毁指定的ychart实例
+     * @param {number} id ychart实例ID
+     */
+    depose: function(id) {
+        if (instances[id]) {
+            instances[id].clean();
+            instances[id] = null;
+        }
+    };
 };
 
 

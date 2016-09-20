@@ -13,7 +13,7 @@ var REQUIRED_CHILD = {
 
 
 /**
- * @function 基本canvas视图类创建工厂， 调用该方法并且传入如下参数即创建了一个新的视图元素
+ * @description 基本canvas视图类创建工厂， 调用该方法并且传入如下参数即创建了一个新的视图元素
  * @param {object} defaults 视图元素构造相关方法
  * @returns {BaseContextView} 视图元素类
  */
@@ -31,7 +31,7 @@ var baseContextViewExtend = function (defaults) {
 
     /**
      * @class
-     * @classdesc ychart自带形状的构造类.
+     * @classdesc ychart形状的构造类.
      */
     class BaseContextView extends ContextView {
         constructor(baseOption) {

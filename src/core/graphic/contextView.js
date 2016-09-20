@@ -13,6 +13,7 @@ import text from "./helper/text"
 import {
     mixin
 } from "../../tool/klass"
+
 import {
     isPtInPath,
     isPtInRect
@@ -21,13 +22,17 @@ import {
 import {
     noOp
 } from "../../tool/lang"
+
 import {
     getRectByCtx
 } from "../../tool/dom.js"
 
 /**
- * 绘制在canvas上的图形的基类
+ * @classdesc 绘制在canvas上的CanvasRenderingContext2D图形的绘图处理类,该类提供绘图相关
+ * 的方法和控制，但是具体路径的绘制则由具体图形负责。 该类可以说仅仅是一个代
+ * 理
  * @class
+ * @abstract
  */
 class ContextView extends View {
     constructor(type = "ContextView", option = {}) {
@@ -52,16 +57,16 @@ class ContextView extends View {
      * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
      * @default 图片或文字为1，其他元素为0
      */
-    get coordinate(){
+    get coordinate() {
         return this.configProxy.getConfig().coordinate;
     }
 
     /**
-     * 当前元素是否可以拖动
-     * @property {boolean} Draggable
+     *
+     * @property {boolean} Draggable 当前元素是否可以拖动
      * @default true
      */
-    get draggable(){
+    get draggable() {
         return this.config.draggable === undefined ? true : option.draggable;
     }
 
@@ -70,7 +75,7 @@ class ContextView extends View {
      * @property {Number} zLevel
      * @default 0
      */
-    get zLevel(){
+    get zLevel() {
         return this.config.zLevel || 0;
     }
 
@@ -87,7 +92,7 @@ class ContextView extends View {
      * @default true
      * @return boolean
      */
-    get getable(){
+    get getable() {
         return typeof this.config.getable === "undefined" ? true : this.config.getable;
     }
 
@@ -232,11 +237,9 @@ class ContextView extends View {
      * @param {Number} y   y座标
      */
     contain(x, y) {
-        var local = this.transformCoordToLocal(x,y);
-        // console.log(local)
-        var isContain = isPtInRect(this.GetContainRect(), local[0], local[1]) ||
+        var local = this.transformCoordToLocal(x, y);
+        return isPtInRect(this.GetContainRect(), local[0], local[1]) ||
             isPtInPath(this, this.config, x, y);
-        return isContain;
     }
 
     /**

@@ -1,7 +1,6 @@
 /**
  *动画效果模块
  * @module ychart/animation
- *
  */
 
 var requestAnimFrame = (window !== undefined &&
@@ -18,7 +17,8 @@ var Nop = function () {
 };
 
 /**
- * @function 动画控制函数
+ * @function
+ * @description 动画控制函数
  * @param option
  */
 var animate = function (option) {
