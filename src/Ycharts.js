@@ -4,7 +4,7 @@
  */
 import Storage from "./Storage"
 import Painter from "./Painter"
-import Handler from "./Handler"
+import Handler from "./Reactor"
 
 
 var i=1000;
@@ -93,7 +93,7 @@ var instances = {};
  * @global
  * @class
  */
-const ychart = {
+var ychart = {
     /**
      * ycharts外部访问接口。 用于统一管理所有用到的ycharts实例
      * @param id  容器ID
@@ -104,7 +104,7 @@ const ychart = {
         var _charts = new YCharts(id, config);
         instances[id] = _charts;
         return _charts;
-    };
+    },
 
     /**
      * 销毁指定的ychart实例
@@ -115,7 +115,7 @@ const ychart = {
             instances[id].clean();
             instances[id] = null;
         }
-    };
+    }
 };
 
 

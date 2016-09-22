@@ -4,7 +4,6 @@
  */
 
 import ShapeBuilder from "../core/viewBuilder"
-import BaseShape from "./BaseShape"
 
 /**
  * 圆形

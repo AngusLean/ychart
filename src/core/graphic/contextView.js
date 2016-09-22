@@ -37,6 +37,7 @@ import {
 class ContextView extends View {
     constructor(type = "ContextView", option = {}) {
         super(type, option);
+
         this.configProxy = new OptionProxy(option);
 
         /**
