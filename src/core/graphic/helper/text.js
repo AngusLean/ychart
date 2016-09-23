@@ -4,7 +4,7 @@
 import Style from "../../config/style"
 import {getContext} from "./viewutil"
 
-var st = new Style._style();
+var st = new Style.style();
 
 var defaultFont = st.font;
 var defaultAlign = st.textAlign;

@@ -1,12 +1,12 @@
-export var callOrApply = function (func, ctx, args) {
+export var callOrApply = function(func, ctx, args) {
 
 };
 
-export var throwFunc = function (str) {
+export var throwFunc = function(str) {
     throw str
 };
 
-export var noOp = function (){};
+export var noOp = function() {};
 
 export var bind1Arg = function(handler, context) {
     return function(arg1) {
@@ -15,3 +15,11 @@ export var bind1Arg = function(handler, context) {
 }
 
 
+export var onreadyCallback = function(ctx, element, callback) {
+    var timer = setInterval(function() {
+        if (element.complete) {
+            callback.call(ctx)
+            clearInterval(timer)
+        }
+    }, 50)
+}

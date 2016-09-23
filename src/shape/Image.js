@@ -3,7 +3,9 @@
  * @module ychart/shape/Image
  */
 import ShapeBuilder from "../core/viewBuilder"
-
+import {
+    onreadyCallback
+}　 from "../tool/lang.js"
 
 /**
  * 图形形状类
@@ -35,17 +37,28 @@ ShapeBuilder.baseContextViewExtend({
      */
     Init: function(config) {
         this.origin = this.origin || [];
+        //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
+        if (config.image) {
+            this.__setOrigin(config.image);
+        }
+        if (typeof this.coordinate == "undefined")
+            this.coordinate = 1;
+    },
+
+    /**
+     * 设置图片放大缩小的中心座标。 由于依赖于已经加载的图片，所以单独列出来
+     * @private
+     */
+    __setOrigin: function(image) {
+        var config = this.config;
         var rect = [];
         if (config.dWidth && config.dHeight) {
             this.origin[0] = config.dx || 0 + config.dWidth / 2;
             this.origin[1] = rect[1] - config.dy || 0 + config.dHeight / 2;
         } else {
-            this.origin[0] = config.dx || 0 + config.image.width / 2;
-            this.origin[1] = rect[1] - config.dy || 0 + config.image.height / 2;
+            this.origin[0] = config.dx || 0 + image.width / 2;
+            this.origin[1] = rect[1] - config.dy || 0 + image.height / 2;
         }
-
-        if (typeof this.coordinate == "undefined")
-            this.coordinate = 1;
     },
 
     type: "Image",
@@ -58,36 +71,51 @@ ShapeBuilder.baseContextViewExtend({
      * @private
      */
     BuildPath: function(ctx, config) {
-        if (this.coordinate == 1) {
-            let rect = this.getRectByCtx(ctx);
-            let imgH = config.image.height;
-            if (config.dWidth && config.dHeight) {
-                if (config.sx && config.sy) {
-                    ctx.drawImage(config.image, config.sx || 0, config.sy || 0, config.sWidth,
-                        config.sHeight, config.dx, rect[1] - config.dy - config.dHeight, config.dWidth, config.dHeight);
+        var buildImagePath = function() {
+            var image = this.image || config.image;
+            if (this.coordinate == 1) {
+                let rect = this.getRectByCtx(ctx);
+                let imgH = image.height;
+                if (config.dWidth && config.dHeight) {
+                    if (config.sx && config.sy) {
+                        ctx.drawImage(image, config.sx || 0, config.sy || 0, config.sWidth,
+                            config.sHeight, config.dx, rect[1] - config.dy - config.dHeight, config.dWidth, config.dHeight);
+                    } else {
+                        let dy = rect[1] - config.dHeight - (config.dy || 0);
+                        ctx.drawImage(image, config.dx || 0, dy, config.dWidth, config.dHeight);
+                    }
                 } else {
-                    let dy = rect[1] - config.dHeight - (config.dy || 0);
-                    ctx.drawImage(config.image, config.dx || 0, dy, config.dWidth, config.dHeight);
+                    ctx.drawImage(image, config.sx || 0, rect[1] - imgH - (config.sy || 0));
                 }
-            } else {
-                ctx.drawImage(config.image, config.sx || 0, rect[1] - imgH - (config.sy || 0));
-            }
-        } else {
-            if (config.dWidth && config.dHeight) {
-                if (config.sx && config.sy) {
-                    ctx.drawImage(config.image, config.sx || 0, config.sy || 0, config.sWidth,
-                        config.sHeight, config.dx, config.dy, config.dWidth, config.dHeight);
+            } else if (this.coordinate == -1) {
+                if (config.dWidth && config.dHeight) {
+                    if (config.sx && config.sy) {
+                        ctx.drawImage(image, config.sx || 0, config.sy || 0, config.sWidth,
+                            config.sHeight, config.dx, config.dy, config.dWidth, config.dHeight);
+                    } else {
+                        ctx.drawImage(image, config.dx || 0, config.dy || 0, config.dWidth, config.dHeight);
+                    }
                 } else {
-                    ctx.drawImage(config.image, config.dx || 0, config.dy || 0, config.dWidth, config.dHeight);
+                    ctx.drawImage(image, config.sx || 0, config.sy || 0);
                 }
-            } else {
-                ctx.drawImage(config.image, config.sx || 0, config.sy || 0);
             }
+        }
+        var _this = this;
+        if (config.image) {
+            buildImagePath.call(_this)
+        } else if (config.imagesrc) {
+            this.image = new Image();
+            this.image.onload = function() {
+                _this.__setOrigin(_this.image);
+                return buildImagePath.call(_this);
+            }
+            this.image.src = config.imagesrc;
         }
     },
 
     GetContainRect: function() {
         var config = this.config;
+        var image = this.image || config.image;
         if (!this.rect) {
             this.rect = [];
             if (config.dWidth && config.dHeight) {
@@ -98,8 +126,8 @@ ShapeBuilder.baseContextViewExtend({
             } else {
                 this.rect[0] = config.dx || 0;
                 this.rect[1] = config.dy || 0;
-                this.rect[2] = this.rect[0] + config.image.width;
-                this.rect[3] = this.rect[1] + config.image.height;
+                this.rect[2] = this.rect[0] + image.width;
+                this.rect[3] = this.rect[1] + image.height;
             }
         }
         return this.rect;

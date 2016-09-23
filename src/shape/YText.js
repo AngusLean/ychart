@@ -16,7 +16,8 @@ import ShapeBuilder from "../core/viewBuilder"
  */
 export default ShapeBuilder.baseContextViewExtend({
     Init: function(config){
-        this.coordinate = 1;
+        if (typeof this.coordinate == "undefined")
+            this.coordinate = 1;
     },
 
     type: "Text",
@@ -37,7 +38,12 @@ export default ShapeBuilder.baseContextViewExtend({
             ctx.fillStyle = config.style.textColor;
         }
         var rect = this.getRectByCtx(ctx);
-        utext.fillText(ctx, config.text, pt[0], rect[1]-pt[1],
+        var y = rect[1]-pt[1];
+        //coordinate为-1的时候表示已左上角为原点
+        if(this.coordinate == -1){
+            y = pt[1];
+        }
+        utext.fillText(ctx, config.text, pt[0], y,
                        config.style.font, config.style.textAlign, config.style.textBaseline);
         ctx.restore();
     }

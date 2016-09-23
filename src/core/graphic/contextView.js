@@ -62,13 +62,19 @@ class ContextView extends View {
         return this.configProxy.getConfig().coordinate;
     }
 
+    set coordinate(val){
+        this.configProxy.update({
+            coordinate: val
+        });
+    }
+
     /**
      *
      * @property {boolean} Draggable 当前元素是否可以拖动
      * @default true
      */
     get draggable() {
-        return this.config.draggable === undefined ? true : option.draggable;
+        return this.config.draggable === undefined ? true : this.config.draggable;
     }
 
     /**
@@ -209,7 +215,7 @@ class ContextView extends View {
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
-    Brush(ctx, width, height) {
+    Brush(ctx) {
         var config = this.config;
 
         if (!config.ignore) {
