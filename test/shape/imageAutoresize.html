@@ -22,7 +22,7 @@
         <button onclick="zoomIn()">缩小</button>
     </div>
     <div style="display: none;">
-        <img src="jjsk1.png" id="img" alt="">
+        <img src="image/jjsk1.png" id="img" alt="">
     </div>
     <script>
         var $ = function(id)
@@ -97,7 +97,7 @@
                 var scale = [1, 1];
                 scale[0] = tw / ow,
                     scale[1] = th / oh;
-                var gp = new Group(
+                gp = new Group(
                 {
                     scale: scale
                 })
@@ -122,20 +122,21 @@
                     console.log(ar2)
                 });
 
-                function zoomOut()
-                {
-                    gp.zoom(1.3, 1.1);
-                    yh.BrushAll();
-                }
 
-                function zoomIn()
-                {
-                    yh.cleanPainter();
-                    gp.zoom(0.7, 0.9);
-                    yh.BrushAll();
-                }
             }
-            ico.src = "./video.png"
+            ico.src = "image/video.png"
+        }
+        function zoomOut()
+        {
+            gp.zoom(1.3, 1.1);
+            yh.BrushAll();
+        }
+
+        function zoomIn()
+        {
+            yh.cleanPainter();
+            gp.zoom(0.7, 0.9);
+            yh.BrushAll();
         }
     </script>
 </body>

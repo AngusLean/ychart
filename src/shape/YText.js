@@ -2,7 +2,9 @@
  * 文字
  * @module ychart/shape/Text
  */
-import {checkNull} from "../tool/util"
+import {
+    checkNull
+} from "../tool/util"
 import utext from "../core/graphic/helper/text"
 import ShapeBuilder from "../core/viewBuilder"
 /**
@@ -15,36 +17,52 @@ import ShapeBuilder from "../core/viewBuilder"
  * @constructor YText
  */
 export default ShapeBuilder.baseContextViewExtend({
-    Init: function(config){
-        if (typeof this.coordinate == "undefined")
-            this.coordinate = 1;
+    defaultConfig: {
+        coordinate: 1
     },
 
     type: "Text",
 
-    BuildPath: function (ctx, config) {
+    BuildPath: function(ctx, config) {
         config.style.brushType = "none";
     },
 
-    DrawText: function (ctx, config) {
+    DrawText: function(ctx, config) {
         if (checkNull(config.text)) {
             return;
         }
-
-        var pt = config.beginpt;
         ctx.save();
+
+        var config = this.config;
+
         //文字颜色
         if (!checkNull(config.style.textColor)) {
             ctx.fillStyle = config.style.textColor;
         }
+
         var rect = this.getRectByCtx(ctx);
-        var y = rect[1]-pt[1];
-        //coordinate为-1的时候表示已左上角为原点
-        if(this.coordinate == -1){
-            y = pt[1];
+
+        var y = rect[1] - config.dy;
+
+        if (this.coordinate == -1) {
+            y = config.dy;
         }
-        utext.fillText(ctx, config.text, pt[0], y,
-                       config.style.font, config.style.textAlign, config.style.textBaseline);
+
+        var textparams = [config.text, config.dx, y, config.style.font, config.style.textAlign, config.style.textBaseline];
+
+        utext.fillText(ctx, textparams[0], textparams[1], textparams[2], textparams[3], textparams[4], textparams[5]);
+
+        //设置文本的包围圈
+        if (this.__dirty || !this.containRect) {
+            let textrect = utext.getTextRect(textparams[0], textparams[1], textparams[2], textparams[3], textparams[4], textparams[5]);
+            this.containRect = [textrect.x, textrect.y, textrect.x + textrect.width, textrect.y + textrect.height];
+        }
+
         ctx.restore();
+    },
+
+    GetContainRect: function() {
+        return this.containRect;
     }
+
 });

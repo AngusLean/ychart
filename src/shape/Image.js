@@ -30,6 +30,10 @@ import {
 export default
 ShapeBuilder.baseContextViewExtend({
 
+    defaultOption:{
+        coordinate : 1
+    },
+
     /**
      * 构造函数 。 在构造函数中指定该图像的中心点
      * @param {object} option  绘制形状的配置
@@ -39,10 +43,16 @@ ShapeBuilder.baseContextViewExtend({
         this.origin = this.origin || [];
         //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
         if (config.image) {
-            this.__setOrigin(config.image);
+            this.image = config.image;
+            this.__setOrigin(this.image);
+        }else{
+            this.image = new Image();
+            let _this = this;
+            this.image.onload = function () {
+                _this.__setOrigin(_this.image);
+            }
+            this.image.src = config.imagesrc;
         }
-        if (typeof this.coordinate == "undefined")
-            this.coordinate = 1;
     },
 
     /**
@@ -100,23 +110,13 @@ ShapeBuilder.baseContextViewExtend({
                 }
             }
         }
-        var _this = this;
-        if (config.image) {
-            buildImagePath.call(_this)
-        } else if (config.imagesrc) {
-            this.image = new Image();
-            this.image.onload = function() {
-                _this.__setOrigin(_this.image);
-                return buildImagePath.call(_this);
-            }
-            this.image.src = config.imagesrc;
-        }
+        onreadyCallback(this,this.image,buildImagePath);
     },
 
     GetContainRect: function() {
         var config = this.config;
         var image = this.image || config.image;
-        if (!this.rect) {
+        if (this.__dirty || !this.rect) {
             this.rect = [];
             if (config.dWidth && config.dHeight) {
                 this.rect[0] = config.dx || 0;

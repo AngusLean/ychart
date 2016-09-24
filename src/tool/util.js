@@ -72,7 +72,6 @@ export function merge(target, source, overwrite, map) {
     for (var i in source) {
         mergeItem(target, source, i, overwrite);
     }
-
     return target;
 }
 

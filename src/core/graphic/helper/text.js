@@ -1,8 +1,9 @@
-
 //使用默认样式
 
 import Style from "../../config/style"
-import {getContext} from "./viewutil"
+import {
+    getContext
+} from "./viewutil"
 
 var st = new Style.style();
 
@@ -64,9 +65,9 @@ var TextUtil = {
         var width = 0;
         for (var i = 0, l = text.length; i < l; i++) {
             width = Math.max(
-                             _ctx.measureText(text[i]).width,
-                             width
-                            );
+                _ctx.measureText(text[i]).width,
+                width
+            );
         }
         _ctx.restore();
 
@@ -98,23 +99,23 @@ var TextUtil = {
         text = (text + '').split('\n');
 
         switch (textAlign) {
-        case 'end':
-        case 'right':
-            x -= width;
-            break;
-        case 'center':
-            x -= (width / 2);
-            break;
+            case 'end':
+            case 'right':
+                x -= width;
+                break;
+            case 'center':
+                x -= (width / 2);
+                break;
         }
 
         switch (textBaseline) {
-        case 'top':
-            break;
-        case 'bottom':
-            y -= lineHeight * text.length;
-            break;
-        default:
-            y -= lineHeight * text.length / 2;
+            case 'top':
+                break;
+            case 'bottom':
+                y -= lineHeight * text.length;
+                break;
+            default:
+                y -= lineHeight * text.length / 2;
         }
 
         return {
@@ -133,23 +134,24 @@ function _fillText(ctx, text, x, y, textFont, textAlign, textBaseline) {
     }
     ctx.textAlign = textAlign;
     ctx.textBaseline = textBaseline;
+
     var rect = TextUtil.getTextRect(
-                                    text, x, y, textFont, textAlign, textBaseline
-                                   );
+        text, x, y, textFont, textAlign, textBaseline
+    );
 
     text = (text + "").split("\n");
 
     var lineHeight = TextUtil.getTextHeight("国", textFont);
 
     switch (textBaseline) {
-    case "top":
-        y = rect.y;
-        break;
-    case "bottom":
-        y = rect.y + lineHeight;
-        break;
-    default:
-        y = rect.y + lineHeight / 2;
+        case "top":
+            y = rect.y;
+            break;
+        case "bottom":
+            y = rect.y + lineHeight;
+            break;
+        default:
+            y = rect.y + lineHeight / 2;
     }
 
     for (var i = 0, l = text.length; i < l; i++) {

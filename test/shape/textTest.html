@@ -22,14 +22,15 @@
 
     var text = new Ytext({
         text: "我是测试文字",
-        beginpt: [20,50],
+        <!-- coordinate: -1, -->
+        dx: 20,
+        dy: 50,
         style:{
             textColor: "green"
         }
     });
 
     yh.add(text);
-    <!-- yh.add(rect); -->
     yh.BrushAll();
     </script>
 </body>

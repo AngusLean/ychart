@@ -38,7 +38,7 @@ class ContextView extends View {
     constructor(type = "ContextView", option = {}) {
         super(type, option);
 
-        this.configProxy = new OptionProxy(option);
+        this.configProxy = new OptionProxy(this.defaultConfig , option);
 
         /**
          * 绘图实例，用于调用实例的刷新方法
@@ -50,6 +50,18 @@ class ContextView extends View {
 
         Transform.call(this, option);
         Eventful.call(this);
+    }
+
+    /**
+     * 每个具体元素类的默认配置。
+     * 该配置将覆盖全局系统默认配置，但是会被全局用户自定义配置以及具体元素配置所覆盖
+     * @property {Object}  config  元素默认配置
+     * @default {style:{}}
+     */
+    defaultConfig:{
+        style:{
+
+        }
     }
 
     /**
@@ -245,8 +257,8 @@ class ContextView extends View {
      */
     contain(x, y) {
         var local = this.transformCoordToLocal(x, y);
-        return isPtInRect(this.GetContainRect(), local[0], local[1]) ||
-            isPtInPath(this, this.config, x, y);
+        return this.getable && (isPtInRect(this.GetContainRect(), local[0], local[1]) ||
+            isPtInPath(this, this.config, x, y));
     }
 
     /**
@@ -281,7 +293,6 @@ class ContextView extends View {
 
         ctx.restore();
     }
-
 }
 
 

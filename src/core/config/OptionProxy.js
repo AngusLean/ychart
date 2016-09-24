@@ -6,9 +6,15 @@
 
 import styleProxy from "./StyleProxy"
 
-import {DEFAULT_CONFIG,useRectangularCoordinateSystem} from "./config"
+import {
+    DEFAULT_CONFIG,
+    useRectangularCoordinateSystem
+} from "./config"
 
-import {checkNull} from "../../tool/util"
+import {
+    checkNull,
+    merge
+} from "../../tool/util"
 /**
  * 每个可绘制元素的配置代理类
  * 每个可绘制元素的配置项管理类。 该类将管理每个元素绘制需要的各项属性，其中，
@@ -17,8 +23,7 @@ import {checkNull} from "../../tool/util"
  * @class
  * @param config
  */
-var OptionProxy = function (config) {
-
+var OptionProxy = function() {
     /**
      * 配置代理
      * @member {boolean}
@@ -26,17 +31,17 @@ var OptionProxy = function (config) {
      */
     this.styleProxy = null;
 
-    //每个绘图元素的所有配置项。 其中 style 这个项表示所有样式相关。 独立处理
 
     /**
      * 实际配置
+     * 每个绘图元素的所有配置项。 其中 style 这个项表示所有样式相关。 独立处理
      * @member {object}
      */
     this.config = {
         style: {}
     };
 
-    this.init(config);
+    this.init(arguments);
 };
 
 
@@ -46,21 +51,25 @@ var item;
  * 初始化样式管理类。 设置该元素绘制必须的样式
  * @param config
  */
-OptionProxy.prototype.init = function (config) {
-    var item;
-    for (item in config) {
-        if(item){
-            if (item != "style") {
-                this.config[item] = config[item];
-            } else {
-                this.styleProxy = new styleProxy(config[item]);
+OptionProxy.prototype.init = function(configs) {
+    for (let i=0 ,len = configs.length ;i<len ;i++) {
+        let config = configs[i];
+        for (let item in config) {
+            if (item) {
+                if (item != "style") {
+                    this.config[item] = config[item];
+                } else {
+                    this.styleProxy = new styleProxy(config[item]);
+                }
             }
         }
     }
+
     if (this.styleProxy == null) {
         this.styleProxy = new styleProxy();
     }
-    this.config["coordinate"] = config.coordinate || useRectangularCoordinateSystem;
+    this.config["coordinate"] = this.config.coordinate || useRectangularCoordinateSystem;
+
     this.config.style = this.styleProxy.getStyle();
 };
 
@@ -68,7 +77,7 @@ OptionProxy.prototype.init = function (config) {
  * 获取所有配置
  * @returns {object} config
  */
-OptionProxy.prototype.getConfig = function (width , height) {
+OptionProxy.prototype.getConfig = function(width, height) {
     return this.config;
 };
 
@@ -76,7 +85,7 @@ OptionProxy.prototype.getConfig = function (width , height) {
  * 获取样式
  * @returns {OptionProxy.config.style|{}}
  */
-OptionProxy.prototype.getStyle = function () {
+OptionProxy.prototype.getStyle = function() {
     return this.config.style || {};
 };
 
@@ -84,7 +93,7 @@ OptionProxy.prototype.getStyle = function () {
  * 绑定当前样式到指定的上下文
  * @param context
  */
-OptionProxy.prototype.bindContext = function (context) {
+OptionProxy.prototype.bindContext = function(context) {
     this.styleProxy.bindContext(context);
 };
 
@@ -92,7 +101,7 @@ OptionProxy.prototype.bindContext = function (context) {
  * 获取画刷类型。 自动基于属性选择是填充还是描边
  * @param context
  */
-OptionProxy.prototype.getBrushType = function (context) {
+OptionProxy.prototype.getBrushType = function(context) {
     return this.styleProxy.getBrushType();
 };
 
@@ -100,7 +109,7 @@ OptionProxy.prototype.getBrushType = function (context) {
  * 更新数据
  * @param option
  */
-OptionProxy.prototype.update = function (config) {
+OptionProxy.prototype.update = function(config) {
     for (item in config) {
         if (item) {
             if (item != "style") {
