@@ -30,8 +30,8 @@ import {
 export default
 ShapeBuilder.baseContextViewExtend({
 
-    defaultOption:{
-        coordinate : 1
+    defaultOption: {
+        coordinate: 1
     },
 
     /**
@@ -45,10 +45,10 @@ ShapeBuilder.baseContextViewExtend({
         if (config.image) {
             this.image = config.image;
             this.__setOrigin(this.image);
-        }else{
+        } else {
             this.image = new Image();
             let _this = this;
-            this.image.onload = function () {
+            this.image.onload = function() {
                 _this.__setOrigin(_this.image);
             }
             this.image.src = config.imagesrc;
@@ -110,7 +110,7 @@ ShapeBuilder.baseContextViewExtend({
                 }
             }
         }
-        onreadyCallback(this,this.image,buildImagePath);
+        onreadyCallback(this, this.image, buildImagePath);
     },
 
     GetContainRect: function() {

@@ -9,7 +9,7 @@
  * @param name
  * @returns {boolean}
  */
-var hasPrototypeProperty = function (object, name) {
+var hasPrototypeProperty = function(object, name) {
     return !object.hasOwnProperty(name) && (name in object);
 };
 
@@ -66,11 +66,17 @@ export function merge(target, source, overwrite, map) {
     if (checkNull(target)) {
         target = {};
     }
-    if (!checkNull(map))
-        replaceattr(source, map);
+    if (isArr(source)) {
+        source.forEach(function(item) {
+            merge(target, item, overwrite, map);
+        })
+    } else {
+        if (!checkNull(map))
+            replaceattr(source, map);
 
-    for (var i in source) {
-        mergeItem(target, source, i, overwrite);
+        for (var i in source) {
+            mergeItem(target, source, i, overwrite);
+        }
     }
     return target;
 }
@@ -99,14 +105,14 @@ export function replaceattr(target, map) {
 }
 
 export function isType(type) {
-    return function (ele) {
+    return function(ele) {
         return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
     };
 }
 
 export function forEach(ele, ctx, cb) {
     if (_isType("Array")(ele)) {
-        ele.forEach((function (item, index) {
+        ele.forEach((function(item, index) {
             cb.call(ctx, item, index);
         }));
     } else if (_isType("Object")(ele)) {
@@ -119,7 +125,9 @@ export function forEach(ele, ctx, cb) {
     }
 }
 
-export var isFunc = isType("Function"),
-    isObj = isType("Object"),
-    isArr = isType("Array");
+export function isArr = function() {
+    return isType("Array")
+}
 
+export var isFunc = isType("Function"),
+    isObj = isType("Object")
