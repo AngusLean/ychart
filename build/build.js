@@ -71,6 +71,7 @@ rollup.rollup({
     ]
   })
   .then(function (bundle) {
+
     var code = bundle.generate({
       format: 'umd',
       moduleName: 'ychart',

@@ -15,15 +15,15 @@ var i=1000;
  * @constructor
  */
 var YCharts = function (eleid, opt) {
-    //当前实例ID
-    // this.id = "Ychart-"+i++;
     //当前实例绑定的页面元素ID
     this.domid = eleid;
 
     //存储所有绘图相关组件。
     this.__storage = new Storage(this);
+
     //绘图具体操作类。 与storage交互
     this.__painter = new Painter(this, this.__storage);
+
     //事件相关操作
     this.__handler = new Handler(this.domid, this.__painter, this.__storage);
 };

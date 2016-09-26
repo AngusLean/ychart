@@ -10,12 +10,18 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel' }
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /(node_modules|bower_components)/,
+        query: {
+          presets: [['es2015']],
+          plugins: ['add-module-exports']
+        }
+      }
     ]
   },
-  babel: {
-    loose: 'all'
-  },
+
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {

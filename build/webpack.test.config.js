@@ -16,6 +16,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel',
+        query: {
+          presets: ['es2015'],
+          plugins: ['add-module-exports']
+        },
         // NOTE: use absolute path to make sure
         // running tests is OK even if it is in node_modules of other project
         exclude: [
