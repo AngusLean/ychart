@@ -59,10 +59,10 @@ class ContextView extends View {
      * @default {style:{}}
      */
 
-/*    defaultConfig = {
+    /* defaultConfig={
         style:{
         }
-    }*/
+    } */
 
     /**
      * 是否使用直角座标系，除了图片和文字，其他字体默认都是以

@@ -24,12 +24,12 @@ export var onreadyCallback = function(ctx, element, callback, blocked) {
         return;
     }
     if (blocked) {
-        while (true) {
+        /* while (true) {
             if (element.complete) {
                 callback.call(ctx);
                 return;
             }
-        }
+        } */
     } else {
         let timer = setInterval(function() {
             if (element.complete) {
