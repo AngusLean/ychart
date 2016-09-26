@@ -33,6 +33,7 @@ ychart.extendView = function (config) {
     var customView = ShapeBuilder.baseContextViewExtend(config);
     debugs.open = isDebug;
     return customView;
-};
+}
 
 export default ychart
+

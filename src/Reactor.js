@@ -103,11 +103,11 @@ handlers.prototype.initHandlers = function() {
 
     var _this = this,
         exEvent;
-    ALL_HANDLER_NAMES.forEach(function(item) {
+    ALL_HANDLER_NAMES.forEach(item => {
         var eventHandler = DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item) :
             DEFAULT_HANDLERS[item];
         //设置所有的事件处理函数
-        _this._handlers[item] = eventHandler;
+        this._handlers[item] = eventHandler;
         eventUtil.addHandler(_this.root, item, bind1Arg(function(event) {
 
             //获取自定义事件
@@ -118,8 +118,8 @@ handlers.prototype.initHandlers = function() {
 
             //拖动管理。 元素拖动相关的事件由这里面发出去。
             this._dragmanager.trigger(item, exEvent);
-        }, _this));
-    });
+        }, _this))
+    })
 
 };
 

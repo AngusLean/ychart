@@ -27,8 +27,7 @@ import {
  * @constructor Image
  * @extends ContextView
  */
-export default
-ShapeBuilder.baseContextViewExtend({
+export default ShapeBuilder.baseContextViewExtend({
 
     defaultOption: {
         coordinate: 1
@@ -110,7 +109,7 @@ ShapeBuilder.baseContextViewExtend({
                 }
             }
         }
-        onreadyCallback(this, this.image, buildImagePath);
+        onreadyCallback(this, this.image, buildImagePath ,true);
     },
 
     GetContainRect: function() {
@@ -119,17 +118,17 @@ ShapeBuilder.baseContextViewExtend({
         if (this.__dirty || !this.rect) {
             this.rect = [];
             if (config.dWidth && config.dHeight) {
-                this.rect[0] = config.dx || 0;
-                this.rect[1] = config.dy || 0;
-                this.rect[2] = this.rect[0] + config.dWidth;
-                this.rect[3] = this.rect[1] + config.dHeight;
+                this.rect[0] = +config.dx || 0;
+                this.rect[1] = +config.dy || 0;
+                this.rect[2] = this.rect[0] + (+config.dWidth);
+                this.rect[3] = this.rect[1] + (+config.dHeight);
             } else {
-                this.rect[0] = config.dx || 0;
-                this.rect[1] = config.dy || 0;
-                this.rect[2] = this.rect[0] + image.width;
-                this.rect[3] = this.rect[1] + image.height;
+                this.rect[0] = +config.dx || 0;
+                this.rect[1] = +config.dy || 0;
+                this.rect[2] = this.rect[0] + (+image.width);
+                this.rect[3] = this.rect[1] + (+image.height);
             }
         }
         return this.rect;
     }
-});
+})

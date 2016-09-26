@@ -14,25 +14,33 @@ export var bind1Arg = function(handler, context) {
     };
 };
 
-var runAfterTimes = function(times,callback){
-    setTimeout(callback , times);
+var runAfterTimes = function(times, callback) {
+    setTimeout(callback, times);
 }
 
-export var onreadyCallback = function(ctx, element, callback) {
+export var onreadyCallback = function(ctx, element, callback, blocked) {
     if (element.complete) {
         callback.call(ctx);
         return;
     }
-    var timer = setInterval(function() {
-        if (element.complete) {
-            callback.call(ctx)
-            clearInterval(timer)
-        }else{
-            console.log("enter time out")
-            runAfterTimes(5000, function(){
-                console.log("clean intervel")
-                clearInterval(timer)
-            })
+    if (blocked) {
+        while (true) {
+            if (element.complete) {
+                callback.call(ctx);
+                return;
+            }
         }
-    }, 50)
+    } else {
+        let timer = setInterval(function() {
+            if (element.complete) {
+                callback.call(ctx)
+                clearInterval(timer)
+            } else {
+                console.log("enter time out")
+                runAfterTimes(5000, function() {
+                    clearInterval(timer)
+                })
+            }
+        }, 50)
+    }
 };
