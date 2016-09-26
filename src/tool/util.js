@@ -17,6 +17,27 @@ function parseInt10(val) {
     return parseInt(val, 10);
 }
 
+export function isType(type) {
+    return function(ele) {
+        return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
+    };
+}
+
+export function forEach(ele, ctx, cb) {
+    if (_isType("Array")(ele)) {
+        ele.forEach((function(item, index) {
+            cb.call(ctx, item, index);
+        }));
+    } else if (_isType("Object")(ele)) {
+        var it, index = 0;
+        for (it in ele) {
+            if (ele.hasOwnProperty(it)) {
+                cb.call(ctx, it, index++);
+            }
+        }
+    }
+}
+
 /**
  * 检查一个对象是否为空
  * @function
@@ -67,12 +88,11 @@ export function merge(target, source, overwrite, map) {
         target = {};
     }
     if (isArr(source)) {
-        source.forEach(function(item) {
-            merge(target, item, overwrite, map);
-        })
+        source.forEach(item =>
+            merge(target, item, overwrite, map)
+        )
     } else {
-        if (!checkNull(map))
-            replaceattr(source, map);
+        map && replaceattr(source, map);
 
         for (var i in source) {
             mergeItem(target, source, i, overwrite);
@@ -95,38 +115,16 @@ export function replaceattr(target, map) {
                 // 将target中的属性名替换为对应的映射后的名字
                 target[map[tg]] = target[tg];
                 target[tg] = null;
-            } else {
-                // warn(" MergeItem source item '" + tg + "' not in map '"
-                // + map.constructor.name + "' or it's one name ");
             }
         }
     }
     return target;
 }
 
-export function isType(type) {
-    return function(ele) {
-        return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
-    };
-}
 
-export function forEach(ele, ctx, cb) {
-    if (_isType("Array")(ele)) {
-        ele.forEach((function(item, index) {
-            cb.call(ctx, item, index);
-        }));
-    } else if (_isType("Object")(ele)) {
-        var it, index = 0;
-        for (it in ele) {
-            if (ele.hasOwnProperty(it)) {
-                cb.call(ctx, it, index++);
-            }
-        }
-    }
-}
 
-export function isArr = function() {
-    return isType("Array")
+export function isArr(obj) {
+    return isType("Array")(obj)
 }
 
 export var isFunc = isType("Function"),
