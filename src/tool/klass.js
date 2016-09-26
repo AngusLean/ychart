@@ -21,7 +21,7 @@ export var mixin = function (target, source, overlay) {
     _over(target, source, overlay);
     function _over(target, source, overlay) {
         for (var ele in source) {
-            if (source.hasOwnProperty(ele) &&
+            if (ele != "constructor" && source.hasOwnProperty(ele) &&
                 (overlay ? (source[ele] !== null) : (target[ele] === null))) {
                 target[ele] = source[ele];
             }

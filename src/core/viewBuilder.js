@@ -40,6 +40,10 @@ var baseContextViewExtend = function (defaults) {
                 defaults["Init"].call(this,baseOption);
             }
         }
+        zoom(x , y){
+            this.__yh.cleanPainter();
+            super.zoom(x , y);
+        }
     }
 
     for(var prop in defaults){

@@ -13,7 +13,9 @@
 <div style="width: 800px;height: 100px;border: solid 1px blue; margin: 0 auto;margin-top:20px;">
     X位移:<input type="text" id="dx" value="10">
     Y位移:<input type="text" id="dy" value="10">
+    缩放值:<input type="text" id="zoomval" value="10">
     <input type="button" id="dragtest" value="拖动测试"/>
+    <input type="button" id="zoom" value="缩放测试"/>
     <input type="button" id="setoptiontest" value="动态修改元素样式测试"/>
     <input type="button" id="stopoptiontest" value="停止动态修改样式测试"/>
 </div>
@@ -58,7 +60,6 @@
     yh.BrushAll();
 
     $("dragtest").addEventListener("click", function (event) {
-//                            randomDrawLine();
         var x = parseInt($("dx").value);
         var y = parseInt($("dy").value);
         line2.drift(x, y);
@@ -71,7 +72,12 @@
     $("stopoptiontest").addEventListener("click", function () {
         window.clearInterval(te);
     });
-
+    $("zoom").addEventListener("click",function(){
+        yh.cleanPainter();
+        var val = parseInt($("zoomval").value);
+        line1.zoom(val,val);
+        yh.update();
+    });
     function randomDrawLine() {
         line2.setOption({
             beginpt: [randomInt10(), randomInt50()],
