@@ -39,7 +39,6 @@ export var isPtInPath = function(shape, config, x, y) {
     if (type == "all" || type == "fill") {
         rs = ctx.isPointInPath(x, y);
     } else {
-
         rs = ctx.isPointInStroke(x, y);
     }
     ctx.restore();
