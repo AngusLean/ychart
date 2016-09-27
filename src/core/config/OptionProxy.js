@@ -23,7 +23,7 @@ import {
  * @class
  * @param config
  */
-var OptionProxy = function() {
+var OptionProxy = function(...option) {
     /**
      * 配置代理
      * @member {boolean}
@@ -41,7 +41,7 @@ var OptionProxy = function() {
         style: {}
     };
 
-    this.init(arguments);
+    this.init(option);
 };
 
 
@@ -52,15 +52,15 @@ var item;
  * @param config
  */
 OptionProxy.prototype.init = function(configs) {
-    for (let i=0 ,len = configs.length ;i<len ;i++) {
-        let config = configs[i];
-        for (let item in config) {
-            if (item) {
-                if (item != "style") {
-                    this.config[item] = config[item];
-                } else {
-                    this.styleProxy = new styleProxy(config[item]);
-                }
+    var config = {};
+    merge(config, configs, true)
+
+    for (let item in config) {
+        if (item) {
+            if (item != "style") {
+                this.config[item] = config[item];
+            } else {
+                this.styleProxy = new styleProxy(config[item]);
             }
         }
     }
