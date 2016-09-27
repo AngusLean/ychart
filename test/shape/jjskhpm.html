@@ -57,6 +57,7 @@
             initMapContainer(testdata);
         });
 
+ 
         //适配地图容器的大小
         function adapterMapContainerSize(ow, oh)
         {
@@ -117,7 +118,7 @@
 
         function videoTagClickHandler(event, config)
         {
-            console.log(config.data)
+            console.log("tag点击 "+event.targetEle.id)
         }
 
         $("#zoomout").on("click", function()

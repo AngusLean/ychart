@@ -45,6 +45,10 @@
         line1.drift(10,10);
         yh.BrushAll();
     }
+
+line1.on("click",function(event, config){
+    console.log("line1.click: "+event.targetEle.id)
+})
     </script>
 </body>
 </html>
