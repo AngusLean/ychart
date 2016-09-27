@@ -97,7 +97,7 @@ DocProject/Help/html
 
 # Click-Once directory
 publish
-
+doc/
 # Others
 [Bb]in
 [Oo]bj
@@ -166,7 +166,7 @@ pip-log.txt
 
 /lib
 node_modules
-
+doc/
 /exvim
 .exvim.minicanvas
 *.exvim

@@ -38,7 +38,7 @@ class ContextView extends View {
     constructor(type = "ContextView", option = {}) {
         super(type, option);
 
-        this.configProxy = new OptionProxy(this.defaultConfig , option);
+        this.configProxy = new OptionProxy(this.defaultConfig, option);
 
         /**
          * 绘图实例，用于调用实例的刷新方法
@@ -58,11 +58,11 @@ class ContextView extends View {
      * @property {Object}  config  元素默认配置
      * @default {style:{}}
      */
-/*    defaultConfig = {
-        style:{
+    /*    defaultConfig = {
+            style:{
 
-        }
-    }*/
+            }
+        }*/
 
     /**
      * 是否使用直角座标系，除了图片和文字，其他字体默认都是以
@@ -74,7 +74,7 @@ class ContextView extends View {
         return this.configProxy.getConfig().coordinate;
     }
 
-    set coordinate(val){
+    set coordinate(val) {
         this.configProxy.update({
             coordinate: val
         });
