@@ -15,11 +15,11 @@ import {
 //临时变量
 var ev, obj;
 
-//所有的事件名称
-var ALL_HANDLER_NAMES = ["click", "mousedown", "mousemove", "mouseup", "focus"];
+//所有捕获的事件名称
+var ALL_EVENT_NAMES = ["click", "mousedown", "mousemove", "mouseup", "focus"];
 
 //自定义的一些事件处理函数
-var DEFAULT_HANDLERS = {
+var SPECIFIED_EVENT_HANDLERS = {
 
     //上一个获取焦点的元素
     _lastHovered: null,
@@ -49,6 +49,22 @@ var DEFAULT_HANDLERS = {
         ev = exEvent, obj = ev.targetEle;
         if (this._lastHovered != null) {
             this.triggerProxy(this._lastHovered, "globalout", ev);
+        }
+        this._lastHovered = null;
+    }
+};
+
+//通用事件处理函数
+var COMMON_EVENT_HANDLER = function(name) {
+    return function(exEvent) {
+
+        ev = exEvent;
+        obj = ev.targetEle;
+
+        //某个形状处于焦点中并且可以捕获事件
+        if (obj) {
+            //分发该元素的获取焦点事件
+            this.triggerProxy(obj, name, ev);
         }
     }
 };
@@ -88,39 +104,27 @@ var handlers = function(root, painter, storage) {
  */
 handlers.prototype.initHandlers = function() {
 
-    var defaultEventProcess = function(name) {
-        return function(exEvent) {
-            ev = exEvent;
-            obj = ev.targetEle;
+    var _this = this;
 
-            //某个形状处于焦点中并且可以捕获事件
-            if (obj) {
-                //分发该元素的获取焦点事件
-                this.triggerProxy(obj, name, ev);
-            }
-        };
-    };
-
-    var _this = this,
-        exEvent;
-    ALL_HANDLER_NAMES.forEach(item => {
-        var eventHandler = DEFAULT_HANDLERS[item] === undefined ? defaultEventProcess(item) :
-            DEFAULT_HANDLERS[item];
-        //设置所有的事件处理函数
-        this._handlers[item] = eventHandler;
-        eventUtil.addHandler(_this.root, item, bind1Arg(function(event) {
+    ALL_EVENT_NAMES.forEach(eventName => {
+        //具体的事件处理函数
+        var eventHandler = SPECIFIED_EVENT_HANDLERS[eventName] === undefined ? COMMON_EVENT_HANDLER(eventName) :
+            SPECIFIED_EVENT_HANDLERS[eventName];
+        //绑定事件处理函数的作用域为handler类.
+        this._handlers[eventName] = bind1Arg(event => {
 
             //获取自定义事件
-            exEvent = this.extendAndFixEventPackge(event);
+            var exEvent = this.extendAndFixEventPackge(event);
 
-            //转发标准事件到元素。
-            this._handlers[item].call(_this, exEvent);
+            //调用事件处理函数
+            eventHandler.call(this , exEvent);
 
             //拖动管理。 元素拖动相关的事件由这里面发出去。
-            this._dragmanager.trigger(item, exEvent);
-        }, _this))
-    })
+            this._dragmanager.trigger(eventName ,exEvent);
 
+        } , this);
+        eventUtil.addHandler(_this.root, eventName, this._handlers[eventName])
+    })
 };
 
 /**
@@ -133,6 +137,7 @@ handlers.prototype.extendAndFixEventPackge = function(event) {
     event = eventUtil.clientToLocal(this.root, event, event);
     //目标元素
     event.targetEle = this.getHoverElement(event);
+
     return event;
 };
 
@@ -166,5 +171,10 @@ handlers.prototype.getHoverElement = function(exEvent) {
     return null;
 };
 
+handlers.prototype.depose = function () {
+    for(let event in this._handlers){
+        eventUtil.removeHandler(this.root , event ,this._handlers[event]);
+    }
+};
 
 export default handlers;

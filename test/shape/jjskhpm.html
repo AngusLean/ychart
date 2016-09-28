@@ -27,6 +27,7 @@
     <div style="width:800px;margin:0 auto;margin-top:10px;">
         <button id="zoomout">放大</button>
         <button id="zoomin">缩小</button>
+        <button id="move">移动</button>
     </div>
     <div style="display: none;">
         <img src="jjsk3.png" id="img" alt="">
@@ -49,11 +50,11 @@
         }];
 
             initMapContainer(testdata);
-        //由于某个水库的背景图变化不大，所以先写死
 
         $(window).resize(function()
         {
             $("#mapContainer").html("");
+            yh.clear();
             initMapContainer(testdata);
         });
 
@@ -78,6 +79,7 @@
             yh.cleanPainter();
 
             var scale = [1, 1];
+            <!-- scale[0]=1.2,scale[1]=1.2; -->
             gp = new Group(
             {
                 scale: scale
@@ -91,24 +93,28 @@
                 coordinate: -1,
                 getable: false,
                 //imagesrc: "image/jjsk1.png"
-                imagesrc: imgsrc1
+                imagesrc: imgsrc1,
+                dWidth: 1500,
+                dHeight: 900
             });
             gp.add(backImgEle);
+            tmps = [];
             //地图上的小图标
             for (var i = 0, len = points.length; i < len; i++)
             {
                 var tmp = new YImage(
                 {
                     coordinate: -1,
-                    draggable: false,
+                    <!-- draggable: false, -->
                     imagesrc: "image/" + points[i]["bkimg"],
                     dWidth: points[i]["dWidth"],
                     dHeight: points[i]["dHeight"],
                     dx: points[i]["dx"],
                     dy: points[i]["dy"],
-                    data: points[i]
+                    data: points[i],
                 });
                 gp.add(tmp);
+                tmps.push(tmp);
                 tmp.on("click", videoTagClickHandler);
             }
             yh.add(gp);
@@ -131,6 +137,10 @@
             gp.zoom(0.8, 0.8);
             yh.BrushAll();
         })
+$("#move").on("click",function(){
+    tmps[0].move(10,10);
+    yh.update();
+})
     </script>
 </body>
 

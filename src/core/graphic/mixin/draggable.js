@@ -3,7 +3,7 @@
  */
 
 
-import EventUtil from "./eventful"
+import Eventful from "./eventful"
 import {mixin} from "../../../tool/klass"
 
 var target;
@@ -14,7 +14,7 @@ var target;
  * @constructor
  */
 var Draggable = function () {
-    EventUtil.call(this);
+    Eventful.call(this);
 
     this.on('mousedown', this._dragStart, this);
     this.on('mousemove', this._dragIng, this);
@@ -64,9 +64,10 @@ Draggable.prototype = {
             var dy = y - this._y;
             this._x = x;
             this._y = y;
+            console.log(dx+"  "+(-dy)+"   "+target.transform);
             target.drift(dx, -dy);
             this.trigger(target, 'draging', exEvent);
-            //更新视图
+            // 更新视图
             target.__yh && target.__yh.update();
         }
     },
@@ -89,6 +90,6 @@ Draggable.prototype = {
 };
 
 
-mixin(Draggable, EventUtil, true);
+mixin(Draggable, Eventful, true);
 
 export default Draggable;

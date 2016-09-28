@@ -61,8 +61,6 @@ var Transformable = function (opts) {
 
 };
 
-var Transformable1 = function (opts) {
-};
 
 /**
  * 默认的变换矩阵
