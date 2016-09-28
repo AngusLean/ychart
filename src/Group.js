@@ -31,6 +31,11 @@ class Group extends Element{
     add(child) {
         if (child == this)
             return;
+        this,children.forEach(ele = > {
+            if(child.id === ele.id){
+                return this;
+            }
+        });
         //子形状或者group的父类。 继承变换以及样式
         child.parent = this;
 

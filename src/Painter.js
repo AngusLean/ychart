@@ -179,6 +179,7 @@ Painter.prototype.getHeight = function () {
 Painter.prototype.clean = function () {
     this.width = null;
     this.height = null;
+
     //删除创建的canvas元素
     this.container.innerHTML = "";
     this.container = null;
