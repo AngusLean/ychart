@@ -15,7 +15,6 @@ var Moveable = function () {
 };
 
 Moveable.prototype = {
-    constructor: Moveable,
 
     /**
      * 拖动

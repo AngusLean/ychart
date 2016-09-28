@@ -45,6 +45,7 @@ YCharts.prototype.clear = function () {
  */
 YCharts.prototype.cleanPainter = function(){
     this.__painter.cleanPainter();
+
 };
 
 /**
@@ -71,6 +72,10 @@ YCharts.prototype.BrushAll = function () {
 YCharts.prototype.update = function () {
     this.BrushAll();
 };
+
+YCharts.prototype.resize = function(wh ,ht){
+    this.__painter.resize(wh ,ht);
+}
 
 /**
  * 获取当前ychart容器的宽度

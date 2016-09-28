@@ -46,8 +46,8 @@ export var createDOM = function (id, type, width, height, left, top) {
     st.position = "absolute";
     st.left = left;
     st.top = top;
-    st.width = width + "px";
-    st.height = height + "px";
+    // st.width = width + "px";
+    // st.height = height + "px";
     newdom.width = width;
     newdom.height = height;
     newdom.setAttribute("ychart-layer", id);

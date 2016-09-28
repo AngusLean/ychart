@@ -28,7 +28,7 @@ var Painter = function (yh, storage) {
     this.left = temp.left;
     this.top = temp.top;
 
-    this.layer = [];
+    this.__layer = [];
 };
 
 /**
@@ -44,13 +44,13 @@ Painter.prototype.refresh = function () {
         zlevel = shape.zLevel || 0;
         layer = this.getLayer(zlevel);
         //脏元素所在的layer需要清除画布过后重新绘制
-        if (lastZlevel != zlevel && layer.__needClear) {
+        if (lastZlevel != zlevel && layer.__dirty) {
             layer.clear();
             lastZlevel = zlevel;
-            layer.__needClear = false;
+            layer.__dirty = false;
         }
         this.preProcessShapeInLayer(shape, layer);
-        shape.Brush(layer.getContext() ,this.getWidth(), this.getHeight());
+        shape.Brush(layer.getContext());
         this.afterProcessShapeInLayer(shape, layer);
     }
 };
@@ -71,7 +71,7 @@ Painter.prototype.updateLayerState = function (shapeList) {
         //已经设置过
 
         //如果图像为脏，则需要清除当前画布
-        !layer.__needClear && (layer.__needClear = shape.__dirty);
+        !layer.__dirty && (layer.__dirty = shape.__dirty);
     }
 };
 
@@ -142,7 +142,7 @@ Painter.prototype.afterProcessShapeInLayer = function (shape, layer) {
  * @returns {module::ychart/layer} Layer实例
  */
 Painter.prototype.getLayer = function (zLevel) {
-    var layer = this.layer[zLevel];
+    var layer = this.__layer[zLevel];
     if (!layer) {
         layer = new Layer(guid() + "-zlevel", zLevel, {
             width: this.getWidth(),
@@ -151,9 +151,8 @@ Painter.prototype.getLayer = function (zLevel) {
             top: this.top
         });
         this.insertLayer(zLevel, layer);
-        this.layer[zLevel] = layer;
+        this.__layer[zLevel] = layer;
     }
-
     return layer;
 };
 
@@ -185,10 +184,27 @@ Painter.prototype.clean = function () {
     this.container = null;
 };
 
+/**
+ * 清除画布中的内容，不会影响到其他事件或者内容
+ */
 Painter.prototype.cleanPainter = function(){
-    this.layer.forEach(function(la){
-        la.clear();
+    this.__layer.forEach( la => la.clear());
+}
+
+/**
+ * 改变当前容器的大小,该方法会导致整个ychart控制的容器的实际大小也对应改变
+ * 实际实现是通过Layer模块实现
+ * 该方法与room方法的不同的是该方法会改变容器即canvas的大小
+ * @param {Number} width 目标宽度
+ * @param {Number} height 目标高度
+ */
+Painter.prototype.resize = function(width , height){
+    this.__layer.forEach( la => {
+        la.resize(width ,height);
     });
+    this.width = width ;
+    this.height = height;
+    this.refresh();
 }
 
 /**
@@ -198,7 +214,7 @@ Painter.prototype.cleanPainter = function(){
  */
 Painter.prototype.insertLayer = function (zLevel, layer) {
     var dom = layer.dom;
-    if (this.layer.length != 0) {
+    if (this.__layer.length != 0) {
         var children = this.container.getElementsByTagName("canvas");
         var i, len, child;
         for (i = 0 , len = children.length; i < len; i++) {

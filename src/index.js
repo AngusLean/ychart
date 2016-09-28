@@ -35,5 +35,12 @@ ychart.extendView = function (config) {
     return customView;
 }
 
+/**
+ * @todo  Group在变换时如何清楚已绘制的图形？
+ * layer变换时如何清楚已绘制的图形？
+ * 三者与元素的绘制能否统一？
+ * painter,layer代码能够优化下，变量命令不规范？
+ */
+
 export default ychart
 

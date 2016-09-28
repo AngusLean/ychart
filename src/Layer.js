@@ -4,7 +4,9 @@
  */
 import {checkNull} from "./tool/util"
 import {createDOM,getContext} from "./tool/dom"
-
+import Moveable from "./core/graphic/mixin/moveable.js"
+import Transform from "./core/graphic/mixin/transform.js"
+import {mixin} from "./tool/klass.js"
 
 /**
  *
@@ -26,21 +28,21 @@ var Layer = function (id, zLevel, opts) {
     }
 
     this.dom.setAttribute("zLevel", zLevel);
+
     this.ctx = getContext(this.dom);
+
+    this.layerW = opts.width ;
+    this.layerH = opts.height;
+
     if (checkNull(this.ctx)) {
         alert("浏览器不支持HTML5 canvas绘图,请更新浏览器 " + this.ctx);
         return;
     }
 
-    //画布大小
-    this.ctxWidth = this.ctx.canvas.width;
-    this.ctxHeight = this.ctx.canvas.height;
-
-    //默认变换。即已当前层的左下角为原点的直角座标系
-    // this.transform = [1, 0, 0, -1, 0, this.ctxHeight];
-    // this.invTransform = [1, 0, 0, -1, 0, this.ctxHeight];
     //当前画布由于包含的图形有变化需要清除后重新绘制
-    this.__needClear = false;
+    this.__dirty = false;
+
+    Transform.call(this)
 };
 
 
@@ -60,11 +62,37 @@ Layer.prototype.getContext = function () {
 };
 
 /**
- * 清除当前layer
+ * 清除当前layer所有的绘制的内容
  * @returns {*}
  */
 Layer.prototype.clear = function () {
-    this.ctx.clearRect(0, 0, this.ctxWidth, this.ctxHeight);
+    this.ctx.clearRect(0, 0, this.layerW ,this.layerH);
 };
+
+/**
+ * 改变当前layer的大小。 该操作实际上是通过计算目标大小与当前的canvas大小
+ * 然后按照对应的比例进行缩放实现的。  同时，也会改变canvas本身的大小
+ * @param {Number} width  目标宽度
+ * @param {Number} height  目标高度
+ */
+Layer.prototype.resize = function(width , height){
+    var dx = width / this.layerW ,dy = height / this.layerH;
+    //对于直接改变大小，就不在之前的比例上缩放，而是直接缩放到指定比例
+    // this.scale[0] = dx ,this.scale[1] = dy;
+
+    this.zoom(dx ,dy);
+
+    //由于layer始终会是最根部的一个元素，所以它的变换需要手动调用。
+    //而对于Group的变换，只有在确定了它所处的层级过后才能更新变换
+    this.updateTransform();
+
+    this.dom.width =  width;
+    this.dom.height = height;
+    this.layerW = width ,this.layerH = height;
+}
+
+
+mixin(Layer , Transform ,true);
+mixin(Layer , Moveable ,true);
 
 export default Layer;

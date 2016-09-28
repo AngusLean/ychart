@@ -64,7 +64,6 @@ Draggable.prototype = {
             var dy = y - this._y;
             this._x = x;
             this._y = y;
-            console.log(dx+"  "+(-dy)+"   "+target.transform);
             target.drift(dx, -dy);
             this.trigger(target, 'draging', exEvent);
             // 更新视图

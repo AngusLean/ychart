@@ -28,6 +28,7 @@
         <button id="zoomout">放大</button>
         <button id="zoomin">缩小</button>
         <button id="move">移动</button>
+        <button id="resize">改变大小</button>
     </div>
     <div style="display: none;">
         <img src="jjsk3.png" id="img" alt="">
@@ -58,7 +59,7 @@
             initMapContainer(testdata);
         });
 
- 
+
         //适配地图容器的大小
         function adapterMapContainerSize(ow, oh)
         {
@@ -138,10 +139,15 @@
             gp.zoom(0.8, 0.8);
             yh.BrushAll();
         })
-$("#move").on("click",function(){
-    tmps[0].move(10,10);
-    yh.update();
-})
+        $("#move").on("click",function(){
+            tmps[0].move(10,10);
+            yh.update();
+        })
+        var ow =  1500, oh = 900 ,i=1;
+        $("#resize").on("click",function(){
+            yh.cleanPainter();
+            yh.resize(ow-50*(i++) , oh-20*i);
+        })
     </script>
 </body>
 
