@@ -23,13 +23,12 @@ Moveable.prototype = {
      * @param {number} dy
      */
     drift: function (dx, dy) {
-        if (!isArr(this.position)) {
-            this.position = [0, 0];
-        }
+        // if (!isArr(this.position)) {
+            // this.position = [0, 0];
+        // }
 
         this.position[0] += dx;
         this.position[1] -= dy;
-
         this.__dirty = true;
     },
 
@@ -49,9 +48,9 @@ Moveable.prototype = {
      * @param {number}  angle 旋转弧度
      */
     rotate: function (x, y, angle) {
-        if (!isArr(this.origin)) {
-            this.origin = [0, 0];
-        }
+        // if (!isArr(this.origin)) {
+            // this.origin = [0, 0];
+        // }
         if(!this.rotation){
             this.rotation = 0;
         }

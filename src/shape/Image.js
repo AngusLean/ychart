@@ -14,7 +14,9 @@ import {
  *  <br>(image, dx, dy);
  *  <br>(image, dx, dy, dWidth, dHeight);
  *  <br>(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+ *  分别对应着按照图片的默认尺寸绘制\ 指定目标位置和尺寸\ 指定截取图片上的某一块绘制到目标对象上的某个位置
  * @property {HTMLImage} image 图形的HTMLImage对象， 注意不能是通过DOM获取的对象。 可以通过新建一个Image对象
+ * @property {String} imagesrc 图形的src属性， 注意必须和Ychart同源,否则会由于浏览器的安全限制而报错. 与image属性同时存在时Image属性有效
  * @property {number} dx 绘制该图形在画布上的起点X  默认0
  * @property {number} dy 绘制该图形在画布上的起点Y  默认0
  * @property {number} dWidth 绘制该图形在画布上的宽度  默认不指定
@@ -109,7 +111,7 @@ export default ShapeBuilder.baseContextViewExtend({
                 }
             }
         }
-        onreadyCallback(this, this.image, buildImagePath ,true);
+        onreadyCallback(this, this.image, buildImagePath ,3000);
     },
 
     GetContainRect: function() {

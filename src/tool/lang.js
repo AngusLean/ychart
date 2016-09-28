@@ -24,12 +24,11 @@ export var onreadyCallback = function(ctx, element, callback, blocked) {
         return;
     }
     if (blocked) {
-        /* while (true) {
-            if (element.complete) {
-                callback.call(ctx);
-                return;
-            }
-        } */
+        /*let start = new Date();
+        let limit = isNaN(blocked) ? 2000 : blocked;
+        while(!element.complete && (new Date() - start < limit)){
+        }
+        callback.call(ctx);*/
     } else {
         let timer = setInterval(function() {
             if (element.complete) {

@@ -35,6 +35,7 @@ var YCharts = function (eleid, opt) {
 YCharts.prototype.clear = function () {
     this.__painter.clean();
     this.__storage.clean();
+    this.__handler.depose();
 };
 
 /**
