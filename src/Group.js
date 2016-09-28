@@ -31,7 +31,7 @@ class Group extends Element{
     add(child) {
         if (child == this)
             return;
-        this,children.forEach(ele = > {
+        this.children.forEach(ele => {
             if(child.id === ele.id){
                 return this;
             }
