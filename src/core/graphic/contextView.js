@@ -1,3 +1,4 @@
+
 /**
  * 绘制在canvas上的元素基类模块
  * @module ychart/core/graphic/contextview
@@ -31,6 +32,12 @@ import {
  * @abstract
  */
 class ContextView extends View {
+
+    /**
+     * @param {String} type  元素类型. 该类型默认为ContextView
+     * @param {Object} option  实例的具体参数
+     * @constructor
+     */
     constructor(type = "ContextView", option = {}) {
         super(type, option);
 
@@ -54,12 +61,10 @@ class ContextView extends View {
      * @property {Object}  config  元素默认配置
      * @default {style:{}}
      */
-
-    /*    defaultConfig = {
-            style:{
-
-            }
-        }*/
+    // static defaultConfig = {
+        // style:{
+        // }
+    // }
 
 
     /**

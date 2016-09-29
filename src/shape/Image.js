@@ -2,10 +2,10 @@
  * 图片
  * @module ychart/shape/Image
  */
-import ShapeBuilder from "../core/viewBuilder"
+import ShapeBuilder from "../core/viewBuilder";
 import {
     onreadyCallback
-}　 from "../tool/lang.js"
+}from "../tool/lang";
 
 /**
  * 图形形状类
@@ -25,7 +25,7 @@ import {
  * @property {number} sy 绘制该图形在图像上的起点Y  默认不指定
  * @property {number} sWidth 绘制该图形在图像上的宽度  默认不指定
  * @property {number} sHeight 绘制该图形在图像上的宽度  默认不指定
- * @property {Object} style 样式。{@link Line}
+ * @property {Object} style 样式.
  * @constructor Image
  * @extends ContextView
  */
@@ -51,7 +51,7 @@ export default ShapeBuilder.baseContextViewExtend({
             let _this = this;
             this.image.onload = function() {
                 _this.__setOrigin(_this.image);
-            }
+            };
             this.image.src = config.imagesrc;
         }
     },
@@ -110,7 +110,7 @@ export default ShapeBuilder.baseContextViewExtend({
                     ctx.drawImage(image, config.sx || 0, config.sy || 0);
                 }
             }
-        }
+        };
         onreadyCallback(this, this.image, buildImagePath ,3000);
     },
 
@@ -133,4 +133,4 @@ export default ShapeBuilder.baseContextViewExtend({
         }
         return this.rect;
     }
-})
+});

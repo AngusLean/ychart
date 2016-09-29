@@ -1,5 +1,5 @@
 var ClientToLocal = function(el, e, out) {
-    var out = out || {};
+    out = out || {};
     var box = el.getBoundingClientRect();
     out.ycX = e.clientX - box.left;
     out.ycY = e.clientY - box.top;

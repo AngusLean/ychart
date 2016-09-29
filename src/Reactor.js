@@ -3,14 +3,14 @@
  * @module ychart/Handler
  */
 
-import eventUtil from "./tool/event"
-import Draggable from "./core/graphic/mixin/draggable"
+import eventUtil from "./tool/event";
+import Draggable from "./core/graphic/mixin/draggable";
 import {
     doc
-} from "./tool/dom"
+} from "./tool/dom";
 import {
     bind1Arg
-} from "./tool/lang"
+} from "./tool/lang";
 
 //临时变量
 var ev, obj;
@@ -66,7 +66,7 @@ var COMMON_EVENT_HANDLER = function(name) {
             //分发该元素的获取焦点事件
             this.triggerProxy(obj, name, ev);
         }
-    }
+    };
 };
 
 /**
@@ -87,7 +87,7 @@ var handlers = function(root, painter, storage) {
     this.root = doc(root);
 
     //事件处理程序
-    this._handlers = {}
+    this._handlers = {};
 
     //拖动管理。 只需要调用它的事件分发函数即可
     this._dragmanager = new Draggable();
@@ -123,8 +123,8 @@ handlers.prototype.initHandlers = function() {
             this._dragmanager.trigger(eventName ,exEvent);
 
         } , this);
-        eventUtil.addHandler(_this.root, eventName, this._handlers[eventName])
-    })
+        eventUtil.addHandler(_this.root, eventName, this._handlers[eventName]);
+    });
 };
 
 /**

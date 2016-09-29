@@ -138,7 +138,7 @@ Painter.prototype.afterProcessShapeInLayer = function (shape ) {
 /**
  * 获取指定zLevel的yaler，如果该zLevel不存在，就创建一个新的Layer实例并添加到绘图器
  * @param zLevel {string} 绘图所在层级， 整数
- * @returns {module::ychart/layer} Layer实例
+ * @return {module::ychart/layer} Layer实例
  */
 Painter.prototype.getLayer = function (zLevel) {
     var layer = this.__layer[zLevel];

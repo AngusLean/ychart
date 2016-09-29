@@ -2,17 +2,22 @@
  * 元素容器类
  * @module ychart/Group
  */
-import {merge} from "./tool/util"
-import {mixin} from "./tool/klass"
-import Transform from "./core/graphic/mixin/transform"
-import Moveable from "./core/graphic/mixin/moveable.js"
-import Element from "./core/graphic/element"
+import {merge} from "./tool/util";
+import {mixin} from "./tool/klass";
+import Transform from "./core/graphic/mixin/transform";
+import Moveable from "./core/graphic/mixin/moveable.js";
+import Element from "./core/graphic/element";
 
 /**
  * @class
  * @classdesc 元素容器类。 该类可以包含任何继承于 {@link ./core/graphic/view} 的类
  */
 class Group extends Element{
+
+    /**
+     * @constructor
+     * @param {Object} options  组的配置
+     */
     constructor(options){
         super("group");
 
@@ -25,7 +30,7 @@ class Group extends Element{
 
     /**
      * 添加一个子元素
-     * @param child 子元素对象， 可以是shape中的任何元素或者自定义的元素
+     * @param {Element} child 子元素对象， 可以是shape中的任何元素或者自定义的元素
      * @returns {Group}
      */
     add(child) {
@@ -41,7 +46,7 @@ class Group extends Element{
 
         this.children.push(child);
         return this;
-    };
+    }
 }
 
 mixin(Group ,Transform , true);
