@@ -2,10 +2,10 @@
  * 绘图中绘制控制器模块
  * @module ychart/painter
  */
-import Layer from "./Layer"
-import guid from "./tool/guid"
-import Group from "./Group"
-import {getPosition} from "./tool/dom"
+import Layer from "./Layer";
+import guid from "./tool/guid";
+import Group from "./Group";
+import {getPosition} from "./tool/dom";
 
 /**
  * 绘图组件。
@@ -27,7 +27,6 @@ var Painter = function (yh, storage) {
     this.height = temp.height;
     this.left = temp.left;
     this.top = temp.top;
-
     this.__layer = [];
 };
 
@@ -132,7 +131,7 @@ Painter.prototype.preProcessShapeInLayer = function (shape, layer) {
  * @param shape {module:ychart/core/graphic/element} 元素实例
  * @param layer {module:ychart/layer} 绘图层
  */
-Painter.prototype.afterProcessShapeInLayer = function (shape, layer) {
+Painter.prototype.afterProcessShapeInLayer = function (shape ) {
     shape.__dirty = false;
 };
 
@@ -190,7 +189,7 @@ Painter.prototype.clean = function () {
  */
 Painter.prototype.cleanPainter = function(){
     this.__layer.forEach( la => la.clear());
-}
+};
 
 /**
  * 改变当前容器的大小,该方法会导致整个ychart控制的容器的实际大小也对应改变
@@ -206,7 +205,7 @@ Painter.prototype.resize = function(width , height){
     this.width = width ;
     this.height = height;
     this.refresh();
-}
+};
 
 /**
  * 在文档中插入指定的layer节点
@@ -215,7 +214,7 @@ Painter.prototype.resize = function(width , height){
  */
 Painter.prototype.insertLayer = function (zLevel, layer) {
     var dom = layer.dom;
-    if (this.__layer.length != 0) {
+    if (this.__layer.length !== 0) {
         var children = this.container.getElementsByTagName("canvas");
         var i, len, child;
         for (i = 0 , len = children.length; i < len; i++) {

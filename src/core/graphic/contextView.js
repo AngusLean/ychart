@@ -3,29 +3,25 @@
  * @module ychart/core/graphic/contextview
  */
 
-import View from "./view"
-import Transform from "./mixin/transform"
-import Eventful from "./mixin/eventful"
-import Moveable from "./mixin/moveable"
-import OptionProxy from "../config/OptionProxy"
-import text from "./helper/text"
+import View from "./view";
+import Transform from "./mixin/transform";
+import Eventful from "./mixin/eventful";
+import Moveable from "./mixin/moveable";
+import OptionProxy from "../config/OptionProxy";
+import text from "./helper/text";
 
 import {
     mixin
-} from "../../tool/klass"
+} from "../../tool/klass";
 
 import {
     isPtInPath,
     isPtInRect
-} from "./helper/viewutil"
-
-import {
-    noOp
-} from "../../tool/lang"
+} from "./helper/viewutil";
 
 import {
     getRectByCtx
-} from "../../tool/dom.js"
+} from "../../tool/dom.js";
 
 /**
  * @classdesc 绘制在canvas上的CanvasRenderingContext2D图形的绘图处理类,该类提供绘图相关
@@ -122,6 +118,7 @@ class ContextView extends View {
      * @method
      * @param {CanvasRenderingContext2D} ctx
      */
+    /* eslint-disable */
     BeforeBrush(ctx, config) {}
 
     /**
@@ -136,6 +133,7 @@ class ContextView extends View {
      * @return {Array.<Number>} 返回rect数组
      */
     GetContainRect() {}
+    /*eslint-enable */
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
@@ -161,7 +159,7 @@ class ContextView extends View {
      * @private
      * @param {CanvasRenderingContext2D} ctx
      */
-    __SetShapeTransform(ctx, config) {
+    __SetShapeTransform(ctx) {
 
         this.updateTransform();
 
@@ -190,6 +188,7 @@ class ContextView extends View {
      */
     __AfterBrush(ctx, config) {
         var tp = this.configProxy.getBrushType();
+        /* eslint-disable */
         switch (tp) {
             case "both":
             case "all":
@@ -208,6 +207,7 @@ class ContextView extends View {
                 ctx.fill();
                 break;
         }
+        /* eslint-enable */
         ctx.restore();
 
         this.AfterBrush(ctx, config);
@@ -219,10 +219,12 @@ class ContextView extends View {
      * @param {CanvasRenderingContext2D} ctx
      * @param {object} config --配置。
      */
+    /* eslint-disable*/
     BuildPath(ctx, config) {
         //设置合适的填充方法
         throw new Error(" unsurported operation -- can't build shape path");
     }
+    /* eslint-enable */
 
     /**
      * 绘制的接口。 绘制该元素必须调用该方法
@@ -302,4 +304,4 @@ mixin(ContextView, Transform, true);
 mixin(ContextView, Eventful, true);
 mixin(ContextView, Moveable, true);
 
-export default ContextView
+export default ContextView;

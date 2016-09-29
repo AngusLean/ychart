@@ -2,11 +2,11 @@
  * 代表canvas中一个绘图层。 与具体形状的关系仅仅是当前layer所处的zIndex
  * @module ychart/layer
  */
-import {checkNull} from "./tool/util"
-import {createDOM,getContext} from "./tool/dom"
-import Moveable from "./core/graphic/mixin/moveable.js"
-import Transform from "./core/graphic/mixin/transform.js"
-import {mixin} from "./tool/klass.js"
+import {checkNull} from "./tool/util";
+import {createDOM,getContext} from "./tool/dom";
+import Moveable from "./core/graphic/mixin/moveable.js";
+import Transform from "./core/graphic/mixin/transform.js";
+import {mixin} from "./tool/klass.js";
 
 /**
  *
@@ -42,7 +42,7 @@ var Layer = function (id, zLevel, opts) {
     //当前画布由于包含的图形有变化需要清除后重新绘制
     this.__dirty = false;
 
-    Transform.call(this)
+    Transform.call(this);
 };
 
 
@@ -89,7 +89,7 @@ Layer.prototype.resize = function(width , height){
     this.dom.width =  width;
     this.dom.height = height;
     this.layerW = width ,this.layerH = height;
-}
+};
 
 
 mixin(Layer , Transform ,true);
