@@ -12,8 +12,9 @@ var requestAnimFrame = (window !== undefined &&
     || function (callback) {
         window.setTimeout(callback, 1000 / 60);
     };
+
 var Nop = function () {
-    return true
+    return true;
 };
 
 /**
@@ -34,10 +35,11 @@ var animate = function (option) {
         onChanging(beginResult);
 
         requestAnimFrame(frame);
-    })(onBegin())
+    })(function(){
+        setTimeout(onBegin,beginDelay);
+    }());
 };
 
 export default {
-    requestAnimFrame: requestAnimFrame,
     animate: animate
 };

@@ -2,9 +2,9 @@
  * 绘图元素类构造器
  * @module  ychart/graphic/viewBuilder
  */
-import ContextView from "./graphic/contextView"
-import {isObj, isType ,isFunc} from "../tool/util"
-import debugs from "../tool/debug"
+import ContextView from "./graphic/contextView";
+import { isType ,isFunc} from "../tool/util";
+import debugs from "../tool/debug";
 
 var REQUIRED_CHILD = {
     type: "String",
@@ -40,8 +40,9 @@ var baseContextViewExtend = function (defaults) {
                 defaults["Init"].call(this,baseOption);
             }
         }
-        zoom(x , y){
-            this.__yh.cleanPainter();
+        zoom(x, y){
+            console.log("zoom   "+x+" "+y);
+            // this.__yh.cleanPainter();
             super.zoom(x , y);
         }
     }
@@ -55,4 +56,4 @@ var baseContextViewExtend = function (defaults) {
 
 export default {
     baseContextViewExtend
-}
+};
