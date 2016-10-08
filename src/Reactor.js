@@ -104,8 +104,6 @@ var handlers = function(root, painter, storage) {
  */
 handlers.prototype.initHandlers = function() {
 
-    var _this = this;
-
     ALL_EVENT_NAMES.forEach(eventName => {
         //具体的事件处理函数
         var eventHandler = SPECIFIED_EVENT_HANDLERS[eventName] === undefined ? COMMON_EVENT_HANDLER(eventName) :
@@ -123,7 +121,7 @@ handlers.prototype.initHandlers = function() {
             this._dragmanager.trigger(eventName ,exEvent);
 
         } , this);
-        eventUtil.addHandler(_this.root, eventName, this._handlers[eventName]);
+        eventUtil.addHandler(this.root, eventName, this._handlers[eventName]);
     });
 };
 
