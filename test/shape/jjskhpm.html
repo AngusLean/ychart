@@ -36,15 +36,22 @@
     <script>
         var testdata = [
         {
-            dx: 280,
-            dy: 230,
+            dx: 485,
+            dy: 170,
+            dWidth: 20,
+            dHeight: 30,
+            bkimg: "maptmpetag.png"
+        },
+         {
+            dx: 465,
+            dy: 150,
             dWidth: 20,
             dHeight: 30,
             bkimg: "maptmpetag.png"
         },
         {
-            dx: 320,
-            dy: 300,
+            dx: 235,
+            dy: 250,
             dWidth: 20,
             dHeight: 30,
             bkimg: "maptmpetag.png"
@@ -72,8 +79,7 @@
         //初始化并且设置地图
         function initMapContainer(points)
         {
-            var imgsrc1 = "http://image.webservices.ft.com/v1/images/raw/http%3A%2F%2Fi.ftimg.net%2Fpicture%2F1%2F000065271_piclink.jpg?source=ftchinese&width=670&height=377&fit=cover";
-
+            var imgsrc1 = "./jjskhpm.png"
             var YImage = ychart.shape.Image;
             var Group = ychart.Group;
 
@@ -96,8 +102,8 @@
                 getable: false,
                 //imagesrc: "image/jjsk1.png"
                 imagesrc: imgsrc1,
-                dWidth: 1500,
-                dHeight: 900
+                //dWidth: 1500,
+                //dHeight: 900
             });
             gp.add(backImgEle);
             tmps = [];

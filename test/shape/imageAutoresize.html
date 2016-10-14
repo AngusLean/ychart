@@ -37,7 +37,11 @@
             Circle = ycharts.shape.Circle;
         var Group = ychart.Group;
         yh = ycharts.init("drawing");
-
+        var pts = [
+                    [280, 255],
+                    [320, 285],
+                    [290, 230]
+                ];
         var img = document.images[0];
         img.onload = function()
         {
@@ -48,11 +52,12 @@
             var ico = new Image();
             ico.onload = function()
             {
-                var pts = [
-                    [180, 290],
-                    [440, 260]
-                ];
-                var imgs = new YImage(
+                var scale = [1, 1];
+                gp = new Group(
+                {
+                    scale: scale
+                })
+                var bkimg = new YImage(
                 {
                     coordinate: -1,
                     getable: false,
@@ -60,71 +65,58 @@
                     dWidth: ow,
                     dHeight: oh
                 });
-                var circle1 = new Circle(
-                {
-                    coordinate: -1,
-                    x: pts[0][0],
-                    y: pts[0][1],
-                    draggable: false,
-                    r: 5,
-                    style:
-                    {
-                        color: "red"
-                    }
-                });
-                var cicle3 = new YImage(
-                {
-                    coordinate: -1,
-                    image: ico,
-                    dx: pts[0][0],
-                    dy: pts[0][1],
-                    dWidth: 30,
-                    dHeight: 30
-                });
+              
+               gp.add(bkimg);
                 var circle2 = new Circle(
                 {
                     coordinate: -1,
                     x: pts[1][0],
                     y: pts[1][1],
-                    draggable: false,
+                  
                     r: 5,
                     style:
                     {
-                        color: "red"
+                        color: "blue"
                     }
                 });
-                var scale = [1, 1];
-                scale[0] = tw / ow,
-                    scale[1] = th / oh;
-                gp = new Group(
-                {
-                    scale: scale
-                })
-                gp.add(circle1);
-                gp.add(imgs);
-                gp.add(cicle3);
-                gp.add(circle2);
+                
+                var tag;
+                pts.forEach(function(item){
+                    tag = new YImage(
+                  {
+                      coordinate: -1,
+                      image: ico,
+                      dx: item[0],
+                      dy: item[1],
+                      dWidth: 30,
+                      dHeight: 30
+                  });
+                  tag.on("click",tagclick);
+                  gp.add(tag);
+                });
+                
+                
+             //   gp.add(circle2);
                 yh.add(gp);
                 yh.BrushAll();
 
-                circle1.on("click", function()
-                {
-                    console.log("curcle1 click!");
-                });
+                
                 circle2.on("click", function(event, ar2)
                 {
                     console.log(event);
                     console.log(ar2);
                 });
-                cicle3.on("click", function(event, ar2)
-                {
-                    console.log(ar2)
-                });
-
+                
+        
 
             }
             ico.src = "image/video.png"
         }
+        
+        function tagclick(event, ar2){
+          console.log(ar2)
+        }
+        
         function zoomOut()
         {
             gp.zoom(1.3, 1.1);
