@@ -31,7 +31,7 @@ import {
  */
 export default ShapeBuilder.baseContextViewExtend({
 
-    defaultOption: {
+    defaultConfig: {
         coordinate: 1
     },
 

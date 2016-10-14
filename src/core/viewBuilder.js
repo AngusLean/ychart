@@ -41,8 +41,6 @@ var baseContextViewExtend = function (defaults) {
             }
         }
         zoom(x, y){
-            console.log("zoom   "+x+" "+y);
-            // this.__yh.cleanPainter();
             super.zoom(x , y);
         }
     }
