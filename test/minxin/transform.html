@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ychart transform测试</title>
+    <script src="../../dist/ychart.js"></script>
+    <script src="../js/jquery.min.js"></script>
+</head>
+<style>
+    .middlerow{
+        width: 1300px;margin: 0 auto;
+    }
+
+</style>
+<body>
+    <div class="middlerow">
+        <div id="drawing" style="width: 600px; height: 500px; border:solid 1px red"></div>
+    </div>
+    <div class="middl">
+        缩放比例:
+        <input type="text" id="percent" >
+        <input type="button" value="放大" onclick = Zoom()>
+    </div>
+</body>
+<script type="text/javascript" charset="utf-8">
+    var yh = ychart.init("drawing");
+    var line = new ychart.shape.Line({
+        beginpt: [0,250],
+        endpt: [300,250],
+        style:{
+            lineColor: "blue",
+            lineWidth: 3
+        }
+    });
+    yh.add(line);
+    yh.BrushAll();
+
+
+    function Zoom(){
+        var per = parseFloat($("#percent").val());
+        <!-- line.origin=[150,-250] -->
+        line.zoom(per,per);
+        yh.update();
+    }
+</script>
+</html>
