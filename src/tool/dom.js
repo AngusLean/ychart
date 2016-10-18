@@ -39,18 +39,16 @@ export var doc = function (id) {
 };
 
 
-export var createDOM = function (id, type, width, height, left, top) {
+export var createDOM = function (id, type, desc, width, height, left, top) {
     var newdom = document.createElement(type);
 
     var st = newdom.style;
     st.position = "absolute";
     st.left = left;
     st.top = top;
-    // st.width = width + "px";
-    // st.height = height + "px";
     newdom.width = width;
     newdom.height = height;
-    newdom.setAttribute("ychart-layer", id);
+    newdom.setAttribute("ychart-"+desc, id);
     return newdom;
 };
 

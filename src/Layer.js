@@ -35,7 +35,7 @@ class Layer {
         this.zLevel = zLevel;
 
         if (checkNull(this.dom)) {
-            this.dom = createDOM(id, "canvas", opts.width, opts.height, opts.left || 0, opts.top || 0);
+            this.dom = createDOM(id, "canvas", "layer", opts.width, opts.height, opts.left || 0, opts.top || 0);
         }
 
         this.dom.setAttribute("zLevel", zLevel);
