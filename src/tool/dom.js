@@ -44,8 +44,10 @@ export var createDOM = function (id, type, desc, width, height, left, top) {
 
     var st = newdom.style;
     st.position = "absolute";
-    st.left = left;
-    st.top = top;
+    st.left = left+"px";
+    st.top = top+"px";
+    // st.width = width+"px";
+    // st.height = height+"px";
     newdom.width = width;
     newdom.height = height;
     newdom.setAttribute("ychart-"+desc, id);

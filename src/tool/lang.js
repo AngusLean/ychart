@@ -35,7 +35,6 @@ export var onreadyCallback = function(ctx, element, callback, blocked) {
                 callback.call(ctx)
                 clearInterval(timer)
             } else {
-                console.log("enter time out")
                 runAfterTimes(5000, function() {
                     clearInterval(timer)
                 })

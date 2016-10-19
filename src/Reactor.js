@@ -5,6 +5,9 @@
 
 import eventUtil from "./tool/event";
 import Draggable from "./core/graphic/mixin/draggable";
+import HtmlView from "./core/graphic/htmlView"
+import {DEFAULT_CONFIG} from "./core/config/config"
+
 import {
     doc
 } from "./tool/dom";
@@ -12,22 +15,23 @@ import {
     bind1Arg
 } from "./tool/lang";
 
-//临时变量
-var ev, obj;
 
 //所有捕获的事件名称
 var ALL_EVENT_NAMES = ["click", "mousedown", "mousemove", "mouseup", "focus"];
 
 //自定义的一些事件处理函数
-var SPECIFIED_EVENT_HANDLERS = {
+var SPECIAL_EVENT_HANDLERS = {
 
     //上一个获取焦点的元素
     _lastHovered: null,
 
+    //全局消息提示组件
+    htmlView: null,
+
     //鼠标移动事件捕获及分发
     mousemove: function(exEvent) {
 
-        ev = exEvent, obj = exEvent.targetEle;
+        var ev = exEvent, obj = exEvent.targetEle;
         //判断和之前获取焦点的是否是同一个形状
         if (this._lastHovered != null && this._lastHovered != obj) {
             this.triggerProxy(this._lastHovered, "blur", ev);
@@ -38,28 +42,51 @@ var SPECIFIED_EVENT_HANDLERS = {
             this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
             //分发该元素的鼠标移动事件
             this.triggerProxy(obj, "mousemove", ev);
+
+            //处理鼠标在元素上的消息提示
+            if(obj.config.tip){
+                if(!this.htmlView){
+                    this.htmlView = new HtmlView({
+                        // width: 0,
+                        // height: 0,
+                        left: exEvent.clientX+DEFAULT_CONFIG.tipoffsetX,
+                        top: exEvent.clientY+DEFAULT_CONFIG.tipoffsetY
+                    })
+                }else{
+                    this.htmlView.move(exEvent.clientX+DEFAULT_CONFIG.tipoffsetX,
+                        exEvent.clientY+DEFAULT_CONFIG.tipoffsetY);
+                }
+                if(this._lastHovered != obj )
+                    this.htmlView.info(obj.config.tip);
+                this.htmlView.show();
+            }else{
+                this.htmlView && this.htmlView.hide();
+            }
         } else {
             //默认样式
             this.root.style.cursor = this._DEFAULT_CURSOR;
+            //隐藏消息提示
+            this.htmlView && this.htmlView.hide();
         }
         this._lastHovered = obj;
     },
 
     mouseout: function(exEvent) {
-        ev = exEvent, obj = ev.targetEle;
+        var ev = exEvent;
         if (this._lastHovered != null) {
             this.triggerProxy(this._lastHovered, "globalout", ev);
         }
         this._lastHovered = null;
+        this.htmlView && this.htmlView.hide();
     }
+
 };
 
 //通用事件处理函数
 var COMMON_EVENT_HANDLER = function(name) {
     return function(exEvent) {
 
-        ev = exEvent;
-        obj = ev.targetEle;
+        var ev = exEvent,obj = ev.targetEle;
 
         //某个形状处于焦点中并且可以捕获事件
         if (obj) {
@@ -106,8 +133,8 @@ handlers.prototype.initHandlers = function() {
 
     ALL_EVENT_NAMES.forEach(eventName => {
         //具体的事件处理函数
-        var eventHandler = SPECIFIED_EVENT_HANDLERS[eventName] === undefined ? COMMON_EVENT_HANDLER(eventName) :
-            SPECIFIED_EVENT_HANDLERS[eventName];
+        var eventHandler = SPECIAL_EVENT_HANDLERS[eventName] === undefined ? COMMON_EVENT_HANDLER(eventName) :
+            SPECIAL_EVENT_HANDLERS[eventName];
         //绑定事件处理函数的作用域为handler类.
         this._handlers[eventName] = bind1Arg(event => {
 
@@ -131,8 +158,9 @@ handlers.prototype.initHandlers = function() {
  * @returns {exEvent}
  */
 handlers.prototype.extendAndFixEventPackge = function(event) {
-
+    //座标转换
     event = eventUtil.clientToLocal(this.root, event, event);
+
     //目标元素
     event.targetEle = this.getHoverElement(event);
 
