@@ -4,18 +4,25 @@
  */
 
 import View from "./view";
-import {
-    createDOM
-} from "../../tool/dom";
+// import {
+    // createDOM
+// } from "../../tool/dom";
 
 /**
  * @private
  */
 class DomContent{
     constructor(config) {
-        this._root = createDOM(config.id, "div", "htmlView", config.width,
-            config.height, config.left, config.top);
-
+        // this._root = createDOM(config.id, "div", "htmlView", config.width, config.height, config.left, config.top);
+        this._root = document.createElement("div");
+        this._root.style={
+            width: config.width ,
+            height: config.height,
+            left: config.left,
+            top: config.height
+        };
+        this._root.style.position = "absolute";
+        this._root.setAttribute("id",config.id);
         this._content = document.createElement("div");
 
         this.init(config);
@@ -44,15 +51,14 @@ class DomContent{
         return document.createElement("div");
     }
     show(){
-        this.root.style.visibility = "visible";
+        this._root.style.visibility = "visible";
     }
     hide(){
-        this.root.style.visibility = "hidden";
+        this._root.style.visibility = "hidden";
     }
     move(x,y){
-        this.root.style.left = x+"px";
-        this.root.style.top = y+"px";
-
+        this._root.style.left = x+"px";
+        this._root.style.top = y+"px";
     }
 }
 

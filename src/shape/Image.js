@@ -3,6 +3,8 @@
  * @module ychart/shape/Image
  */
 import ShapeBuilder from "../core/viewBuilder";
+import {isArr , checkNull}from "../tool/util";
+
 import {
     onreadyCallback
 }from "../tool/lang";
@@ -82,21 +84,26 @@ export default ShapeBuilder.baseContextViewExtend({
      * @private
      */
     BuildPath: function(ctx, config) {
+        numberOrZero(config, ["dx" , "dy"]);
         var buildImagePath = function() {
             var image = this.image || config.image;
             if (this.coordinate == 1) {
                 let rect = this.getRectByCtx(ctx);
                 let imgH = image.height;
                 if (config.dWidth && config.dHeight) {
+                    let dy = rect[1] - config.dHeight - (config.dy || 0);
                     if (config.sx && config.sy) {
-                        ctx.drawImage(image, config.sx || 0, config.sy || 0, config.sWidth,
-                            config.sHeight, config.dx, rect[1] - config.dy - config.dHeight, config.dWidth, config.dHeight);
+                        ctx.drawImage(image, config.sx , config.sy , config.sWidth,
+                            config.sHeight, config.dx , dy, config.dWidth, config.dHeight);
                     } else {
-                        let dy = rect[1] - config.dHeight - (config.dy || 0);
-                        ctx.drawImage(image, config.dx || 0, dy, config.dWidth, config.dHeight);
+                        ctx.drawImage(image, config.dx , dy, config.dWidth, config.dHeight);
                     }
+                    //指定当前的包围矩形
+                    this.rect = [+config.dx  , dy ,config.dx + config.dWidth ,dy + config.dHeight];
                 } else {
-                    ctx.drawImage(image, config.sx || 0, rect[1] - imgH - (config.sy || 0));
+                    let dy = rect[1] - imgH - config.dy ;
+                    ctx.drawImage(image, config.dx , dy);
+                    this.rect = [+config.dx  , dy ,config.dx  + image.width ,dy + image.height];
                 }
             } else if (this.coordinate == -1) {
                 if (config.dWidth && config.dHeight) {
@@ -104,10 +111,12 @@ export default ShapeBuilder.baseContextViewExtend({
                         ctx.drawImage(image, config.sx || 0, config.sy || 0, config.sWidth,
                             config.sHeight, config.dx, config.dy, config.dWidth, config.dHeight);
                     } else {
-                        ctx.drawImage(image, config.dx || 0, config.dy || 0, config.dWidth, config.dHeight);
+                        ctx.drawImage(image, config.dx , config.dy , config.dWidth, config.dHeight);
                     }
+                    this.rect=[+config.dx ,config.dy , +config.dx+config.dWidth ,+config.dy+config.dHeight ];
                 } else {
-                    ctx.drawImage(image, config.sx || 0, config.sy || 0);
+                    ctx.drawImage(image, config.dx , config.dy );
+                    this.rect = [+config.dx , +config.dy , config.dx+image.width , config.dy+image.height];
                 }
             }
         };
@@ -119,18 +128,43 @@ export default ShapeBuilder.baseContextViewExtend({
         var image = this.image || config.image;
         if (this.__dirty || !this.rect) {
             this.rect = [];
-            if (config.dWidth && config.dHeight) {
-                this.rect[0] = +config.dx || 0;
-                this.rect[1] = +config.dy || 0;
-                this.rect[2] = this.rect[0] + (+config.dWidth);
-                this.rect[3] = this.rect[1] + (+config.dHeight);
-            } else {
-                this.rect[0] = +config.dx || 0;
-                this.rect[1] = +config.dy || 0;
-                this.rect[2] = this.rect[0] + (+image.width);
-                this.rect[3] = this.rect[1] + (+image.height);
+            if(this.coordinate == -1){
+                if (config.dWidth && config.dHeight) {
+                    this.rect[0] = +config.dx || 0;
+                    this.rect[1] = +config.dy || 0;
+                    this.rect[2] = this.rect[0] + (+config.dWidth);
+                    this.rect[3] = this.rect[1] + (+config.dHeight);
+                } else {
+                    this.rect[0] = +config.dx || 0;
+                    this.rect[1] = +config.dy || 0;
+                    this.rect[2] = this.rect[0] + (+image.width);
+                    this.rect[3] = this.rect[1] + (+image.height);
+                }
+            }else if(this.coordinate == 1){
+                if (config.dWidth && config.dHeight) {
+                    this.rect[0] = +config.dx || 0;
+                    this.rect[1] = +config.dy || 0;
+                    this.rect[2] = this.rect[0] + (+config.dWidth);
+                    this.rect[3] = this.rect[1] + (+config.dHeight);
+                } else {
+                    this.rect[0] = +config.dx || 0;
+                    this.rect[1] = +config.dy || 0;
+                    this.rect[2] = this.rect[0] + (+image.width);
+                    this.rect[3] = this.rect[1] + (+image.height);
+                }
+
             }
         }
         return this.rect;
     }
 });
+
+function numberOrZero(obj , fields){
+    if(isArr(fields)){
+        fields.forEach(field => {
+            obj[field] = (checkNull(obj[field]) || isNaN(obj[field]) ) ? 0 : obj[field];
+        });
+    }else{
+        obj[fields] = (checkNull(obj[fields]) || isNaN(obj[fields]) ) ? 0 : obj[fields];
+    }
+}

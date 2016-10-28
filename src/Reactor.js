@@ -5,8 +5,8 @@
 
 import eventUtil from "./tool/event";
 import Draggable from "./core/graphic/mixin/draggable";
-import HtmlView from "./core/graphic/htmlView"
-import {DEFAULT_CONFIG} from "./core/config/config"
+import HtmlView from "./core/graphic/htmlView";
+import {DEFAULT_CONFIG} from "./core/config/config";
 
 import {
     doc
@@ -47,11 +47,9 @@ var SPECIAL_EVENT_HANDLERS = {
             if(obj.config.tip){
                 if(!this.htmlView){
                     this.htmlView = new HtmlView({
-                        // width: 0,
-                        // height: 0,
                         left: exEvent.clientX+DEFAULT_CONFIG.tipoffsetX,
                         top: exEvent.clientY+DEFAULT_CONFIG.tipoffsetY
-                    })
+                    });
                 }else{
                     this.htmlView.move(exEvent.clientX+DEFAULT_CONFIG.tipoffsetX,
                         exEvent.clientY+DEFAULT_CONFIG.tipoffsetY);
@@ -184,9 +182,8 @@ handlers.prototype.triggerProxy = function(element, eventName, exEvent) {
  */
 handlers.prototype.getHoverElement = function(exEvent) {
     var shapes = this.__storage.getDisplayableShapeList();
-    var sp;
-    for (var i = 0, len = shapes.length; i < len; i++) {
-        sp = shapes[i];
+    for (let i = shapes.length-1 ; i >=0; i--) {
+        let sp = shapes[i];
         if (sp.contain(
                 exEvent.ycX,
                 exEvent.ycY
