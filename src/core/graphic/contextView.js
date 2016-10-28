@@ -266,7 +266,8 @@ class ContextView extends View {
      */
     contain(x, y) {
         var local = this.transformCoordToLocal(x, y);
-        return this.getable && (isPtInRect(this.GetContainRect(), local[0], local[1]) ||
+        return this.getable &&
+            (isPtInRect(this.GetContainRect(), local[0], local[1]) ||
             isPtInPath(this, this.config, x, y));
     }
 

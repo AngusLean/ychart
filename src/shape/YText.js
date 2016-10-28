@@ -4,9 +4,9 @@
  */
 import {
     checkNull
-} from "../tool/util"
-import utext from "../core/graphic/helper/text"
-import ShapeBuilder from "../core/viewBuilder"
+} from "../tool/util";
+import utext from "../core/graphic/helper/text";
+import ShapeBuilder from "../core/viewBuilder";
 /**
  * 文本
  * 由于文本显示与图像刚好是竖向完全相反的两个方向，所以对文本绘制特殊处理。
@@ -32,8 +32,6 @@ export default ShapeBuilder.baseContextViewExtend({
             return;
         }
         ctx.save();
-
-        var config = this.config;
 
         //文字颜色
         if (!checkNull(config.style.textColor)) {
@@ -63,6 +61,10 @@ export default ShapeBuilder.baseContextViewExtend({
 
     GetContainRect: function() {
         return this.containRect;
-    }
+    },
+
+    /* IsPtInPath: function(){
+        return true;
+    } */
 
 });

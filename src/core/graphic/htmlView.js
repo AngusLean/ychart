@@ -3,11 +3,14 @@
  * @module ychart/core/graphic/htmlVIew
  */
 
-import View from "./view"
+import View from "./view";
 import {
     createDOM
-} from "../../tool/dom"
+} from "../../tool/dom";
 
+/**
+ * @private
+ */
 class DomContent{
     constructor(config) {
         this._root = createDOM(config.id, "div", "htmlView", config.width,
@@ -19,14 +22,12 @@ class DomContent{
     }
 
     init(config){
-        this._root.style.border = "solid 1px #efefef";
-        this._root.style.backgroundColor = "white";
+        this._root.style.border = "solid 1px #efefef"; this._root.style.backgroundColor = "white";
         this._root.style.padding = "5px";
 
         if(config.title) this._root.appendChild(this.title);
         this._root.appendChild(this._content);
         if(config.footer) this._root.appendChild(this.footer);
-
         document.body && document.body.appendChild(this._root);
     }
 

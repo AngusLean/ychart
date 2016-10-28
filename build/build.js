@@ -1,3 +1,4 @@
+/*eslint-disable*/
 var fs = require('fs')
 var zlib = require('zlib')
 var rollup = require('rollup')
@@ -132,3 +133,4 @@ function logError (e) {
 function blue (str) {
   return '\x1b[1m\x1b[34m' + str + '\x1b[39m\x1b[22m'
 }
+/* eslint-enable*/
