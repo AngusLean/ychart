@@ -4,25 +4,19 @@
  */
 
 import View from "./view";
-// import {
-    // createDOM
-// } from "../../tool/dom";
+import {
+    createDOM
+} from "../../tool/dom";
 
 /**
  * @private
  */
 class DomContent{
     constructor(config) {
-        // this._root = createDOM(config.id, "div", "htmlView", config.width, config.height, config.left, config.top);
-        this._root = document.createElement("div");
-        this._root.style={
-            width: config.width ,
-            height: config.height,
-            left: config.left,
-            top: config.height
-        };
-        this._root.style.position = "absolute";
-        this._root.setAttribute("id",config.id);
+
+        this._root = createDOM(config.id, "div", "htmlView", config.width,
+            config.height, null , {left: config.left , top: config.top});
+
         this._content = document.createElement("div");
 
         this.init(config);

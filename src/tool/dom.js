@@ -39,15 +39,14 @@ export var doc = function (id) {
 };
 
 /* eslint-disable */
-export var createDOM = function (id, type, desc, width, height, left, top) {
+export var createDOM = function (id, type, desc, width, height, pos ,style) {
     var newdom = document.createElement(type);
-
     var st = newdom.style;
     st.position = "absolute";
-    // st.left = left+"px";
-    // st.top = top+"px";
-    // st.width = width+"px";
-    // st.height = height+"px";
+    st.position = typeof pos === "undefined" ? "absolute" : pos;
+    for(let item in style){
+       st[item] = style[item];
+    }
     newdom.width = width;
     newdom.height = height;
     newdom.setAttribute("ychart-"+desc, id);
