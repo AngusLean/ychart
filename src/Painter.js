@@ -5,7 +5,7 @@
 import Layer from "./Layer";
 import guid from "./tool/guid";
 import Group from "./Group";
-import {getPosition} from "./tool/dom";
+import {getPosition , createDOM} from "./tool/dom";
 
 /**
  * 绘图组件。
@@ -20,13 +20,16 @@ import {getPosition} from "./tool/dom";
 var Painter = function (yh, storage) {
     this.__storage = storage;
     this.__yh = yh;
-
-    this.container = document.getElementById(yh.domid);
-    var temp = getPosition(this.container);
+    var dom = document.getElementById(yh.domid);
+    var temp = getPosition(dom);
     this.width = temp.width;
     this.height = temp.height;
     this.left = temp.left;
     this.top = temp.top;
+
+    // this.container = createDOM(guid() , "div" , "container" ,this.width , this.height ,"relative");
+    this.container = createDOM(guid() , "div" , "container" ,"relative", {width: this.width ,height: this.height});
+    dom.appendChild(this.container);
     this.__layer = [];
 };
 

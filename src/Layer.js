@@ -35,7 +35,7 @@ class Layer {
         this.zLevel = zLevel;
 
         if (checkNull(this.dom)) {
-            this.dom = createDOM(id, "canvas", "layer", opts.width, opts.height);
+            this.dom = createDOM(id, "canvas", "layer", "position", null , {width: opts.width ,height: opts.height});
         }
 
         this.dom.setAttribute("zLevel", zLevel);
@@ -46,7 +46,7 @@ class Layer {
         this.layerH = opts.height;
 
         if (checkNull(this.ctx)) {
-            alert("浏览器不支持HTML5 canvas绘图,请更新浏览器 " + this.ctx);
+            alert("浏览器不支持HTML5 canvas,请更新浏览器 " + this.ctx);
             return;
         }
 

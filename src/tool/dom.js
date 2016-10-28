@@ -12,12 +12,12 @@ export var getPosition = function (id) {
         document.documentElement.scrollLeft : document.body.scrollLeft;
     return {
         width: (element.clientWidth || parseInt10(st.width) || parseInt10(element.style.width) -
-                (parseInt10(st.paddingLeft) || 0) -
+            (parseInt10(st.paddingLeft) || 0) -
                 (parseInt10(st.paddingRight))) || 0,
 
         height: (element.clientHeight || parseInt10(st.height) || parseInt10(element.style.height) -
-                 (parseInt10(st.paddingTop) || 0) -
-                 (parseInt10(st.paddingBottom))) || 0,
+            (parseInt10(st.paddingTop) || 0) -
+                (parseInt10(st.paddingBottom))) || 0,
         top: rect.top + scrollTop,
         left: rect.left + scrollLeft
     };
@@ -39,16 +39,20 @@ export var doc = function (id) {
 };
 
 /* eslint-disable */
-export var createDOM = function (id, type, desc, width, height, pos ,style) {
+export var createDOM = function (id, type, desc, pos ,style , attr) {
     var newdom = document.createElement(type);
     var st = newdom.style;
-    st.position = "absolute";
     st.position = typeof pos === "undefined" ? "absolute" : pos;
-    for(let item in style){
-       st[item] = style[item];
+    if(style){
+        for(let item in style){
+            st[item] = style[item];
+        }
     }
-    newdom.width = width;
-    newdom.height = height;
+    if(attr){
+        for(let item in attr){
+            newdom[item] = attr[item];
+        }
+    }
     newdom.setAttribute("ychart-"+desc, id);
     return newdom;
 };
