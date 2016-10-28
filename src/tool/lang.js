@@ -1,9 +1,6 @@
-export var callOrApply = function(func, ctx, args) {
-
-};
 
 export var throwFunc = function(str) {
-    throw str
+    throw str;
 };
 
 export var noOp = function() {};
@@ -17,7 +14,6 @@ export var bind1Arg = function(handler, context) {
 var runAfterTimes = function(times, callback) {
     setTimeout(callback, times);
 }
-
 export var onreadyCallback = function(ctx, element, callback, blocked) {
     if (element.complete) {
         callback.call(ctx);

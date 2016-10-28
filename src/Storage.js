@@ -3,8 +3,10 @@
  * @module ychart/storage
  *
  */
-import {isArr} from "./tool/util"
-import Group from "./Group"
+import {isArr} from "./tool/util";
+import Group from "./Group";
+
+sdfsd
 
 /**
  *
@@ -67,6 +69,8 @@ Storage.prototype.getDisplayableShapeList = function () {
 
     return list;
 };
+
+
 
 /**
  * 清楚存储器

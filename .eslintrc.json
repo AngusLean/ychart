@@ -15,7 +15,7 @@
         "no-console": "off",
         "linebreak-style": [
             "error",
-            "windows"
+            "linux"
         ],
         "quotes": [
             "error",

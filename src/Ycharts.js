@@ -75,7 +75,7 @@ YCharts.prototype.update = function () {
 
 YCharts.prototype.resize = function(wh ,ht){
     this.__painter.resize(wh ,ht);
-}
+};
 
 /**
  * 获取当前ychart容器的宽度
