@@ -6,7 +6,6 @@
 import {isArr} from "./tool/util";
 import Group from "./Group";
 
-sdfsd
 
 /**
  *

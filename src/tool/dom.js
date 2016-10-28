@@ -42,7 +42,7 @@ export var doc = function (id) {
 export var createDOM = function (id, type, desc, width, height, pos ,style) {
     var newdom = document.createElement(type);
     var st = newdom.style;
-    st.position = checkNull(pos) ? "absolute" : pos;
+    st.position = typeof pos === "undefined" ? "absolute" : pos;
     for(let item in style){
        st[item] = style[item];
     }

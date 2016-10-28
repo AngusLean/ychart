@@ -14,7 +14,7 @@ import {
 class DomContent{
     constructor(config) {
         this._root = createDOM(config.id, "div", "htmlView", config.width,
-            config.height, config.left, config.top);
+            config.height, null , {left: config.left , top: config.top});
 
         this._content = document.createElement("div");
 
