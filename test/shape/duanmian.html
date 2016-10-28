@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../dist/ychart.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div style="width: 100px;height: 768px;float:left"></div>
+    <div style="position:relative">
+    <div id="container" style="width: 400px;height: 300px; border: solid 1px red"></div>
+    </div>
+    <img id="bkimg" style="display: none" src="./image/hpm.jpg" alt="">
+    <script>
+
+    var yh = ychart.init("container")
+    var gp = new ychart.Group({
+        scale: [1,1]
+    })
+    gp.add(new ychart.shape.Image({
+        image: document.getElementById("bkimg"),
+        draggable: false,
+        getable: false
+    }));
+    var commontip = "<div style='font-size:10px'><br>点击查看该断面信息</div>"
+    var duanmian1tip = "<span style=''>坝横+030断面,"+
+        "该断面有: 1个位错计(1),1个基岩渗压计(9)</span>"+commontip
+    var duanmian2tip = "<span style=''>坝横+058断面,"+
+        "所有温度计,倾斜仪,坝基渗压计,坝体渗压计都位于该断面.</span>"+commontip
+
+    var duanmian3tip = "<span style=''>坝横+083断面,"+
+        "该断面有: 位错计3.</span>"+commontip
+
+    var duanmian4tip = "<span style=''>坝横+106断面,"+
+        "该断面有: 位错计4,基岩渗压计10</span>"+commontip
+    var allpos = [[50,50,60,35 ,duanmian1tip],[120,80,125,55,duanmian2tip],
+        [180,77,175,55,duanmian3tip],[220,67,210,50,duanmian4tip]]
+    allpos.forEach(function(item ,index){
+        var line = new ychart.shape.Line({
+            x0: item[0],
+            y0: item[1],
+            x1: item[2],
+            y1: item[3],
+            tip: item[4],
+            draggable: false,
+            style: {
+                lineColor: "blue",
+                lineWidth: 5
+            }
+        }) ;
+        gp.add(line)
+    })
+    yh.add(gp)
+    yh.BrushAll();
+    </script>
+</body>
+</html>
