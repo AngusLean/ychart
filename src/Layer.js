@@ -30,8 +30,11 @@ class Layer {
     * @constructor
     */
     constructor(id, zLevel, opts) {
+        //当前层的ID
         this.id = id;
+        //当前层的实际DOM. 也就是一个canvas元素实例
         this.dom = document.getElementById(id);
+        //当前层的前后顺序.
         this.zLevel = zLevel;
 
         if (checkNull(this.dom)) {
@@ -47,7 +50,7 @@ class Layer {
         this.layerH = opts.height;
 
         if (checkNull(this.ctx)) {
-            alert("浏览器不支持HTML5 canvas,请更新浏览器 " + this.ctx);
+            alert("浏览器不支持HTML5 canvas,初始化ychart失败 . 请更新浏览器 " );
             return;
         }
 
