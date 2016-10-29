@@ -2,6 +2,7 @@
  * 库的入口接口。 提供所有外部接口
  * @module ychart/index
  */
+
 import ychart from "./Ycharts"
 import Bezier from "./shape/Bezier"
 import Circle from "./shape/Circle"
@@ -14,7 +15,7 @@ import Group from "./Group"
 import Animation from "./animation/animation"
 import ShapeBuilder from "./core/viewBuilder"
 import debugs from "./tool/debug"
-import textUtil from "./core/graphic/helper/text.js"
+import textUtil from "./core/graphic/helper/text"
 
 ychart.shape = {Bezier ,Circle ,Line ,Rect ,Triangle ,YText,Image};
 
@@ -33,7 +34,7 @@ ychart.extendView = function (config) {
     var customView = ShapeBuilder.baseContextViewExtend(config);
     debugs.open = isDebug;
     return customView;
-}
+};
 
 /**
  * @todo  Group在变换时如何清楚已绘制的图形？

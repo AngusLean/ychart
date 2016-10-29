@@ -14,8 +14,6 @@ import {
 class DomContent{
     constructor(config) {
 
-        // this._root = createDOM(config.id, "div", "htmlView", config.width, config.height, null , {left: config.left , top: config.top});
-
         this._root = createDOM(config.id, "div", "htmlView","absolute", {left: config.left , top: config.top} ,{width: config.width , height: config.height});
         this._content = document.createElement("div");
 
@@ -27,8 +25,11 @@ class DomContent{
         this._root.style.padding = "5px";
 
         if(config.title) this._root.appendChild(this.title);
+
         this._root.appendChild(this._content);
+
         if(config.footer) this._root.appendChild(this.footer);
+
         document.body && document.body.appendChild(this._root);
     }
 
