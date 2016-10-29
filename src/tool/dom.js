@@ -45,7 +45,11 @@ export var createDOM = function (id, type, desc, pos ,style , attr) {
     st.position = typeof pos === "undefined" ? "absolute" : pos;
     if(style){
         for(let item in style){
-            st[item] = style[item];
+            if(isNaN(style[item])){
+                st[item] = style[item];
+            }else{
+                st[item] = style[item]+"px";
+            }
         }
     }
     if(attr){

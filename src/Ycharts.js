@@ -2,19 +2,18 @@
  * 绘图核心控制模块
  * @module ychart/Ychart
  */
-import Storage from "./Storage"
-import Painter from "./Painter"
-import Handler from "./Reactor"
+import Storage from "./Storage";
+import Painter from "./Painter";
+import Handler from "./Reactor";
 
 
-var i=1000;
 /**
  * @classdesc ychart绘图实例的类。在页面上调用YH.init后返回的就是该类的一个实例
  * @class YCharts
  * @param eleid {string}  放置canvas的容器。 不能是canvas元素， 必须设置宽度和高度
  * @constructor
  */
-var YCharts = function (eleid, opt) {
+var YCharts = function (eleid ) {
     //当前实例绑定的页面元素ID
     this.domid = eleid;
 
@@ -107,6 +106,7 @@ var ychart = {
      * @returns {YCharts}
      */
     init: function(id, config) {
+        document.getElementById(id).innerHTML = "";
         var _charts = new YCharts(id, config);
         instances[id] = _charts;
         return _charts;

@@ -20,16 +20,16 @@ import {getPosition , createDOM} from "./tool/dom";
 var Painter = function (yh, storage) {
     this.__storage = storage;
     this.__yh = yh;
-    var dom = document.getElementById(yh.domid);
-    var temp = getPosition(dom);
+    this.origindom = document.getElementById(yh.domid);
+    var temp = getPosition(this.origindom);
     this.width = temp.width;
     this.height = temp.height;
     this.left = temp.left;
     this.top = temp.top;
 
     // this.container = createDOM(guid() , "div" , "container" ,this.width , this.height ,"relative");
-    this.container = createDOM(guid() , "div" , "container" ,"relative", {width: this.width ,height: this.height});
-    dom.appendChild(this.container);
+    this.container = createDOM(guid() , "div" , "container" ,"relative", {width: "100%" ,height: "100%"});
+    this.origindom.appendChild(this.container);
     this.__layer = [];
 };
 
@@ -149,8 +149,8 @@ Painter.prototype.getLayer = function (zLevel) {
         layer = new Layer(guid() + "-zlevel", zLevel, {
             width: this.getWidth(),
             height: this.getHeight(),
-            left: this.left,
-            top: this.top
+            left: 0,
+            top: 0
         });
         this.insertLayer(zLevel, layer);
         this.__layer[zLevel] = layer;
@@ -183,8 +183,8 @@ Painter.prototype.clean = function () {
     this.height = null;
 
     //删除创建的canvas元素
-    this.container.innerHTML = "";
-    this.container = null;
+    this.origindom.innerHTML = "";
+    this.origindom = null;
 };
 
 /**
