@@ -111,7 +111,6 @@ var ychart = {
         instances[id] = _charts;
         return _charts;
     },
-
     /**
      * 销毁指定的ychart实例
      * @param {number} id ychart实例ID
