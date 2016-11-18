@@ -124,8 +124,8 @@ export function replaceattr(target, map) {
 
 
 export function isArr(obj) {
-    return isType("Array")(obj)
+    return isType("Array")(obj);
 }
 
 export var isFunc = isType("Function"),
-    isObj = isType("Object")
+    isObj = isType("Object");

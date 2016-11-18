@@ -3,19 +3,19 @@
  * @module ychart/index
  */
 
-import ychart from "./Ycharts"
-import Bezier from "./shape/Bezier"
-import Circle from "./shape/Circle"
-import Line from "./shape/Line"
-import Rect from "./shape/Rect"
-import Triangle from "./shape/Triangle"
-import YText from "./shape/YText"
-import Image from "./shape/Image"
-import Group from "./Group"
-import Animation from "./animation/animation"
-import ShapeBuilder from "./core/viewBuilder"
-import debugs from "./tool/debug"
-import textUtil from "./core/graphic/helper/text"
+import ychart from "./Ycharts";
+import Bezier from "./shape/Bezier";
+import Circle from "./shape/Circle";
+import Line from "./shape/Line";
+import Rect from "./shape/Rect";
+import Triangle from "./shape/Triangle";
+import YText from "./shape/YText";
+import Image from "./shape/Image";
+import Group from "./Group";
+import Animation from "./animation/animation";
+import ShapeBuilder from "./core/viewBuilder";
+import debugs from "./tool/debug";
+import textUtil from "./core/graphic/helper/text";
 
 ychart.shape = {Bezier ,Circle ,Line ,Rect ,Triangle ,YText,Image};
 
@@ -43,5 +43,5 @@ ychart.extendView = function (config) {
  * painter,layer代码能够优化下，变量命令不规范？
  */
 
-export default ychart
+export default ychart;
 

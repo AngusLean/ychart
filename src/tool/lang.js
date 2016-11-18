@@ -1,4 +1,3 @@
-
 export var throwFunc = function(str) {
     throw str;
 };
@@ -11,30 +10,24 @@ export var bind1Arg = function(handler, context) {
     };
 };
 
-var runAfterTimes = function(times, callback) {
-    setTimeout(callback, times);
-}
-export var onreadyCallback = function(ctx, element, callback, blocked) {
+import {isArr} from "./util";
+
+export var onreadyCallback = function(ctx, element, callback) {
+    var notCompleteCb = isArr(callback) ? callback[1] : noOp;
+    var completeCb = isArr(callback) ? callback[0] : noOp;
     if (element.complete) {
-        callback.call(ctx);
+        completeCb.call(ctx);
         return;
     }
-    if (blocked) {
-        /*let start = new Date();
-        let limit = isNaN(blocked) ? 2000 : blocked;
-        while(!element.complete && (new Date() - start < limit)){
+    let timer = setInterval(function() {
+        if (element.complete) {
+            completeCb.call(ctx);
+
+            notCompleteCb.call(ctx);
+            clearInterval(timer);
+            return;
+        } else {
+            // notCompleteCb.call(ctx);
         }
-        callback.call(ctx);*/
-    } else {
-        let timer = setInterval(function() {
-            if (element.complete) {
-                callback.call(ctx)
-                clearInterval(timer)
-            } else {
-                runAfterTimes(5000, function() {
-                    clearInterval(timer)
-                })
-            }
-        }, 50)
-    }
+    }, 150);
 };

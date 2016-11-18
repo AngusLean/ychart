@@ -78,4 +78,5 @@ Storage.prototype.clean = function () {
     this._roots = [];
 };
 
+
 export default Storage;
