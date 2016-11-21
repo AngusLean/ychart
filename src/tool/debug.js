@@ -27,7 +27,7 @@ var printobj = function (obj) {
                 if (isObj(obj[ele])) {
                     debug(ele + " : ");
                     isobj = true;
-                    printObj(obj[ele]);
+                    printobj(obj[ele]);
                     isobj = false;
                 } else {
                     if (isobj) {
@@ -40,7 +40,7 @@ var printobj = function (obj) {
         } else if (isArr(obj)) {
             var len = obj.length;
             for (var i = 0; i < len; i++) {
-                printObj(obj[i]);
+                printobj(obj[i]);
             }
         }
     }

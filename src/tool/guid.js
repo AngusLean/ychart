@@ -1,7 +1,6 @@
+var beginid = 1000;
+var guid = function(){
+    return beginid++;
+};
 
-    var beginid = 1000;
-    var guid = function(){
-        return beginid++;
-    };
-
-    export default guid;
+export default guid;
