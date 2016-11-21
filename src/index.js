@@ -2,7 +2,7 @@
  * 库的入口接口。 提供所有外部接口
  * @module ychart/index
  */
-
+/* eslint ignore*/
 import ychart from "./Ycharts"
 import Bezier from "./shape/Bezier"
 import Circle from "./shape/Circle"

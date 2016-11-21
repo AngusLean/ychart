@@ -52,6 +52,7 @@ export default ShapeBuilder.baseContextViewExtend({
             this.image = new Image();
             let _this = this;
             this.image.onload = function() {
+                this.image = null;
                 _this.__setOrigin(_this.image);
             };
             this.image.src = config.imagesrc;
