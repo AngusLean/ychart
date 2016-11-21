@@ -121,7 +121,9 @@ export default ShapeBuilder.baseContextViewExtend({
                 }
             }
         };
-        onreadyCallback(this, this.image, buildImagePath ,3000);
+        onreadyCallback(this, this.image, [buildImagePath ,function(){
+            this.__yh.update();
+        }],3000);
     },
 
     GetContainRect: function() {
