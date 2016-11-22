@@ -13,14 +13,16 @@
 
     var yh = ychart.init("container")
     var gp = new ychart.Group({
-        scale: [1,1]
+        scale: [1.4,1.2]
     })
     var imgurl = "http://hkcitizensmedia.com/wp-content/uploads/2016/07/%E4%B8%89%E5%B3%BD%E5%A4%A7%E5%A3%A9.jpg";
     gp.add(new ychart.shape.Image({
         <!-- image: document.getElementById("bkimg"), -->
-        imagesrc: imgurl,
-        draggable: false,
-        getable: false
+        image: imgurl,
+        dWidth: 100,
+        dHeight: 100,
+        <!--draggable: false,-->
+        <!--getable: false-->
     }));
     var commontip = "<div style='font-size:10px'><br>点击查看该断面信息</div>"
     var duanmian1tip = "<span style=''>坝横+030断面,"+

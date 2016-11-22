@@ -45,7 +45,7 @@ export default ShapeBuilder.baseContextViewExtend({
     Init: function(config) {
         this.origin = this.origin || [];
         //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
-        if (config.image) {
+        if (typeof config.image != "string") {
             this.image = config.image;
             this.__setOrigin(this.image);
         } else {
@@ -55,7 +55,7 @@ export default ShapeBuilder.baseContextViewExtend({
                 this.image = null;
                 _this.__setOrigin(_this.image);
             };
-            this.image.src = config.imagesrc;
+            this.image.src = config.image;
         }
     },
 
