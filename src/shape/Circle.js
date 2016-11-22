@@ -3,7 +3,7 @@
  * @module ychart/shape/Circle
  */
 
-import ShapeBuilder from "../core/viewBuilder"
+import ShapeBuilder from "../core/viewBuilder";
 
 /**
  * 圆形
@@ -31,5 +31,5 @@ export default ShapeBuilder.baseContextViewExtend({
             config.startangel || 0, config.endangel || Math.PI * 2);
     }
 
-})
+});
 

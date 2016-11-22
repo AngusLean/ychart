@@ -12,22 +12,31 @@ export var bind1Arg = function(handler, context) {
 
 import {isArr} from "./util";
 
-export var onreadyCallback = function(ctx, element, callback) {
+/**
+ * 判断某个元素是否加载完成
+ * @param {} ctx 回调函数的上下文
+ * @param {HTMLElement} 待加载的元素
+ * @param {Function | Array.{Function}} 成功的回调函数或者 [调用当前函数时已经加载的回调,稍后的回调]的回调函数数组
+ * @param {Function} 判断这个元素是否加载的函数
+ */
+var onreadyCallback = function(ctx, element, callback ,loadMethod) {
     var notCompleteCb = isArr(callback) ? callback[1] : noOp;
     var completeCb = isArr(callback) ? callback[0] : noOp;
-    if (element.complete) {
+    if (loadMethod(element)) {
         completeCb.call(ctx);
         return;
     }
     let timer = setInterval(function() {
-        if (element.complete) {
-            completeCb.call(ctx);
-
+        if (loadMethod(element)) {
             notCompleteCb.call(ctx);
             clearInterval(timer);
             return;
-        } else {
-            // notCompleteCb.call(ctx);
-        }
-    }, 150);
+        }}, 150);
+};
+
+export var onImgReady = function(ctx , element , callback){
+    var isImageLoaded = function(imgElement){
+        return imgElement.complete && imgElement.naturalHeight !== 0;
+    };
+    onreadyCallback(ctx,element,callback,isImageLoaded);
 };

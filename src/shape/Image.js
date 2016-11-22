@@ -6,7 +6,7 @@ import ShapeBuilder from "../core/viewBuilder";
 import {isArr , checkNull}from "../tool/util";
 
 import {
-    onreadyCallback
+    onImgReady
 }from "../tool/lang";
 
 /**
@@ -120,9 +120,9 @@ export default ShapeBuilder.baseContextViewExtend({
                 }
             }
         };
-        onreadyCallback(this, this.image, [buildImagePath ,function(){
+        onImgReady(this, this.image, [buildImagePath ,function(){
             this.__yh.update();
-        }],3000);
+        }]);
     },
 
     GetContainRect: function() {
@@ -154,7 +154,6 @@ export default ShapeBuilder.baseContextViewExtend({
                     this.rect[2] = this.rect[0] + (+image.width);
                     this.rect[3] = this.rect[1] + (+image.height);
                 }
-
             }
         }
         return this.rect;
