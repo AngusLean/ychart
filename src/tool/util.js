@@ -9,14 +9,14 @@
  * @param name
  * @returns {boolean}
  */
-var hasPrototypeProperty = function(object, name) {
+/* var hasPrototypeProperty = function(object, name) {
     return !object.hasOwnProperty(name) && (name in object);
 };
 
 function parseInt10(val) {
     return parseInt(val, 10);
 }
-
+ */
 export function isType(type) {
     return function(ele) {
         return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
@@ -24,11 +24,11 @@ export function isType(type) {
 }
 
 export function forEach(ele, ctx, cb) {
-    if (_isType("Array")(ele)) {
+    if (isType("Array")(ele)) {
         ele.forEach((function(item, index) {
             cb.call(ctx, item, index);
         }));
-    } else if (_isType("Object")(ele)) {
+    } else if (isType("Object")(ele)) {
         var it, index = 0;
         for (it in ele) {
             if (ele.hasOwnProperty(it)) {
@@ -45,7 +45,7 @@ export function forEach(ele, ctx, cb) {
  * @returns {boolean}
  */
 export function checkNull(which) {
-    return !which || typeof which == 'undefined' || which == 'null';
+    return !which || typeof which == "undefined" || which == "null";
 }
 
 /**
@@ -58,7 +58,7 @@ export function checkNull(which) {
 export function mergeItem(target, source, key, overwrite) {
     if (source.hasOwnProperty(key) && !(source[key] == null)) {
         var targetProp = target[key];
-        if (typeof targetProp == 'object') {
+        if (typeof targetProp == "object") {
             // 如果需要递归覆盖，就递归调用merge
             merge(
                 target[key],
@@ -90,7 +90,7 @@ export function merge(target, source, overwrite, map) {
     if (isArr(source)) {
         source.forEach(item =>
             merge(target, item, overwrite, map)
-        )
+        );
     } else {
         map && replaceattr(source, map);
 
@@ -120,7 +120,6 @@ export function replaceattr(target, map) {
     }
     return target;
 }
-
 
 
 export function isArr(obj) {

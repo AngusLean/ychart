@@ -52,6 +52,7 @@ export default ShapeBuilder.baseContextViewExtend({
             this.image = new Image();
             let _this = this;
             this.image.onload = function() {
+                this.image = null;
                 _this.__setOrigin(_this.image);
             };
             this.image.src = config.imagesrc;
@@ -130,7 +131,12 @@ export default ShapeBuilder.baseContextViewExtend({
         var image = this.image || config.image;
         if (this.__dirty || !this.rect) {
             this.rect = [];
-            if(this.coordinate == -1){
+            var isDSize = config.dWidth && config.dHeight;
+            this.rect[0] = +config.dx || 0;
+            this.rect[1] = +config.dy || 0;
+            this.rect[2] = this.rect[0] + (isDSize ? config.dWidth : image.width);
+            this.rect[3] = this.rect[1] + (isDSize ? config.dHeight : image.height);
+            /* if(this.coordinate == -1){
                 if (config.dWidth && config.dHeight) {
                     this.rect[0] = +config.dx || 0;
                     this.rect[1] = +config.dy || 0;
@@ -155,6 +161,7 @@ export default ShapeBuilder.baseContextViewExtend({
                     this.rect[3] = this.rect[1] + (+image.height);
                 }
             }
+            } */
         }
         return this.rect;
     }

@@ -38,5 +38,5 @@ export default {
         this.preventDefault(event);
         this.stopPropagation(event);
     },
-    clientToLocal: ClientToLocal,
+    clientToLocal: ClientToLocal
 };

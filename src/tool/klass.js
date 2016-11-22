@@ -11,7 +11,7 @@ export var inherit = function (clazz, baseClazz) {
         clazz.prototype[prop] = clazzPrototype[prop];
     }
     clazz.constructor = clazz;
-}
+};
 
 //组合两个类。 仅组合原型的属性
 
@@ -28,5 +28,5 @@ export var mixin = function (target, source, overlay) {
         }
         return target;
     }
-}
+};
 
