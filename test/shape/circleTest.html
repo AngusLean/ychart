@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Circle测试</title>
+<script type="text/javascript" src="../../dist/ychart.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <!-- <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div> -->
+    <!--    <div id="drawing" style="border:blue solid 1px ;width :800px;height:600px "> </div> -->
+    <canvas id="drawing1" style="border:blue solid 1px ;width :800px;height:600px "> </canvas>
+</div>
+
+<script>
+    var $= function (id) {
+        return document.getElementById(id);
+    };
+
+function ychartTest(){
+
+
+    var ycharts = ychart, Circle = ycharts.shape.Circle;
+    yh = ycharts.init("drawing");
+
+    var circle =new Circle({
+        x: 140,
+        y: 120,
+        r: 50,
+        style:{
+            lineColor: "red"
+        }
+    });
+    yh.add(circle);
+    yh.BrushAll();
+
+    circle.on("click",function(){
+        console.log("click img");
+    })
+}
+function canvasTest(){
+    var dm = document.getElementById("drawing1");
+    var ctx = dm.getContext("2d");
+
+    var drawLine = function(){
+        ctx.strokeStyle = "red";
+        ctx.moveTo(20,20);
+        ctx.lineTo(50,50);
+        ctx.stroke();
+    }
+    var transform = function(){
+        ctx.translate(0,dm.height);
+        ctx.scale(1,-1);
+    }
+    transform();
+    drawLine();
+}
+canvasTest();
+</script>
+</body>
+</html>

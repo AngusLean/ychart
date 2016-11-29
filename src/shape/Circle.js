@@ -29,6 +29,14 @@ export default ShapeBuilder.baseContextViewExtend({
     BuildPath: function (ctx, config) {
         ctx.arc(config.x, config.y, config.r, Math.PI * 2,
             config.startangel || 0, config.endangel || Math.PI * 2);
+    },
+
+    GetContainRect: function(){
+        var config = this.config;
+        if(this.dirty || !this.rect){
+            this.rect = [config.x - config.r,config.y-config.r ,config.x+config.r,config.y+config.r];
+        }
+        return this.rect;
     }
 
 });
