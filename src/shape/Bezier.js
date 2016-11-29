@@ -149,5 +149,5 @@ export default ShapeBuilder.baseContextViewExtend({
         config.style.brushType = "stroke";
 
     }
-})
+});
 

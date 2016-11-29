@@ -3,8 +3,8 @@
  */
 
 
-import Eventful from "./eventful"
-import {mixin} from "../../../tool/klass"
+import Eventful from "./eventful";
+import {mixin} from "../../../tool/klass";
 
 var target;
 
@@ -16,10 +16,10 @@ var target;
 var Draggable = function () {
     Eventful.call(this);
 
-    this.on('mousedown', this._dragStart, this);
-    this.on('mousemove', this._dragIng, this);
-    this.on('mouseup', this._dragEnd, this);
-    this.on('globalout', this._dragEnd, this);
+    this.on("mousedown", this._dragStart, this);
+    this.on("mousemove", this._dragIng, this);
+    this.on("mouseup", this._dragEnd, this);
+    this.on("globalout", this._dragEnd, this);
 };
 
 
@@ -42,7 +42,7 @@ Draggable.prototype = {
             this._x = exEvent.offsetX;
             this._y = exEvent.offsetY;
             this._dragingTarget = target;
-            this.trigger(target, 'dragStart', exEvent);
+            this.trigger(target, "dragStart", exEvent);
         }
     },
 
@@ -65,9 +65,10 @@ Draggable.prototype = {
             this._x = x;
             this._y = y;
             target.drift(dx, -dy);
-            this.trigger(target, 'draging', exEvent);
+            this.trigger(target, "draging", exEvent);
             // 更新视图
-            target.__yh && target.__yh.update();
+            //target.__yh && target.__yh.update();
+            target.RebrushAll();
         }
     },
 
@@ -81,7 +82,7 @@ Draggable.prototype = {
         target = this._dragingTarget;
         if (target) {
             target.dragging = false;
-            this.trigger(target, 'dragend', exEvent);
+            this.trigger(target, "dragend", exEvent);
         }
 
         this._dragingTarget = null;

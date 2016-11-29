@@ -1,4 +1,3 @@
-
 /**
  * 绘制在canvas上的元素基类模块
  * @module ychart/core/graphic/contextview
@@ -62,8 +61,8 @@ class ContextView extends View {
      * @default {style:{}}
      */
     // static defaultConfig = {
-        // style:{
-        // }
+    // style:{
+    // }
     // }
 
 
@@ -119,6 +118,13 @@ class ContextView extends View {
     }
 
     /**
+     * 重绘整个ychart实例. 通常用于元素位置改变\图片加载完成过后
+     */
+    RebrushAll() {
+        this.__yh && this.__yh.update();
+    }
+
+    /**
      * 绘图元素在把内容绘制到context之前调用的函数
      * @method
      * @param {CanvasRenderingContext2D} ctx
@@ -137,8 +143,10 @@ class ContextView extends View {
      * 获取当前元素的包围圈。
      * @return {Array.<Number>} 返回rect数组
      */
-    GetContainRect() {}
-    /*eslint-enable */
+    GetContainRect() {
+            return this.rect;
+        }
+        /*eslint-enable */
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
@@ -226,10 +234,10 @@ class ContextView extends View {
      */
     /* eslint-disable*/
     BuildPath(ctx, config) {
-        //设置合适的填充方法
-        throw new Error(" unsurported operation -- can't build shape path");
-    }
-    /* eslint-enable */
+            //设置合适的填充方法
+            throw new Error(" unsurported operation -- can't build shape path");
+        }
+        /* eslint-enable */
 
     /**
      * 绘制的接口。 绘制该元素必须调用该方法
@@ -268,7 +276,7 @@ class ContextView extends View {
         var local = this.transformCoordToLocal(x, y);
         return this.getable &&
             (isPtInRect(this.GetContainRect(), local[0], local[1]) ||
-            isPtInPath(this, this.config, x, y));
+                isPtInPath(this, this.config, x, y));
     }
 
     /**
@@ -280,13 +288,12 @@ class ContextView extends View {
         if (!config.text) {
             return;
         }
-
-        var beginpt = this.GetContainRect();
-
-        var x = beginpt[0][0];
-        var y = beginpt[0][1];
-        var height = beginpt[2][1] - beginpt[0][1];
-        y = y + height / 2;
+        var crect = this.GetContainRect();
+        if (!crect) {
+            return;
+        }
+        var x = crect[0];
+        var y = crect[1] + (crect[3] - crect[1]) / 2;
 
         ctx.save();
         var st = this.configProxy.getStyle();
@@ -294,13 +301,9 @@ class ContextView extends View {
         if (!st.textColor) {
             ctx.fillStyle = st.textColor;
         }
-
         //文字的变换与图形不一样，默认情况下就是正向的，特别处理
-        var rect = getRectByCtx(ctx);
-
-        text.fillText(ctx, config.text, x, rect[1] - y, st.font,
-            st.textAlign, st.textBaseline);
-
+        //var rect = getRectByCtx(ctx);
+        text.fillText(ctx, config.text, x, y, st.font, st.textAlign, st.textBaseline);
         ctx.restore();
     }
 }

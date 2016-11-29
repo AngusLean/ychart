@@ -61,7 +61,7 @@ export default ShapeBuilder.baseContextViewExtend({
 
     GetContainRect: function() {
         return this.containRect;
-    },
+    }
 
     /* IsPtInPath: function(){
         return true;
