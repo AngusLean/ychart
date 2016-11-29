@@ -177,7 +177,7 @@ class ContextView extends View {
             let rct = this.getRectByCtx(ctx);
             //ctx.translate(0, rct[1]);
             //ctx.scale(1, -1);
-            //this.rotation = Math.PI / 2;
+            this.rotation = Math.PI / 2;
             //this.position = [0,rct[1]];
             //this.position[1] += rct[1];
             //this.rotation = Math.PI /2;
