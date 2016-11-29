@@ -173,16 +173,20 @@ class ContextView extends View {
      * @param {CanvasRenderingContext2D} ctx
      */
     __SetShapeTransform(ctx) {
+        if (this.coordinate === 0) {
+            let rct = this.getRectByCtx(ctx);
+            //ctx.translate(0, rct[1]);
+            //ctx.scale(1, -1);
+            //this.rotation = Math.PI / 2;
+            //this.position = [0,rct[1]];
+            this.position[1] += rct[1];
+            this.rotation = Math.PI /2;
+        }
 
         this.updateTransform();
 
         this.setTransform(ctx);
 
-        if (this.coordinate === 0) {
-            let rct = this.getRectByCtx(ctx);
-            ctx.translate(0, rct[1]);
-            ctx.scale(1, -1);
-        }
     }
 
     /**
@@ -252,9 +256,10 @@ class ContextView extends View {
             this.__BeforeBrush(ctx, config);
             //具体图形自己的定制
             this.BuildPath(ctx, config);
-            this.DrawText(ctx, config);
             //恢复事故现场
             this.__AfterBrush(ctx, config);
+
+            this.DrawText(ctx, config);
         }
     }
 
@@ -292,15 +297,62 @@ class ContextView extends View {
         if (!crect) {
             return;
         }
-        var x = crect[0];
+        var x = crect[0] + (crect[2] - crect[0]) / 2;
         var y = crect[1] + (crect[3] - crect[1]) / 2;
 
-        ctx.save();
         var st = this.configProxy.getStyle();
+        /* eslint-disable */
+        let textw = text.getTextWidth(config.text, st.font);
+        let texth = text.getTextHeight(config.text ,st.font);
+        switch (config.textpos) {
+            case "top-center":
+                x -= textw/2;
+                y = crect[1];
+                break;
+            case "top-left":
+            case "left-top":
+                x = crect[0];
+                y = crect[1];
+                break;
+            case "top-right":
+                x = crect[2] - wh;
+                y = crect[1];
+                break;
+            case "left-center":
+                x = crect[0];
+                y -= texth/2;
+                st.textBaseline = "top";
+                break;
+            case "left-bottom":
+                x = crect[0];
+                y = crect[3];
+                break;
+            case "bottom-center":
+                y = crect[3];
+                x -= textw/2;
+                break;
+            case "bottom-right":
+                y = crect[3];
+                x = crect[2]-textw;
+            case "right-center":
+                x = crect[2]-textw;
+                y -= texth/2;
+                st.textBaseline = "top";
+                break;
+            default:
+                x -= textw/2;
+                y -= texth/2;
+                st.textBaseline = "top";
+        }
+        /* eslint-disable */
+        ctx.save();
         //文字颜色
-        if (!st.textColor) {
+        if (st.textColor) {
             ctx.fillStyle = st.textColor;
         }
+        //this.rotation = Math.PI;
+        ctx.setTransform(1,0,0,1,0,0);
+        //this.setTransform(1,0,0,-1,0,600);
         //文字的变换与图形不一样，默认情况下就是正向的，特别处理
         //var rect = getRectByCtx(ctx);
         text.fillText(ctx, config.text, x, y, st.font, st.textAlign, st.textBaseline);
