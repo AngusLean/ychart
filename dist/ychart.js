@@ -400,7 +400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	exports.isType = isType;
 	exports.forEach = forEach;
@@ -1489,7 +1489,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {String} type  元素类型. 该类型为element
 	   */
 	  function Element() {
-	    var type = arguments.length <= 0 || arguments[0] === undefined ? "element" : arguments[0];
+	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "element";
 	
 	    _classCallCheck(this, Element);
 	
@@ -2036,11 +2036,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _draggable2 = _interopRequireDefault(_draggable);
 	
-	var _htmlView = __webpack_require__(19);
+	var _htmlView = __webpack_require__(20);
 	
 	var _htmlView2 = _interopRequireDefault(_htmlView);
 	
-	var _config = __webpack_require__(21);
+	var _config = __webpack_require__(19);
 	
 	var _dom = __webpack_require__(14);
 	
@@ -2298,7 +2298,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _klass = __webpack_require__(5);
 	
-	var _config = __webpack_require__(21);
+	var _config = __webpack_require__(19);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -2554,6 +2554,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 19 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	/**
+	 * 默认全局配置
+	 * @global
+	 * @module ychart/core/config/style
+	 */
+	var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
+	    //正常情况下鼠标样式
+	    cursor_default: "default",
+	    cursor_moveable: "move",
+	    cursor_getable: "pointer",
+	
+	    //元素在获取焦点时显示信息提示框必须和鼠标当前位置有偏移不然元素本身将不能捕获事件
+	    tipoffsetX: 10,
+	    tipoffsetY: 0
+	};
+	
+	var useRectangularCoordinateSystem = exports.useRectangularCoordinateSystem = 0;
+
+/***/ },
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2567,7 +2594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @module ychart/core/graphic/htmlVIew
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _view = __webpack_require__(20);
+	var _view = __webpack_require__(21);
 	
 	var _view2 = _interopRequireDefault(_view);
 	
@@ -2658,7 +2685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(HtmlView, _View);
 	
 	    function HtmlView() {
-	        var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	        var option = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
 	        _classCallCheck(this, HtmlView);
 	
@@ -2732,7 +2759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2773,8 +2800,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {Object} option
 	   */
 	  function View() {
-	    var type = arguments.length <= 0 || arguments[0] === undefined ? "view" : arguments[0];
-	    var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "view";
+	    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	
 	    _classCallCheck(this, View);
 	
@@ -2824,33 +2851,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports.default = View;
 	module.exports = exports["default"];
-
-/***/ },
-/* 21 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	/**
-	 * 默认全局配置
-	 * @global
-	 * @module ychart/core/config/style
-	 */
-	var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
-	    //正常情况下鼠标样式
-	    cursor_default: "default",
-	    cursor_moveable: "move",
-	    cursor_getable: "pointer",
-	
-	    //元素在获取焦点时显示信息提示框必须和鼠标当前位置有偏移不然元素本身将不能捕获事件
-	    tipoffsetX: 10,
-	    tipoffsetY: 0
-	};
-	
-	var useRectangularCoordinateSystem = exports.useRectangularCoordinateSystem = 0;
 
 /***/ },
 /* 22 */
@@ -3161,10 +3161,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
-	                                                                                                                                                                                                                                                   * 绘图元素类构造器
-	                                                                                                                                                                                                                                                   * @module  ychart/graphic/viewBuilder
-	                                                                                                                                                                                                                                                   */
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+	                                                                                                                                                                                                                                                                               * 绘图元素类构造器
+	                                                                                                                                                                                                                                                                               * @module  ychart/graphic/viewBuilder
+	                                                                                                                                                                                                                                                                               */
 	
 	
 	var _contextView = __webpack_require__(26);
@@ -3283,7 +3283,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _view = __webpack_require__(20);
+	var _view = __webpack_require__(21);
 	
 	var _view2 = _interopRequireDefault(_view);
 	
@@ -3340,8 +3340,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @constructor
 	     */
 	    function ContextView() {
-	        var type = arguments.length <= 0 || arguments[0] === undefined ? "ContextView" : arguments[0];
-	        var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	        var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "ContextView";
+	        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	
 	        _classCallCheck(this, ContextView);
 	
@@ -3758,7 +3758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _StyleProxy2 = _interopRequireDefault(_StyleProxy);
 	
-	var _config = __webpack_require__(21);
+	var _config = __webpack_require__(19);
 	
 	var _util = __webpack_require__(3);
 	
@@ -3835,7 +3835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }
-	        this.config.style = this.styleProxy.getStyle();*/
+	      this.config.style = this.styleProxy.getStyle();*/
 	};
 	
 	/**
@@ -3970,7 +3970,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	/**
 	 * 样式名映射
@@ -3978,31 +3978,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var styleMap = {
 	
-	    fillStyle: "fillStyle",
-	    fillColor: "fillStyle",
-	    color: "fillStyle",
+	  fillStyle: "fillStyle",
+	  fillColor: "fillStyle",
+	  color: "fillStyle",
 	
-	    strokeStyle: "strokeStyle",
-	    lineColor: "strokeStyle",
-	    lineWidth: "lineWidth",
-	    lineCap: "lineCap",
-	    lineJoin: "lineJoin",
-	    font: "font",
+	  strokeStyle: "strokeStyle",
+	  lineColor: "strokeStyle",
+	  lineWidth: "lineWidth",
+	  lineCap: "lineCap",
+	  lineJoin: "lineJoin",
+	  font: "font",
 	
-	    textAlign: "textAlign",
-	    textBaseline: "textBaseline",
+	  textAlign: "textAlign",
+	  textBaseline: "textBaseline",
 	
-	    shadowColor: "shadowColor",
-	    shadowOffsetX: "shadowOffsetX",
-	    shadowOffsetY: "shadowOffsetY",
-	    shadowBlur: "shadowBlur",
-	    shadowx: "shadowOffsetX",
-	    shadowy: "shadowOffsetY",
+	  shadowColor: "shadowColor",
+	  shadowOffsetX: "shadowOffsetX",
+	  shadowOffsetY: "shadowOffsetY",
+	  shadowBlur: "shadowBlur",
+	  shadowx: "shadowOffsetX",
+	  shadowy: "shadowOffsetY",
 	
-	    globalAlpha: "globalAlpha",
-	    alpha: "globalAlpha",
-	    globalCompositionOperation: "globalCompositionOperation",
-	    overlaystyle: "globalCompositionOperation"
+	  globalAlpha: "globalAlpha",
+	  alpha: "globalAlpha",
+	  globalCompositionOperation: "globalCompositionOperation",
+	  overlaystyle: "globalCompositionOperation"
 	};
 	
 	/**
@@ -4016,121 +4016,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	var style = function style() {};
 	
 	style.prototype = {
-	    /**
-	     * 线条颜色，用于任意路劲绘制中线条样式的控制。
-	     * 值可以是任意十六进制颜色或者英文单词
-	     * 别名 : lineColor
-	     * @type string
-	     * @default blue
-	     */
-	    strokeStyle: "blue",
+	  /**
+	   * 线条颜色，用于任意路劲绘制中线条样式的控制。
+	   * 值可以是任意十六进制颜色或者英文单词
+	   * 别名 : lineColor
+	   * @type string
+	   * @default blue
+	   */
+	  strokeStyle: "blue",
 	
-	    /**
-	     * 填充颜色，用于任意路劲中fill方法的填充样式
-	     * 值可以是任意十六进制颜色或者英文单词
-	     * 别名 ： fillColor  color
-	     * @type string
-	     * @default #dcd5d9
-	     */
-	    fillStyle: "#dcd5d9",
+	  /**
+	   * 填充颜色，用于任意路劲中fill方法的填充样式
+	   * 值可以是任意十六进制颜色或者英文单词
+	   * 别名 ： fillColor  color
+	   * @type string
+	   * @default #dcd5d9
+	   */
+	  fillStyle: "#dcd5d9",
 	
-	    /**
-	     * 线宽。
-	     * @type number
-	     * @default 1
-	     */
-	    lineWidth: 1,
+	  /**
+	   * 线宽。
+	   * @type number
+	   * @default 1
+	   */
+	  lineWidth: 1,
 	
-	    /**
-	     * 线条两端样式. butt、round、square
-	     * @type string
-	     * @default round
-	     */
-	    lineCap: "round",
+	  /**
+	   * 线条两端样式. butt、round、square
+	   * @type string
+	   * @default round
+	   */
+	  lineCap: "round",
 	
-	    /**
-	     * bevel,miter线条相交的方式. 园交,斜交还是斜接.
-	     * @type string
-	     * @default round
-	     */
-	    lineJoin: "round",
+	  /**
+	   * bevel,miter线条相交的方式. 园交,斜交还是斜接.
+	   * @type string
+	   * @default round
+	   */
+	  lineJoin: "round",
 	
-	    /**
-	     * 文字
-	     * @type string
-	     * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
-	     */
-	    font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
+	  /**
+	   * 文字
+	   * @type string
+	   * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
+	   */
+	  font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
 	
-	    /**
-	     * 文字颜色。 strokeStyle
-	     * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
-	     * @type string
-	     * @default black
-	     */
-	    textColor: "black", //文字样式。 非标准canvas属性
+	  /**
+	   * 文字颜色。 strokeStyle
+	   * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
+	   * @type string
+	   * @default black
+	   */
+	  textColor: "black", //文字样式。 非标准canvas属性
 	
-	    /**
-	     * 文本对齐方式
-	     * @type string
-	     * @default start
-	     */
-	    textAlign: "start",
+	  /**
+	   * 文本对齐方式
+	   * @type string
+	   * @default start
+	   */
+	  textAlign: "start",
 	
-	    /**
-	     * 文本基线
-	     * @type string
-	     * @default bottom
-	     */
-	    textBaseline: "bottom",
+	  /**
+	   * 文本基线
+	   * @type string
+	   * @default bottom
+	   */
+	  textBaseline: "bottom",
 	
-	    /**
-	     * 默认阴影颜色
-	     * @type string
-	     * @default #EA9090
-	     */
-	    shadowColor: "#EA9090",
+	  /**
+	   * 默认阴影颜色
+	   * @type string
+	   * @default #EA9090
+	   */
+	  shadowColor: "#EA9090",
 	
-	    /**
-	     * 阴影X偏移
-	     * @type number
-	     * @default  shadowOffsetX
-	     */
-	    shadowOffsetX: 0,
+	  /**
+	   * 阴影X偏移
+	   * @type number
+	   * @default  shadowOffsetX
+	   */
+	  shadowOffsetX: 0,
 	
-	    /**
-	     * 阴影Y偏移
-	     * @type number
-	     * @default shadowOffsetY
-	     */
-	    shadowOffsetY: 0,
+	  /**
+	   * 阴影Y偏移
+	   * @type number
+	   * @default shadowOffsetY
+	   */
+	  shadowOffsetY: 0,
 	
-	    /**
-	     * 像素的模糊数
-	     * @type number
-	     * @default 0
-	     */
-	    shadowBlur: 0,
+	  /**
+	   * 像素的模糊数
+	   * @type number
+	   * @default 0
+	   */
+	  shadowBlur: 0,
 	
-	    /**
-	     * 透明度。  0为透明
-	     * @type number
-	     * @default 1
-	     */
-	    globalAlpha: 1,
+	  /**
+	   * 透明度。  0为透明
+	   * @type number
+	   * @default 1
+	   */
+	  globalAlpha: 1,
 	
-	    /**
-	     * 透明重叠情况
-	     * @type string
-	     * @default source-over
-	     */
-	    globalCompositionOperation: "source-over"
+	  /**
+	   * 透明重叠情况
+	   * @type string
+	   * @default source-over
+	   */
+	  globalCompositionOperation: "source-over"
 	
 	};
 	
 	exports.default = {
-	    style: style,
-	    styleMap: styleMap
+	  style: style,
+	  styleMap: styleMap
 	};
 	module.exports = exports["default"];
 

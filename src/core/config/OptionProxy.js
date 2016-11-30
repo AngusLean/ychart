@@ -13,7 +13,8 @@ import {
 
 import {
     checkNull,
-    merge
+    merge,
+    simpleMerge
 } from "../../tool/util"
 /**
  * 每个可绘制元素的配置代理类
@@ -25,7 +26,7 @@ import {
  */
 var OptionProxy = function(...option) {
     /**
-     * 配置代理
+     * 样式配置代理
      * @member {boolean}
      * @default null
      */
@@ -52,38 +53,9 @@ var OptionProxy = function(...option) {
         }
     });
 
-    this.init(option);
+    this.update(option);
 };
 
-
-/**
- * 初始化样式管理类。 设置该元素绘制必须的样式
- * @param config
- */
-OptionProxy.prototype.init = function(configs) {
-    merge(this.config, configs, true)
-    console.log(this.config);
-   /* var config = {};
-    merge(config, configs, true)
-    for (let item in config) {
-        if (item) {
-            this.config[item] = config[item];
-        }
-    }*/
-
-    /*for (let item in config) {
-        if (item) {
-            if (item != "style") {
-                this.config[item] = config[item];
-            } else {
-                this.styleProxy = new styleProxy(config[item]);
-            }
-        }
-    }
-
-
-    this.config.style = this.styleProxy.getStyle();*/
-};
 
 /**
  * 获取所有配置
@@ -122,16 +94,7 @@ OptionProxy.prototype.getBrushType = function(context) {
  * @param option
  */
 OptionProxy.prototype.update = function(config) {
-    for (item in config) {
-        if (item) {
-            if (item != "style") {
-                this.config[item] = config[item];
-            } else {
-                this.styleProxy.update(config[item]);
-            }
-        }
-    }
-    this.config.style = this.styleProxy.getStyle();
+    simpleMerge(this.config , config);
 };
 
 

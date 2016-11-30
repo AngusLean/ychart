@@ -17,12 +17,6 @@ function parseInt10(val) {
     return parseInt(val, 10);
 }
  */
-export function isType(type) {
-    return function(ele) {
-        return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
-    };
-}
-
 export function forEach(ele, ctx, cb) {
     if (isType("Array")(ele)) {
         ele.forEach((function(item, index) {
@@ -93,9 +87,22 @@ export function merge(target, source, overwrite, map) {
         );
     } else {
         map && replaceattr(source, map);
-
         for (var i in source) {
             mergeItem(target, source, i, overwrite);
+        }
+    }
+    return target;
+}
+
+export function simpleMerge(target , source){
+    if (isArr(source)) {
+        source.forEach(item =>
+            simpleMerge(target, item)
+        );
+    } else {
+        for (var item in source) {
+            if(item)
+                target[item] = source[item];
         }
     }
     return target;
@@ -119,6 +126,12 @@ export function replaceattr(target, map) {
         }
     }
     return target;
+}
+
+export function isType(type) {
+    return function(ele) {
+        return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
+    };
 }
 
 

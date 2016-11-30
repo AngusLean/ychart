@@ -175,6 +175,7 @@ doc/
 .idea/
 buildBK/
 dist/
+dist/*
 srcBK/
 *.bk
 sendtoSws.bat
