@@ -29,7 +29,7 @@ var OptionProxy = function(...option) {
      * @member {boolean}
      * @default null
      */
-    this.styleProxy = null;
+    this.styleProxy = new styleProxy();
 
 
     /**
@@ -38,8 +38,19 @@ var OptionProxy = function(...option) {
      * @member {object}
      */
     this.config = {
-        style: {}
     };
+
+    var _this = this;
+    Object.defineProperty(this.config , "style" ,{
+        enumerable : true,
+        configurable : false,
+        get: function(){
+            return _this.styleProxy.getStyle()
+        },
+        set: function (val) {
+            _this.styleProxy.update(val);
+        }
+    });
 
     this.init(option);
 };
@@ -50,10 +61,17 @@ var OptionProxy = function(...option) {
  * @param config
  */
 OptionProxy.prototype.init = function(configs) {
-    var config = {};
+    merge(this.config, configs, true)
+    console.log(this.config);
+   /* var config = {};
     merge(config, configs, true)
-
     for (let item in config) {
+        if (item) {
+            this.config[item] = config[item];
+        }
+    }*/
+
+    /*for (let item in config) {
         if (item) {
             if (item != "style") {
                 this.config[item] = config[item];
@@ -63,11 +81,8 @@ OptionProxy.prototype.init = function(configs) {
         }
     }
 
-    if (this.styleProxy == null) {
-        this.styleProxy = new styleProxy();
-    }
 
-    this.config.style = this.styleProxy.getStyle();
+    this.config.style = this.styleProxy.getStyle();*/
 };
 
 /**

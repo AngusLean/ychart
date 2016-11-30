@@ -3778,16 +3778,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @member {boolean}
 	     * @default null
 	     */
-	    this.styleProxy = null;
+	    this.styleProxy = new _StyleProxy2.default();
 	
 	    /**
 	     * 实际配置
 	     * 每个绘图元素的所有配置项。 其中 style 这个项表示所有样式相关。 独立处理
 	     * @member {object}
 	     */
-	    this.config = {
-	        style: {}
-	    };
+	    this.config = {};
+	
+	    var _this = this;
+	    Object.defineProperty(this.config, "style", {
+	        enumerable: true,
+	        configurable: false,
+	        get: function get() {
+	            return _this.styleProxy.getStyle();
+	        },
+	        set: function set(val) {
+	            _this.styleProxy.update(val);
+	        }
+	    });
 	
 	    for (var _len = arguments.length, option = Array(_len), _key = 0; _key < _len; _key++) {
 	        option[_key] = arguments[_key];
@@ -3806,24 +3816,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	OptionProxy.prototype.init = function (configs) {
-	    var config = {};
-	    (0, _util.merge)(config, configs, true);
+	    (0, _util.merge)(this.config, configs, true);
+	    console.log(this.config);
+	    /* var config = {};
+	     merge(config, configs, true)
+	     for (let item in config) {
+	         if (item) {
+	             this.config[item] = config[item];
+	         }
+	     }*/
 	
-	    for (var _item in config) {
-	        if (_item) {
-	            if (_item != "style") {
-	                this.config[_item] = config[_item];
+	    /*for (let item in config) {
+	        if (item) {
+	            if (item != "style") {
+	                this.config[item] = config[item];
 	            } else {
-	                this.styleProxy = new _StyleProxy2.default(config[_item]);
+	                this.styleProxy = new styleProxy(config[item]);
 	            }
 	        }
 	    }
-	
-	    if (this.styleProxy == null) {
-	        this.styleProxy = new _StyleProxy2.default();
-	    }
-	
-	    this.config.style = this.styleProxy.getStyle();
+	        this.config.style = this.styleProxy.getStyle();*/
 	};
 	
 	/**
@@ -3920,8 +3932,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	StyleProxy.prototype.bindContext = function (ctx) {
 	    var style = this.style;
-	    for (var prop in style) {
-	        ctx[prop] = style[prop];
+	    for (var prop in this.style) {
+	        ctx[prop] = this.style[prop];
 	    }
 	    // 渐变效果覆盖其他的fillStyle样式
 	    if ((0, _util.isObj)(style.gradient)) {

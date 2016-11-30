@@ -21,15 +21,15 @@ var StyleProxy = function (style) {
 
 StyleProxy.prototype.init = function (style) {
     this.brushType = style.brushType ? style.brushType :
-        style.strokeStyle ?
+        (style.strokeStyle ?
             (style.fillStyle ? 'both' : 'stroke') :
-            (style.fillStyle ? "fill" : "none");
+            (style.fillStyle ? "fill" : "none")    );
 };
 
 StyleProxy.prototype.bindContext = function (ctx) {
     var style = this.style;
-    for (var prop in style) {
-        ctx[prop] = style[prop];
+    for (var prop in this.style) {
+        ctx[prop] = this.style[prop];
     }
     // 渐变效果覆盖其他的fillStyle样式
     if (isObj(style.gradient)) {
