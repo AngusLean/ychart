@@ -45,8 +45,6 @@ var OptionProxy = function(...option) {
 };
 
 
-var item;
-
 /**
  * 初始化样式管理类。 设置该元素绘制必须的样式
  * @param config
@@ -68,7 +66,6 @@ OptionProxy.prototype.init = function(configs) {
     if (this.styleProxy == null) {
         this.styleProxy = new styleProxy();
     }
-    this.config["coordinate"] = this.config.coordinate || useRectangularCoordinateSystem;
 
     this.config.style = this.styleProxy.getStyle();
 };

@@ -39,7 +39,11 @@ Storage.prototype.addEle = function (element) {
             return;
         }
     }
-    element.__yh = this._yh;
+    element.setDefaultConfig({
+        yh:  this._yh,
+        height: this._yh.getHeight()
+    });
+
     //group当成一个元素便于管理
     this._roots.push(element);
 };

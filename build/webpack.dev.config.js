@@ -7,8 +7,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: 'ychart.js',
-        //library: 'ychart',
-        //libraryTarget: 'umd'
+        library: 'ychart',
+        libraryTarget: 'umd'
     },
     module: {
         loaders: [{

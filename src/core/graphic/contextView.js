@@ -72,9 +72,11 @@ class ContextView extends View {
      * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
      * @default 图片或文字为1，其他元素为0
      */
+/*
     get coordinate() {
         return this.configProxy.getConfig().coordinate;
     }
+*/
 
     set coordinate(val) {
         this.configProxy.update({
@@ -154,10 +156,10 @@ class ContextView extends View {
      * @private
      * @param {CanvasRenderingContext2D} ctx
      */
-    __BeforeBrush(ctx, config) {
+    _BeforeBrush(ctx, config) {
         ctx.save();
 
-        this.__SetShapeTransform(ctx, config);
+        this._SetShapeTransform(ctx, config);
 
         this.configProxy.bindContext(ctx);
 
@@ -172,16 +174,7 @@ class ContextView extends View {
      * @private
      * @param {CanvasRenderingContext2D} ctx
      */
-    __SetShapeTransform(ctx) {
-        if (this.coordinate === 0) {
-            let rct = this.getRectByCtx(ctx);
-            //ctx.translate(0, rct[1]);
-            //ctx.scale(1, -1);
-            this.rotation = Math.PI / 2;
-            //this.position = [0,rct[1]];
-            //this.position[1] += rct[1];
-            //this.rotation = Math.PI /2;
-        }
+    _SetShapeTransform(ctx) {
 
         this.updateTransform();
 
@@ -203,7 +196,7 @@ class ContextView extends View {
      * @private
      * @param {CanvasRenderingContext2D} ctx
      */
-    __AfterBrush(ctx, config) {
+    _AfterBrush(ctx, config) {
         var tp = this.configProxy.getBrushType();
         /* eslint-disable */
         switch (tp) {
@@ -241,7 +234,7 @@ class ContextView extends View {
             //设置合适的填充方法
             throw new Error(" unsurported operation -- can't build shape path");
         }
-        /* eslint-enable */
+    /* eslint-enable */
 
     /**
      * 绘制的接口。 绘制该元素必须调用该方法
@@ -250,14 +243,13 @@ class ContextView extends View {
      */
     Brush(ctx) {
         var config = this.config;
-
         if (!config.ignore) {
             //设置样式
-            this.__BeforeBrush(ctx, config);
+            this._BeforeBrush(ctx, config);
             //具体图形自己的定制
             this.BuildPath(ctx, config);
             //恢复事故现场
-            this.__AfterBrush(ctx, config);
+            this._AfterBrush(ctx, config);
 
             this.DrawText(ctx, config);
         }
@@ -273,15 +265,27 @@ class ContextView extends View {
     }
 
     /**
-     * 判断点是否在当前元素内
+     * 判断点是否在当前元素内.该方法会首先通过
+     * @see {GetContainRect} 方法判断,然后调用 @see {_isPtInPath} 方法
      * @param {Number} x   x座标
      * @param {Number} y   y座标
      */
     contain(x, y) {
         var local = this.transformCoordToLocal(x, y);
+        //当前元素的containRect作为缓存, 鼠标应该首先在该范围内才继续判断
         return this.getable &&
-            (isPtInRect(this.GetContainRect(), local[0], local[1]) ||
-                isPtInPath(this, this.config, x, y));
+            (isPtInRect(this.GetContainRect(), local[0], local[1]) &&
+                this._isPtInPath(x, y));
+    }
+
+    /**
+     * 通过路径绘制来判断点是否在元素上
+     * @param x
+     * @param y
+     * @private
+     */
+    _isPtInPath(x,y){
+        return isPtInPath(this, this.config, x, y);
     }
 
     /**
@@ -302,47 +306,55 @@ class ContextView extends View {
 
         var st = this.configProxy.getStyle();
         /* eslint-disable */
-        let textw = text.getTextWidth(config.text, st.font);
-        let texth = text.getTextHeight(config.text ,st.font);
+        var textw = text.getTextWidth(config.text, st.font);
+        var texth = text.getTextHeight(config.text ,st.font);
+        var textAlign = st.textAlign , textBaseline = st.textBaseline;
         switch (config.textpos) {
-            case "top-center":
-                x -= textw/2;
+            case "bottom-center":
                 y = crect[1];
+                textAlign = "center";
                 break;
             case "top-left":
             case "left-top":
                 x = crect[0];
                 y = crect[1];
                 break;
-            case "top-right":
-                x = crect[2] - wh;
+            case "bottom-right":
+            case "right-bottom":
+                x = crect[2] - textw;
                 y = crect[1];
                 break;
             case "left-center":
                 x = crect[0];
-                y -= texth/2;
-                st.textBaseline = "top";
+                textAlign = "left";
+                textBaseline = "middle";
                 break;
             case "left-bottom":
+            case "bottom-left":
                 x = crect[0];
                 y = crect[3];
                 break;
-            case "bottom-center":
+            case "top-center":
                 y = crect[3];
-                x -= textw/2;
+                textAlign = "center";
+                textBaseline = "top";
+                // x -= textw/2;
                 break;
-            case "bottom-right":
+            case "top-right":
+            case "right-top":
                 y = crect[3];
                 x = crect[2]-textw;
+                break;
             case "right-center":
                 x = crect[2]-textw;
                 y -= texth/2;
-                st.textBaseline = "top";
                 break;
             default:
-                x -= textw/2;
-                y -= texth/2;
-                st.textBaseline = "top";
+                textAlign = "center";
+                textBaseline = "middle";
+                // x -= textw/2;
+                // y -= texth/2;
+                // st.textBaseline = "top";
         }
         /* eslint-disable */
         ctx.save();
@@ -350,12 +362,12 @@ class ContextView extends View {
         if (st.textColor) {
             ctx.fillStyle = st.textColor;
         }
-        //this.rotation = Math.PI;
-        ctx.setTransform(1,0,0,1,0,0);
-        //this.setTransform(1,0,0,-1,0,600);
         //文字的变换与图形不一样，默认情况下就是正向的，特别处理
-        //var rect = getRectByCtx(ctx);
-        text.fillText(ctx, config.text, x, y, st.font, st.textAlign, st.textBaseline);
+        var globalTextPos = this.transformCoordToGlobal(x,y);
+        x = globalTextPos[0] ,y=globalTextPos[1];
+
+        text.fillText(ctx, config.text, x, y, st.font, textAlign, textBaseline);
+
         ctx.restore();
     }
 }

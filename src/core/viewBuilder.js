@@ -43,6 +43,27 @@ var baseContextViewExtend = function (defaults) {
         zoom(x, y){
             super.zoom(x , y);
         }
+
+        setDefaultConfig(config){
+            //设置全局ychart属性
+            this.__yh = config.yh;
+            //设置笛卡尔坐标系
+            this._setDefaultTrasformToCartesian(config.height);
+        }
+
+        /**
+         * 设置当前元素的默认坐标系为直角坐标系. 该方法应该在刷新之前调用并且仅仅调用一次.
+         * 由于变换要在元素知道被添加到某个具体的 @see{CanvasRenderingContext2D} 的时候
+         * 才可以.
+         * @private
+         * @param position  距离变换
+         * @param scale  缩放及方向变换
+         */
+        _setDefaultTrasformToCartesian(height){
+            this.position = [0 , height];
+            this.scale = [1,-1];
+        }
+
     }
 
     for(var prop in defaults){

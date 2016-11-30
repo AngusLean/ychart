@@ -38,8 +38,6 @@ var SPECIAL_EVENT_HANDLERS = {
         }
         //某个形状处于焦点中
         if (obj) {
-            //设置处于焦点时的样式
-            this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
             //分发该元素的鼠标移动事件
             this.triggerProxy(obj, "mousemove", ev);
 
@@ -61,8 +59,6 @@ var SPECIAL_EVENT_HANDLERS = {
                 this.htmlView && this.htmlView.hide();
             }
         } else {
-            //默认样式
-            this.root.style.cursor = this._DEFAULT_CURSOR;
             //隐藏消息提示
             this.htmlView && this.htmlView.hide();
         }
@@ -117,8 +113,6 @@ var handlers = function(root, painter, storage) {
     //拖动管理。 只需要调用它的事件分发函数即可
     this._dragmanager = new Draggable();
 
-    this._DEFAULT_FOCUS_CURSOR = "pointer";
-    this._DEFAULT_CURSOR = "default";
     this.initHandlers();
 };
 

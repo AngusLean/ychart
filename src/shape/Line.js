@@ -30,5 +30,6 @@ export default ShapeBuilder.baseContextViewExtend({
             ctx.moveTo(config.x0, config.y0);
             ctx.lineTo(config.x1, config.y1);
         }
+        this.rect = [config.x0 , config.y0 ,config.x1,config.y1];
     }
 });

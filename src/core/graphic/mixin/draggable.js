@@ -5,6 +5,7 @@
 
 import Eventful from "./eventful";
 import {mixin} from "../../../tool/klass";
+import {DEFAULT_CONFIG} from "../../config/config"
 
 var target;
 
@@ -52,11 +53,21 @@ Draggable.prototype = {
      * @private
      */
     _dragIng: function (exEvent) {
+        var ele = exEvent.targetEle;
         target = this._dragingTarget;
         var crt = new Date();
         crt = crt - this._lastClickTime;
+        if(ele){
+            if(ele.draggable)
+                exEvent.target.style.cursor = DEFAULT_CONFIG.cursor_moveable;
+            else
+                exEvent.target.style.cursor = DEFAULT_CONFIG.cursor_getable;
+        }else{
+            exEvent.target.style.cursor = DEFAULT_CONFIG.cursor_default;
+        }
+
         if (target && target.draggable && crt >= this._dragDelay) {
-            // exEvent.target.style.cursor = "move";
+
             var x = exEvent.offsetX;
             var y = exEvent.offsetY;
 
@@ -67,7 +78,6 @@ Draggable.prototype = {
             target.drift(dx, -dy);
             this.trigger(target, "draging", exEvent);
             // 更新视图
-            //target.__yh && target.__yh.update();
             target.RebrushAll();
         }
     },
@@ -78,7 +88,7 @@ Draggable.prototype = {
      * @private
      */
     _dragEnd: function (exEvent) {
-        // exEvent.target.style.cursor = "default";
+        exEvent.target.style.cursor =DEFAULT_CONFIG.cursor_default;
         target = this._dragingTarget;
         if (target) {
             target.dragging = false;

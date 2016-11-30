@@ -346,7 +346,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return;
 	        }
 	    }
-	    element.__yh = this._yh;
+	    element.setDefaultConfig({
+	        yh: this._yh,
+	        height: this._yh.getHeight()
+	    });
+	
 	    //group当成一个元素便于管理
 	    this._roots.push(element);
 	};
@@ -396,7 +400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
 	exports.isType = isType;
 	exports.forEach = forEach;
@@ -619,6 +623,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.children.push(child);
 	            return this;
 	        }
+	    }, {
+	        key: "setDefaultConfig",
+	        value: function setDefaultConfig(config) {}
 	    }]);
 	
 	    return Group;
@@ -1482,7 +1489,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {String} type  元素类型. 该类型为element
 	   */
 	  function Element() {
-	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "element";
+	    var type = arguments.length <= 0 || arguments[0] === undefined ? "element" : arguments[0];
 	
 	    _classCallCheck(this, Element);
 	
@@ -2069,8 +2076,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        //某个形状处于焦点中
 	        if (obj) {
-	            //设置处于焦点时的样式
-	            this.root.style.cursor = this._DEFAULT_FOCUS_CURSOR;
 	            //分发该元素的鼠标移动事件
 	            this.triggerProxy(obj, "mousemove", ev);
 	
@@ -2090,8 +2095,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.htmlView && this.htmlView.hide();
 	            }
 	        } else {
-	            //默认样式
-	            this.root.style.cursor = this._DEFAULT_CURSOR;
 	            //隐藏消息提示
 	            this.htmlView && this.htmlView.hide();
 	        }
@@ -2147,8 +2150,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //拖动管理。 只需要调用它的事件分发函数即可
 	    this._dragmanager = new _draggable2.default();
 	
-	    this._DEFAULT_FOCUS_CURSOR = "pointer";
-	    this._DEFAULT_CURSOR = "default";
 	    this.initHandlers();
 	};
 	
@@ -2297,11 +2298,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _klass = __webpack_require__(5);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _config = __webpack_require__(21);
 	
-	/**
-	 * @module ychart/core/graphic/mixin
-	 */
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var target;
 	
@@ -2310,6 +2309,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @class
 	 * @constructor
 	 */
+	/**
+	 * @module ychart/core/graphic/mixin
+	 */
+	
 	var Draggable = function Draggable() {
 	    _eventful2.default.call(this);
 	
@@ -2348,11 +2351,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @private
 	     */
 	    _dragIng: function _dragIng(exEvent) {
+	        var ele = exEvent.targetEle;
 	        target = this._dragingTarget;
 	        var crt = new Date();
 	        crt = crt - this._lastClickTime;
+	        if (ele) {
+	            if (ele.draggable) exEvent.target.style.cursor = _config.DEFAULT_CONFIG.cursor_moveable;else exEvent.target.style.cursor = _config.DEFAULT_CONFIG.cursor_getable;
+	        } else {
+	            exEvent.target.style.cursor = _config.DEFAULT_CONFIG.cursor_default;
+	        }
+	
 	        if (target && target.draggable && crt >= this._dragDelay) {
-	            // exEvent.target.style.cursor = "move";
+	
 	            var x = exEvent.offsetX;
 	            var y = exEvent.offsetY;
 	
@@ -2363,7 +2373,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            target.drift(dx, -dy);
 	            this.trigger(target, "draging", exEvent);
 	            // 更新视图
-	            //target.__yh && target.__yh.update();
 	            target.RebrushAll();
 	        }
 	    },
@@ -2374,7 +2383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @private
 	     */
 	    _dragEnd: function _dragEnd(exEvent) {
-	        // exEvent.target.style.cursor = "default";
+	        exEvent.target.style.cursor = _config.DEFAULT_CONFIG.cursor_default;
 	        target = this._dragingTarget;
 	        if (target) {
 	            target.dragging = false;
@@ -2649,7 +2658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(HtmlView, _View);
 	
 	    function HtmlView() {
-	        var option = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	        var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	
 	        _classCallCheck(this, HtmlView);
 	
@@ -2764,8 +2773,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {Object} option
 	   */
 	  function View() {
-	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "view";
-	    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	    var type = arguments.length <= 0 || arguments[0] === undefined ? "view" : arguments[0];
+	    var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 	
 	    _classCallCheck(this, View);
 	
@@ -2831,12 +2840,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @module ychart/core/config/style
 	 */
 	var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
-	    //变换相关属性
-	    position: [0, 0],
-	    rotation: 0,
-	    scale: [1, 1],
-	    origin: [0, 0],
-	    transform: null,
+	    //正常情况下鼠标样式
+	    cursor_default: "default",
+	    cursor_moveable: "move",
+	    cursor_getable: "pointer",
 	
 	    //元素在获取焦点时显示信息提示框必须和鼠标当前位置有偏移不然元素本身将不能捕获事件
 	    tipoffsetX: 10,
@@ -3154,10 +3161,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-	                                                                                                                                                                                                                                                                               * 绘图元素类构造器
-	                                                                                                                                                                                                                                                                               * @module  ychart/graphic/viewBuilder
-	                                                                                                                                                                                                                                                                               */
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
+	                                                                                                                                                                                                                                                   * 绘图元素类构造器
+	                                                                                                                                                                                                                                                   * @module  ychart/graphic/viewBuilder
+	                                                                                                                                                                                                                                                   */
 	
 	
 	var _contextView = __webpack_require__(26);
@@ -3222,6 +3229,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            key: "zoom",
 	            value: function zoom(x, y) {
 	                _get(BaseContextView.prototype.__proto__ || Object.getPrototypeOf(BaseContextView.prototype), "zoom", this).call(this, x, y);
+	            }
+	        }, {
+	            key: "setDefaultConfig",
+	            value: function setDefaultConfig(config) {
+	                //设置全局ychart属性
+	                this.__yh = config.yh;
+	                //设置笛卡尔坐标系
+	                this._setDefaultTrasformToCartesian(config.height);
+	            }
+	
+	            /**
+	             * 设置当前元素的默认坐标系为直角坐标系. 该方法应该在刷新之前调用并且仅仅调用一次.
+	             * 由于变换要在元素知道被添加到某个具体的 @see{CanvasRenderingContext2D} 的时候
+	             * 才可以.
+	             * @private
+	             * @param position  距离变换
+	             * @param scale  缩放及方向变换
+	             */
+	
+	        }, {
+	            key: "_setDefaultTrasformToCartesian",
+	            value: function _setDefaultTrasformToCartesian(height) {
+	                this.position = [0, height];
+	                this.scale = [1, -1];
 	            }
 	        }]);
 	
@@ -3309,8 +3340,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @constructor
 	     */
 	    function ContextView() {
-	        var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "ContextView";
-	        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	        var type = arguments.length <= 0 || arguments[0] === undefined ? "ContextView" : arguments[0];
+	        var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 	
 	        _classCallCheck(this, ContextView);
 	
@@ -3349,7 +3380,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
 	     * @default 图片或文字为1，其他元素为0
 	     */
-	
+	    /*
+	        get coordinate() {
+	            return this.configProxy.getConfig().coordinate;
+	        }
+	    */
 	
 	    _createClass(ContextView, [{
 	        key: "RebrushAll",
@@ -3403,11 +3438,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	
 	    }, {
-	        key: "__BeforeBrush",
-	        value: function __BeforeBrush(ctx, config) {
+	        key: "_BeforeBrush",
+	        value: function _BeforeBrush(ctx, config) {
 	            ctx.save();
 	
-	            this.__SetShapeTransform(ctx, config);
+	            this._SetShapeTransform(ctx, config);
 	
 	            this.configProxy.bindContext(ctx);
 	
@@ -3424,17 +3459,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	
 	    }, {
-	        key: "__SetShapeTransform",
-	        value: function __SetShapeTransform(ctx) {
-	            if (this.coordinate === 0) {
-	                var rct = this.getRectByCtx(ctx);
-	                //ctx.translate(0, rct[1]);
-	                //ctx.scale(1, -1);
-	                //this.rotation = Math.PI / 2;
-	                //this.position = [0,rct[1]];
-	                //this.position[1] += rct[1];
-	                //this.rotation = Math.PI /2;
-	            }
+	        key: "_SetShapeTransform",
+	        value: function _SetShapeTransform(ctx) {
 	
 	            this.updateTransform();
 	
@@ -3460,8 +3486,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	
 	    }, {
-	        key: "__AfterBrush",
-	        value: function __AfterBrush(ctx, config) {
+	        key: "_AfterBrush",
+	        value: function _AfterBrush(ctx, config) {
 	            var tp = this.configProxy.getBrushType();
 	            /* eslint-disable */
 	            switch (tp) {
@@ -3514,14 +3540,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "Brush",
 	        value: function Brush(ctx) {
 	            var config = this.config;
-	
 	            if (!config.ignore) {
 	                //设置样式
-	                this.__BeforeBrush(ctx, config);
+	                this._BeforeBrush(ctx, config);
 	                //具体图形自己的定制
 	                this.BuildPath(ctx, config);
 	                //恢复事故现场
-	                this.__AfterBrush(ctx, config);
+	                this._AfterBrush(ctx, config);
 	
 	                this.DrawText(ctx, config);
 	            }
@@ -3540,7 +3565,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * 判断点是否在当前元素内
+	         * 判断点是否在当前元素内.该方法会首先通过
+	         * @see {GetContainRect} 方法判断,然后调用 @see {_isPtInPath} 方法
 	         * @param {Number} x   x座标
 	         * @param {Number} y   y座标
 	         */
@@ -3549,7 +3575,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "contain",
 	        value: function contain(x, y) {
 	            var local = this.transformCoordToLocal(x, y);
-	            return this.getable && ((0, _viewutil.isPtInRect)(this.GetContainRect(), local[0], local[1]) || (0, _viewutil.isPtInPath)(this, this.config, x, y));
+	            //当前元素的containRect作为缓存, 鼠标应该首先在该范围内才继续判断
+	            return this.getable && (0, _viewutil.isPtInRect)(this.GetContainRect(), local[0], local[1]) && this._isPtInPath(x, y);
+	        }
+	
+	        /**
+	         * 通过路径绘制来判断点是否在元素上
+	         * @param x
+	         * @param y
+	         * @private
+	         */
+	
+	    }, {
+	        key: "_isPtInPath",
+	        value: function _isPtInPath(x, y) {
+	            return (0, _viewutil.isPtInPath)(this, this.config, x, y);
 	        }
 	
 	        /**
@@ -3575,45 +3615,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	            /* eslint-disable */
 	            var textw = _text2.default.getTextWidth(config.text, st.font);
 	            var texth = _text2.default.getTextHeight(config.text, st.font);
+	            var textAlign = st.textAlign,
+	                textBaseline = st.textBaseline;
 	            switch (config.textpos) {
-	                case "top-center":
-	                    x -= textw / 2;
+	                case "bottom-center":
 	                    y = crect[1];
+	                    textAlign = "center";
 	                    break;
 	                case "top-left":
 	                case "left-top":
 	                    x = crect[0];
 	                    y = crect[1];
 	                    break;
-	                case "top-right":
-	                    x = crect[2] - wh;
+	                case "bottom-right":
+	                case "right-bottom":
+	                    x = crect[2] - textw;
 	                    y = crect[1];
 	                    break;
 	                case "left-center":
 	                    x = crect[0];
-	                    y -= texth / 2;
-	                    st.textBaseline = "top";
+	                    textAlign = "left";
+	                    textBaseline = "middle";
 	                    break;
 	                case "left-bottom":
+	                case "bottom-left":
 	                    x = crect[0];
 	                    y = crect[3];
 	                    break;
-	                case "bottom-center":
+	                case "top-center":
 	                    y = crect[3];
-	                    x -= textw / 2;
+	                    textAlign = "center";
+	                    textBaseline = "top";
+	                    // x -= textw/2;
 	                    break;
-	                case "bottom-right":
+	                case "top-right":
+	                case "right-top":
 	                    y = crect[3];
 	                    x = crect[2] - textw;
+	                    break;
 	                case "right-center":
 	                    x = crect[2] - textw;
 	                    y -= texth / 2;
-	                    st.textBaseline = "top";
 	                    break;
 	                default:
-	                    x -= textw / 2;
-	                    y -= texth / 2;
-	                    st.textBaseline = "top";
+	                    textAlign = "center";
+	                    textBaseline = "middle";
+	                // x -= textw/2;
+	                // y -= texth/2;
+	                // st.textBaseline = "top";
 	            }
 	            /* eslint-disable */
 	            ctx.save();
@@ -3621,19 +3670,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (st.textColor) {
 	                ctx.fillStyle = st.textColor;
 	            }
-	            //this.rotation = Math.PI;
-	            ctx.setTransform(1, 0, 0, 1, 0, 0);
-	            //this.setTransform(1,0,0,-1,0,600);
 	            //文字的变换与图形不一样，默认情况下就是正向的，特别处理
-	            //var rect = getRectByCtx(ctx);
-	            _text2.default.fillText(ctx, config.text, x, y, st.font, st.textAlign, st.textBaseline);
+	            var globalTextPos = this.transformCoordToGlobal(x, y);
+	            x = globalTextPos[0], y = globalTextPos[1];
+	
+	            _text2.default.fillText(ctx, config.text, x, y, st.font, textAlign, textBaseline);
+	
 	            ctx.restore();
 	        }
 	    }, {
 	        key: "coordinate",
-	        get: function get() {
-	            return this.configProxy.getConfig().coordinate;
-	        },
 	        set: function set(val) {
 	            this.configProxy.update({
 	                coordinate: val
@@ -3748,17 +3794,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    this.init(option);
-	}; /**
-	    * 配置代理类。 内部依赖 {@link module:ychart/core/config/styleProxy}
-	    * @module ychart/core/config/optionProxy
-	    */
-	
-	var item;
+	};
 	
 	/**
 	 * 初始化样式管理类。 设置该元素绘制必须的样式
 	 * @param config
 	 */
+	/**
+	 * 配置代理类。 内部依赖 {@link module:ychart/core/config/styleProxy}
+	 * @module ychart/core/config/optionProxy
+	 */
+	
 	OptionProxy.prototype.init = function (configs) {
 	    var config = {};
 	    (0, _util.merge)(config, configs, true);
@@ -3776,7 +3822,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.styleProxy == null) {
 	        this.styleProxy = new _StyleProxy2.default();
 	    }
-	    this.config["coordinate"] = this.config.coordinate || _config.useRectangularCoordinateSystem;
 	
 	    this.config.style = this.styleProxy.getStyle();
 	};
@@ -3913,7 +3958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	/**
 	 * 样式名映射
@@ -3921,31 +3966,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var styleMap = {
 	
-	  fillStyle: "fillStyle",
-	  fillColor: "fillStyle",
-	  color: "fillStyle",
+	    fillStyle: "fillStyle",
+	    fillColor: "fillStyle",
+	    color: "fillStyle",
 	
-	  strokeStyle: "strokeStyle",
-	  lineColor: "strokeStyle",
-	  lineWidth: "lineWidth",
-	  lineCap: "lineCap",
-	  lineJoin: "lineJoin",
-	  font: "font",
+	    strokeStyle: "strokeStyle",
+	    lineColor: "strokeStyle",
+	    lineWidth: "lineWidth",
+	    lineCap: "lineCap",
+	    lineJoin: "lineJoin",
+	    font: "font",
 	
-	  textAlign: "textAlign",
-	  textBaseline: "textBaseline",
+	    textAlign: "textAlign",
+	    textBaseline: "textBaseline",
 	
-	  shadowColor: "shadowColor",
-	  shadowOffsetX: "shadowOffsetX",
-	  shadowOffsetY: "shadowOffsetY",
-	  shadowBlur: "shadowBlur",
-	  shadowx: "shadowOffsetX",
-	  shadowy: "shadowOffsetY",
+	    shadowColor: "shadowColor",
+	    shadowOffsetX: "shadowOffsetX",
+	    shadowOffsetY: "shadowOffsetY",
+	    shadowBlur: "shadowBlur",
+	    shadowx: "shadowOffsetX",
+	    shadowy: "shadowOffsetY",
 	
-	  globalAlpha: "globalAlpha",
-	  alpha: "globalAlpha",
-	  globalCompositionOperation: "globalCompositionOperation",
-	  overlaystyle: "globalCompositionOperation"
+	    globalAlpha: "globalAlpha",
+	    alpha: "globalAlpha",
+	    globalCompositionOperation: "globalCompositionOperation",
+	    overlaystyle: "globalCompositionOperation"
 	};
 	
 	/**
@@ -3959,121 +4004,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	var style = function style() {};
 	
 	style.prototype = {
-	  /**
-	   * 线条颜色，用于任意路劲绘制中线条样式的控制。
-	   * 值可以是任意十六进制颜色或者英文单词
-	   * 别名 : lineColor
-	   * @type string
-	   * @default blue
-	   */
-	  strokeStyle: "blue",
+	    /**
+	     * 线条颜色，用于任意路劲绘制中线条样式的控制。
+	     * 值可以是任意十六进制颜色或者英文单词
+	     * 别名 : lineColor
+	     * @type string
+	     * @default blue
+	     */
+	    strokeStyle: "blue",
 	
-	  /**
-	   * 填充颜色，用于任意路劲中fill方法的填充样式
-	   * 值可以是任意十六进制颜色或者英文单词
-	   * 别名 ： fillColor  color
-	   * @type string
-	   * @default #dcd5d9
-	   */
-	  fillStyle: "#dcd5d9",
+	    /**
+	     * 填充颜色，用于任意路劲中fill方法的填充样式
+	     * 值可以是任意十六进制颜色或者英文单词
+	     * 别名 ： fillColor  color
+	     * @type string
+	     * @default #dcd5d9
+	     */
+	    fillStyle: "#dcd5d9",
 	
-	  /**
-	   * 线宽。
-	   * @type number
-	   * @default 1
-	   */
-	  lineWidth: 1,
+	    /**
+	     * 线宽。
+	     * @type number
+	     * @default 1
+	     */
+	    lineWidth: 1,
 	
-	  /**
-	   * 线条两端样式. butt、round、square
-	   * @type string
-	   * @default round
-	   */
-	  lineCap: "round",
+	    /**
+	     * 线条两端样式. butt、round、square
+	     * @type string
+	     * @default round
+	     */
+	    lineCap: "round",
 	
-	  /**
-	   * bevel,miter线条相交的方式. 园交,斜交还是斜接.
-	   * @type string
-	   * @default round
-	   */
-	  lineJoin: "round",
+	    /**
+	     * bevel,miter线条相交的方式. 园交,斜交还是斜接.
+	     * @type string
+	     * @default round
+	     */
+	    lineJoin: "round",
 	
-	  /**
-	   * 文字
-	   * @type string
-	   * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
-	   */
-	  font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
+	    /**
+	     * 文字
+	     * @type string
+	     * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
+	     */
+	    font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
 	
-	  /**
-	   * 文字颜色。 strokeStyle
-	   * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
-	   * @type string
-	   * @default black
-	   */
-	  textColor: "black", //文字样式。 非标准canvas属性
+	    /**
+	     * 文字颜色。 strokeStyle
+	     * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
+	     * @type string
+	     * @default black
+	     */
+	    textColor: "black", //文字样式。 非标准canvas属性
 	
-	  /**
-	   * 文本对齐方式
-	   * @type string
-	   * @default start
-	   */
-	  textAlign: "start",
+	    /**
+	     * 文本对齐方式
+	     * @type string
+	     * @default start
+	     */
+	    textAlign: "start",
 	
-	  /**
-	   * 文本基线
-	   * @type string
-	   * @default bottom
-	   */
-	  textBaseline: "bottom",
+	    /**
+	     * 文本基线
+	     * @type string
+	     * @default bottom
+	     */
+	    textBaseline: "bottom",
 	
-	  /**
-	   * 默认阴影颜色
-	   * @type string
-	   * @default #EA9090
-	   */
-	  shadowColor: "#EA9090",
+	    /**
+	     * 默认阴影颜色
+	     * @type string
+	     * @default #EA9090
+	     */
+	    shadowColor: "#EA9090",
 	
-	  /**
-	   * 阴影X偏移
-	   * @type number
-	   * @default  shadowOffsetX
-	   */
-	  shadowOffsetX: 0,
+	    /**
+	     * 阴影X偏移
+	     * @type number
+	     * @default  shadowOffsetX
+	     */
+	    shadowOffsetX: 0,
 	
-	  /**
-	   * 阴影Y偏移
-	   * @type number
-	   * @default shadowOffsetY
-	   */
-	  shadowOffsetY: 0,
+	    /**
+	     * 阴影Y偏移
+	     * @type number
+	     * @default shadowOffsetY
+	     */
+	    shadowOffsetY: 0,
 	
-	  /**
-	   * 像素的模糊数
-	   * @type number
-	   * @default 0
-	   */
-	  shadowBlur: 0,
+	    /**
+	     * 像素的模糊数
+	     * @type number
+	     * @default 0
+	     */
+	    shadowBlur: 0,
 	
-	  /**
-	   * 透明度。  0为透明
-	   * @type number
-	   * @default 1
-	   */
-	  globalAlpha: 1,
+	    /**
+	     * 透明度。  0为透明
+	     * @type number
+	     * @default 1
+	     */
+	    globalAlpha: 1,
 	
-	  /**
-	   * 透明重叠情况
-	   * @type string
-	   * @default source-over
-	   */
-	  globalCompositionOperation: "source-over"
+	    /**
+	     * 透明重叠情况
+	     * @type string
+	     * @default source-over
+	     */
+	    globalCompositionOperation: "source-over"
 	
 	};
 	
 	exports.default = {
-	  style: style,
-	  styleMap: styleMap
+	    style: style,
+	    styleMap: styleMap
 	};
 	module.exports = exports["default"];
 
@@ -4292,7 +4337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var ctx = getContext();
 	    ctx.save();
 	    //设置变换
-	    shape.__BeforeBrush(ctx, config);
+	    shape._BeforeBrush(ctx, config);
 	    //建立路径
 	    shape.BuildPath(ctx, config);
 	    var rs;
@@ -4405,6 +4450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ctx.moveTo(config.x0, config.y0);
 	            ctx.lineTo(config.x1, config.y1);
 	        }
+	        this.rect = [config.x0, config.y0, config.x1, config.y1];
 	    }
 	}); /**
 	     * 直线
@@ -4669,10 +4715,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	exports.default = _viewBuilder2.default.baseContextViewExtend({
 	
-	    defaultConfig: {
-	        coordinate: 1
-	    },
-	
 	    /**
 	     * 构造函数 。 在构造函数中指定该图像的中心点
 	     * @param {object} option  绘制形状的配置
@@ -4734,10 +4776,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var sHeight = config.sHeight || image.height;
 	                var dWidth = config.dWidth || image.width;
 	                var dHeight = config.dHeight || image.height;
-	                if (this.coordinate == 1) {
-	                    var rect = this.getRectByCtx(ctx);
+	                /*if (this.coordinate == 1) {
+	                    let rect = this.getRectByCtx(ctx);
 	                    dy = rect[1] - dHeight - dy;
-	                }
+	                }*/
+	                //图片的目标位置应该是图片的左下角, 在笛卡尔坐标系中就应该加上图片的目标高度
+	                dy += dHeight;
 	                ctx.drawImage(image, config.sx, config.sy, sWidth, sHeight, config.dx, dy, dWidth, dHeight);
 	                this.rect = [config.dx, dy, config.dx + dWidth, dy + dHeight];
 	            }
@@ -4747,8 +4791,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }]);
 	    },
 	
-	    GetContainRect: function GetContainRect() {
-	        return this.rect;
+	    _isPtInPath: function _isPtInPath(x, y) {
+	        return true;
 	    }
 	}); /**
 	     * 图片

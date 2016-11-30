@@ -36,10 +36,6 @@ import {
  */
 export default ShapeBuilder.baseContextViewExtend({
 
-    defaultConfig: {
-        coordinate: 1
-    },
-
     /**
      * 构造函数 。 在构造函数中指定该图像的中心点
      * @param {object} option  绘制形状的配置
@@ -97,10 +93,12 @@ export default ShapeBuilder.baseContextViewExtend({
                 let sHeight = config.sHeight || image.height;
                 let dWidth = config.dWidth || image.width;
                 let dHeight = config.dHeight || image.height;
-                if (this.coordinate == 1) {
+                /*if (this.coordinate == 1) {
                     let rect = this.getRectByCtx(ctx);
                     dy = rect[1] - dHeight - dy;
-                }
+                }*/
+                //图片的目标位置应该是图片的左下角, 在笛卡尔坐标系中就应该加上图片的目标高度
+                dy += dHeight;
                 ctx.drawImage(image, config.sx, config.sy, sWidth, sHeight, config.dx, dy, dWidth, dHeight);
                 this.rect = [config.dx, dy, config.dx + dWidth, dy + dHeight];
             }
@@ -110,8 +108,8 @@ export default ShapeBuilder.baseContextViewExtend({
         }]);
     },
 
-    GetContainRect: function() {
-        return this.rect;
+    _isPtInPath: function(x,y){
+        return true;
     }
 });
 

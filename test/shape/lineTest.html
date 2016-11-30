@@ -17,8 +17,11 @@
     var ycharts = ychart,Line = ychart.shape.Line;
     yh = ycharts.init("drawing");
     var line1 =new Line({
-        beginpt: [100,100],
-        endpt: [15,150],
+        x0: 5,
+        y0: 10,
+        x1: 150,
+        y1: 50,
+        text: "直线文字",
         <!-- rotation: Math.PI, -->
         style:{
             lineColor: "blue",
@@ -37,7 +40,7 @@
 
 
     yh.add(line1);
-    yh.add(line2);
+//    yh.add(line2);
 
     yh.BrushAll();
     function move() {

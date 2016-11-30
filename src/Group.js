@@ -47,6 +47,10 @@ class Group extends Element{
         this.children.push(child);
         return this;
     }
+
+    setDefaultConfig(config){
+
+    }
 }
 
 mixin(Group ,Transform , true);

@@ -213,8 +213,11 @@ var vector = {
     negate: function (out, v) {
         out[0] = -v[0];
         out[1] = -v[1];
-        return out;
+        return  out;
     },
+
+
+
 
     /**
      * 插值两个点
