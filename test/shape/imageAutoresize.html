@@ -59,32 +59,30 @@
                 })
                 var bkimg = new YImage(
                 {
-                    coordinate: -1,
                     getable: false,
                     image: img,
                     dWidth: ow,
                     dHeight: oh
                 });
-              
+
                gp.add(bkimg);
                 var circle2 = new Circle(
                 {
                     coordinate: -1,
                     x: pts[1][0],
                     y: pts[1][1],
-                  
+
                     r: 5,
                     style:
                     {
                         color: "blue"
                     }
                 });
-                
+
                 var tag;
                 pts.forEach(function(item){
                     tag = new YImage(
                   {
-                      coordinate: -1,
                       image: ico,
                       dx: item[0],
                       dy: item[1],
@@ -94,29 +92,29 @@
                   tag.on("click",tagclick);
                   gp.add(tag);
                 });
-                
-                
+
+
              //   gp.add(circle2);
                 yh.add(gp);
                 yh.BrushAll();
 
-                
+
                 circle2.on("click", function(event, ar2)
                 {
                     console.log(event);
                     console.log(ar2);
                 });
-                
-        
+
+
 
             }
             ico.src = "image/video.png"
         }
-        
+
         function tagclick(event, ar2){
           console.log(ar2)
         }
-        
+
         function zoomOut()
         {
             gp.zoom(1.3, 1.1);

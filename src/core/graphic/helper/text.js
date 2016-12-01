@@ -1,9 +1,9 @@
 //使用默认样式
 
-import Style from "../../config/style"
+import Style from "../../config/style";
 import {
     getContext
-} from "./viewutil"
+} from "./viewutil";
 
 var st = new Style.style();
 
@@ -21,7 +21,7 @@ var TextUtil = {
 
     getTextHeight: function(text, textFont) {
         textFont = textFont || defaultFont;
-        var key = text + ':' + textFont;
+        var key = text + ":" + textFont;
         if (TextUtil._textHeightCache[key]) {
             return TextUtil._textHeightCache[key];
         }
@@ -31,9 +31,9 @@ var TextUtil = {
             _ctx.font = textFont;
         }
 
-        text = (text + '').split('\n');
+        text = (text + "").split("\n");
         // 比较粗暴
-        var height = (_ctx.measureText('国').width + 2) * text.length;
+        var height = (_ctx.measureText("国").width + 2) * text.length;
 
         _ctx.restore();
 
@@ -51,7 +51,7 @@ var TextUtil = {
     getTextWidth: function(text, textFont) {
 
         textFont = textFont || defaultFont;
-        var key = text + ':' + textFont;
+        var key = text + ":" + textFont;
         if (TextUtil._textWidthCache[key]) {
             return TextUtil._textWidthCache[key];
         }
@@ -61,7 +61,7 @@ var TextUtil = {
             _ctx.font = textFont;
         }
 
-        text = (text + '').split('\n');
+        text = (text + "").split("\n");
         var width = 0;
         for (var i = 0, l = text.length; i < l; i++) {
             width = Math.max(
@@ -88,34 +88,33 @@ var TextUtil = {
      * @param {string} textFont 字体
      */
     getTextRect: function(text, x, y, textFont, textAlign, textBaseline) {
-
         textFont = textFont || defaultFont;
         textAlign = textAlign || defaultAlign;
         textBaseline = textBaseline || defaultBaseline;
 
         var width = TextUtil.getTextWidth(text, textFont);
-        var lineHeight = TextUtil.getTextHeight('国', textFont);
+        var lineHeight = TextUtil.getTextHeight("国", textFont);
 
-        text = (text + '').split('\n');
+        text = (text + "").split("\n");
 
         switch (textAlign) {
-            case 'end':
-            case 'right':
-                x -= width;
-                break;
-            case 'center':
-                x -= (width / 2);
-                break;
+        case "end":
+        case "right":
+            x -= width;
+            break;
+        case "center":
+            x -= (width / 2);
+            break;
         }
 
         switch (textBaseline) {
-            case 'top':
-                break;
-            case 'bottom':
-                y -= lineHeight * text.length;
-                break;
-            default:
-                y -= lineHeight * text.length / 2;
+        case "top":
+            break;
+        case "bottom":
+            y -= lineHeight * text.length;
+            break;
+        default:
+            y -= lineHeight * text.length / 2;
         }
 
         return {
@@ -135,29 +134,36 @@ function _fillText(ctx, text, x, y, textFont, textAlign, textBaseline) {
     ctx.textAlign = textAlign;
     ctx.textBaseline = textBaseline;
 
-    var rect = TextUtil.getTextRect(
-        text, x, y, textFont, textAlign, textBaseline
-    );
+    var rect = TextUtil.getTextRect( text, x, y, textFont, textAlign, textBaseline );
 
     text = (text + "").split("\n");
 
     var lineHeight = TextUtil.getTextHeight("国", textFont);
-
+    var _left = rect.x , _right = _left + rect.width;
+    var _top = y + lineHeight*text.length , _bottom = y;
     switch (textBaseline) {
-        case "top":
-            y = rect.y;
-            break;
-        case "bottom":
-            y = rect.y + lineHeight;
-            break;
-        default:
-            y = rect.y + lineHeight / 2;
+    case "top":
+        y = rect.y;
+        _top = y;
+        _bottom = y + lineHeight*text.length;
+        break;
+    case "bottom":
+        y = rect.y + lineHeight;
+        break;
+    default:
+        y = rect.y + lineHeight / 2;
     }
-
     for (var i = 0, l = text.length; i < l; i++) {
         ctx.fillText(text[i], x, y);
         y += lineHeight;
     }
+
+    return {
+        left: _left,
+        bottom:_bottom,
+        top: _top,
+        right: _right
+    };
 }
 
 export default {

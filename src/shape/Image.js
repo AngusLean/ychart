@@ -42,7 +42,6 @@ export default ShapeBuilder.baseContextViewExtend({
      * @private
      */
     Init: function(config) {
-        this.origin = this.origin || [];
         //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
         if (typeof config.image != "string") {
             this.image = config.image;
@@ -93,10 +92,6 @@ export default ShapeBuilder.baseContextViewExtend({
                 let sHeight = config.sHeight || image.height;
                 let dWidth = config.dWidth || image.width;
                 let dHeight = config.dHeight || image.height;
-                /*if (this.coordinate == 1) {
-                    let rect = this.getRectByCtx(ctx);
-                    dy = rect[1] - dHeight - dy;
-                }*/
                 //图片的目标位置应该是图片的左下角, 在笛卡尔坐标系中就应该加上图片的目标高度
                 dy += dHeight;
                 ctx.drawImage(image, config.sx, config.sy, sWidth, sHeight, config.dx, dy, dWidth, dHeight);
@@ -104,13 +99,15 @@ export default ShapeBuilder.baseContextViewExtend({
             }
         };
         onImgReady(this, this.image, [buildImagePath1, function() {
-            this.RebrushAll();
+            this.ReBrushAll();
         }]);
     },
 
+    /*eslint-disable*/
     _isPtInPath: function(x,y){
         return true;
     }
+    /*eslint-disable */
 });
 
 function numberOrZero(obj, fields) {

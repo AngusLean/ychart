@@ -5,7 +5,7 @@
 
 import Eventful from "./eventful";
 import {mixin} from "../../../tool/klass";
-import {DEFAULT_CONFIG} from "../../config/config"
+import {DEFAULT_CONFIG} from "../../config/config";
 
 var target;
 
@@ -75,10 +75,10 @@ Draggable.prototype = {
             var dy = y - this._y;
             this._x = x;
             this._y = y;
-            target.drift(dx, -dy);
+            target.drift(dx, dy);
             this.trigger(target, "draging", exEvent);
             // 更新视图
-            target.RebrushAll();
+            target.ReBrushAll();
         }
     },
 

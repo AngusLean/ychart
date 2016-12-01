@@ -2,8 +2,8 @@
  * 样式代理类。
  *
  */
-import {isObj, merge} from "../../tool/util"
-import Style from "./style"
+import {isObj, merge} from "../../tool/util";
+import Style from "./style";
 
 var defaultStyle = Style.style;
 var styleMapper = Style.styleMap;
@@ -22,7 +22,7 @@ var StyleProxy = function (style) {
 StyleProxy.prototype.init = function (style) {
     this.brushType = style.brushType ? style.brushType :
         (style.strokeStyle ?
-            (style.fillStyle ? 'both' : 'stroke') :
+            (style.fillStyle ? "both" : "stroke") :
             (style.fillStyle ? "fill" : "none")    );
 };
 
@@ -49,7 +49,7 @@ StyleProxy.prototype.update = function (_style) {
     }
 };
 
-StyleProxy.prototype.getBrushType = function (style) {
+StyleProxy.prototype.getBrushType = function () {
     return this.brushType;
 };
 

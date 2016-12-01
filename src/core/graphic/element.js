@@ -14,7 +14,7 @@ class Element {
      * @param {String} type  元素类型. 该类型为element
      */
     constructor(type = "element") {
-        this.type = type;
+        Element.type = type;
         this.id = this.type + "_" + guid();
     }
 

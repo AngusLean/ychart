@@ -400,14 +400,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	exports.isType = isType;
 	exports.forEach = forEach;
 	exports.checkNull = checkNull;
 	exports.mergeItem = mergeItem;
 	exports.merge = merge;
+	exports.simpleMerge = simpleMerge;
 	exports.replaceattr = replaceattr;
+	exports.isType = isType;
 	exports.isArr = isArr;
 	/**
 	 *@module ychart/tool/util
@@ -428,12 +429,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return parseInt(val, 10);
 	}
 	 */
-	function isType(type) {
-	    return function (ele) {
-	        return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
-	    };
-	}
-	
 	function forEach(ele, ctx, cb) {
 	    if (isType("Array")(ele)) {
 	        ele.forEach(function (item, index) {
@@ -500,9 +495,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    } else {
 	        map && replaceattr(source, map);
-	
 	        for (var i in source) {
 	            mergeItem(target, source, i, overwrite);
+	        }
+	    }
+	    return target;
+	}
+	
+	function simpleMerge(target, source) {
+	    if (isArr(source)) {
+	        source.forEach(function (item) {
+	            return simpleMerge(target, item);
+	        });
+	    } else {
+	        for (var item in source) {
+	            if (item) target[item] = source[item];
 	        }
 	    }
 	    return target;
@@ -526,6 +533,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	    return target;
+	}
+	
+	function isType(type) {
+	    return function (ele) {
+	        return !checkNull(ele) && Object.prototype.toString.call(ele) == "[object " + type + "]";
+	    };
 	}
 	
 	function isArr(obj) {
@@ -680,7 +693,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -773,7 +786,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var parent = this.parent;
 	    var parentHasTransform = parent && parent.transform;
 	    var needLocalTransform = this.needLocalTransform();
-	
 	    var m = this.transform;
 	    m = m || [];
 	    if (!(needLocalTransform || parentHasTransform)) {
@@ -919,7 +931,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	exports.default = Transformable;
-	module.exports = exports['default'];
+	module.exports = exports["default"];
 
 /***/ },
 /* 7 */
@@ -1372,24 +1384,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	
-	var _util = __webpack_require__(3);
+	/**
+	 * @module ychart/core/graphic/mixin
+	 */
 	
 	/**
 	 * 元素移动相关功能实现。 混入类
 	 * @class
 	 * @mixin
 	 */
-	var Moveable = function Moveable() {}; /**
-	                                        * @module ychart/core/graphic/mixin
-	                                        */
+	var Moveable = function Moveable() {};
 	
 	Moveable.prototype = {
 	
@@ -1404,7 +1415,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // }
 	
 	        this.position[0] += dx;
-	        this.position[1] -= dy;
+	        this.position[1] += dy;
 	        this.__dirty = true;
 	    },
 	
@@ -1424,9 +1435,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {number}  angle 旋转弧度
 	     */
 	    rotate: function rotate(x, y, angle) {
-	        // if (!isArr(this.origin)) {
-	        // this.origin = [0, 0];
-	        // }
 	        if (!this.rotation) {
 	            this.rotation = 0;
 	        }
@@ -1489,11 +1497,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {String} type  元素类型. 该类型为element
 	   */
 	  function Element() {
-	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "element";
+	    var type = arguments.length <= 0 || arguments[0] === undefined ? "element" : arguments[0];
 	
 	    _classCallCheck(this, Element);
 	
-	    this.type = type;
+	    Element.type = type;
 	    this.id = this.type + "_" + (0, _guid2.default)();
 	  }
 	
@@ -2370,10 +2378,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var dy = y - this._y;
 	            this._x = x;
 	            this._y = y;
-	            target.drift(dx, -dy);
+	            target.drift(dx, dy);
 	            this.trigger(target, "draging", exEvent);
 	            // 更新视图
-	            target.RebrushAll();
+	            target.ReBrushAll();
 	        }
 	    },
 	
@@ -2574,10 +2582,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    //元素在获取焦点时显示信息提示框必须和鼠标当前位置有偏移不然元素本身将不能捕获事件
 	    tipoffsetX: 10,
-	    tipoffsetY: 0
-	};
+	    tipoffsetY: 0,
 	
-	var useRectangularCoordinateSystem = exports.useRectangularCoordinateSystem = 0;
+	    //默认的坐标系. 默认为笛卡尔坐标系, 否则就是已左上角为原点的坐标系
+	    coordinateSystem: "Cartesian"
+	};
 
 /***/ },
 /* 20 */
@@ -2685,7 +2694,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(HtmlView, _View);
 	
 	    function HtmlView() {
-	        var option = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	        var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	
 	        _classCallCheck(this, HtmlView);
 	
@@ -2800,8 +2809,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {Object} option
 	   */
 	  function View() {
-	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "view";
-	    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	    var type = arguments.length <= 0 || arguments[0] === undefined ? "view" : arguments[0];
+	    var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 	
 	    _classCallCheck(this, View);
 	
@@ -3161,10 +3170,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-	                                                                                                                                                                                                                                                                               * 绘图元素类构造器
-	                                                                                                                                                                                                                                                                               * @module  ychart/graphic/viewBuilder
-	                                                                                                                                                                                                                                                                               */
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
+	                                                                                                                                                                                                                                                   * 绘图元素类构造器
+	                                                                                                                                                                                                                                                   * @module  ychart/graphic/viewBuilder
+	                                                                                                                                                                                                                                                   */
 	
 	
 	var _contextView = __webpack_require__(26);
@@ -3176,6 +3185,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _debug = __webpack_require__(24);
 	
 	var _debug2 = _interopRequireDefault(_debug);
+	
+	var _config = __webpack_require__(19);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3235,8 +3246,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            value: function setDefaultConfig(config) {
 	                //设置全局ychart属性
 	                this.__yh = config.yh;
-	                //设置笛卡尔坐标系
-	                this._setDefaultTrasformToCartesian(config.height);
+	                if (_config.DEFAULT_CONFIG.coordinateSystem == "Cartesian")
+	                    //设置笛卡尔坐标系
+	                    this._setDefaultTrasformToCartesian(config.height);
 	            }
 	
 	            /**
@@ -3340,8 +3352,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @constructor
 	     */
 	    function ContextView() {
-	        var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "ContextView";
-	        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	        var type = arguments.length <= 0 || arguments[0] === undefined ? "ContextView" : arguments[0];
+	        var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 	
 	        _classCallCheck(this, ContextView);
 	
@@ -3363,37 +3375,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	     * 每个具体元素类的默认配置。
-	     * 该配置将覆盖全局系统默认配置，但是会被全局用户自定义配置以及具体元素配置所覆盖
-	     * @property {Object}  config  元素默认配置
-	     * @default {style:{}}
+	     *
+	     * @property {boolean} Draggable 当前元素是否可以拖动
+	     * @default true
 	     */
-	    // static defaultConfig = {
-	    // style:{
-	    // }
-	    // }
 	
-	
-	    /**
-	     * 是否使用直角座标系，除了图片和文字，其他字体默认都是以
-	     * 左下角为原点的座标系
-	     * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
-	     * @default 图片或文字为1，其他元素为0
-	     */
-	    /*
-	        get coordinate() {
-	            return this.configProxy.getConfig().coordinate;
-	        }
-	    */
 	
 	    _createClass(ContextView, [{
-	        key: "RebrushAll",
+	        key: "ReBrushAll",
 	
 	
 	        /**
 	         * 重绘整个ychart实例. 通常用于元素位置改变\图片加载完成过后
 	         */
-	        value: function RebrushAll() {
+	        value: function ReBrushAll() {
 	            this.__yh && this.__yh.update();
 	        }
 	
@@ -3461,9 +3456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_SetShapeTransform",
 	        value: function _SetShapeTransform(ctx) {
-	
 	            this.updateTransform();
-	
 	            this.setTransform(ctx);
 	        }
 	
@@ -3660,9 +3653,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                default:
 	                    textAlign = "center";
 	                    textBaseline = "middle";
-	                // x -= textw/2;
-	                // y -= texth/2;
-	                // st.textBaseline = "top";
 	            }
 	            /* eslint-disable */
 	            ctx.save();
@@ -3678,20 +3668,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            ctx.restore();
 	        }
-	    }, {
-	        key: "coordinate",
-	        set: function set(val) {
-	            this.configProxy.update({
-	                coordinate: val
-	            });
-	        }
-	
-	        /**
-	         *
-	         * @property {boolean} Draggable 当前元素是否可以拖动
-	         * @default true
-	         */
-	
 	    }, {
 	        key: "draggable",
 	        get: function get() {
@@ -3758,8 +3734,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _StyleProxy2 = _interopRequireDefault(_StyleProxy);
 	
-	var _config = __webpack_require__(19);
-	
 	var _util = __webpack_require__(3);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -3772,9 +3746,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @class
 	 * @param config
 	 */
+	/**
+	 * 配置代理类。 内部依赖 {@link module:ychart/core/config/styleProxy}
+	 * @module ychart/core/config/optionProxy
+	 */
+	
 	var OptionProxy = function OptionProxy() {
 	    /**
-	     * 配置代理
+	     * 样式配置代理
 	     * @member {boolean}
 	     * @default null
 	     */
@@ -3799,50 +3778,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	
-	    for (var _len = arguments.length, option = Array(_len), _key = 0; _key < _len; _key++) {
-	        option[_key] = arguments[_key];
+	    for (var _len = arguments.length, options = Array(_len), _key = 0; _key < _len; _key++) {
+	        options[_key] = arguments[_key];
 	    }
 	
-	    this.init(option);
-	};
-	
-	/**
-	 * 初始化样式管理类。 设置该元素绘制必须的样式
-	 * @param config
-	 */
-	/**
-	 * 配置代理类。 内部依赖 {@link module:ychart/core/config/styleProxy}
-	 * @module ychart/core/config/optionProxy
-	 */
-	
-	OptionProxy.prototype.init = function (configs) {
-	    (0, _util.merge)(this.config, configs, true);
-	    console.log(this.config);
-	    /* var config = {};
-	     merge(config, configs, true)
-	     for (let item in config) {
-	         if (item) {
-	             this.config[item] = config[item];
-	         }
-	     }*/
-	
-	    /*for (let item in config) {
-	        if (item) {
-	            if (item != "style") {
-	                this.config[item] = config[item];
-	            } else {
-	                this.styleProxy = new styleProxy(config[item]);
-	            }
-	        }
-	    }
-	      this.config.style = this.styleProxy.getStyle();*/
+	    this.update(options);
 	};
 	
 	/**
 	 * 获取所有配置
 	 * @returns {object} config
 	 */
-	OptionProxy.prototype.getConfig = function (width, height) {
+	OptionProxy.prototype.getConfig = function () {
 	    return this.config;
 	};
 	
@@ -3863,10 +3810,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	/**
-	 * 获取画刷类型。 自动基于属性选择是填充还是描边
-	 * @param context
+	 * 获取画刷类型。用于AfterBrush刷新时判断
+	 * @return {string} 画刷类型, 'both' \  'stroke' \ 'fill' \ 'none'
 	 */
-	OptionProxy.prototype.getBrushType = function (context) {
+	OptionProxy.prototype.getBrushType = function () {
 	    return this.styleProxy.getBrushType();
 	};
 	
@@ -3875,16 +3822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param option
 	 */
 	OptionProxy.prototype.update = function (config) {
-	    for (item in config) {
-	        if (item) {
-	            if (item != "style") {
-	                this.config[item] = config[item];
-	            } else {
-	                this.styleProxy.update(config[item]);
-	            }
-	        }
-	    }
-	    this.config.style = this.styleProxy.getStyle();
+	    (0, _util.simpleMerge)(this.config, config);
 	};
 	
 	exports.default = OptionProxy;
@@ -3927,7 +3865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	StyleProxy.prototype.init = function (style) {
-	    this.brushType = style.brushType ? style.brushType : style.strokeStyle ? style.fillStyle ? 'both' : 'stroke' : style.fillStyle ? "fill" : "none";
+	    this.brushType = style.brushType ? style.brushType : style.strokeStyle ? style.fillStyle ? "both" : "stroke" : style.fillStyle ? "fill" : "none";
 	};
 	
 	StyleProxy.prototype.bindContext = function (ctx) {
@@ -3952,7 +3890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
-	StyleProxy.prototype.getBrushType = function (style) {
+	StyleProxy.prototype.getBrushType = function () {
 	    return this.brushType;
 	};
 	
@@ -3970,7 +3908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	/**
 	 * 样式名映射
@@ -3978,31 +3916,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var styleMap = {
 	
-	  fillStyle: "fillStyle",
-	  fillColor: "fillStyle",
-	  color: "fillStyle",
+	    fillStyle: "fillStyle",
+	    fillColor: "fillStyle",
+	    color: "fillStyle",
 	
-	  strokeStyle: "strokeStyle",
-	  lineColor: "strokeStyle",
-	  lineWidth: "lineWidth",
-	  lineCap: "lineCap",
-	  lineJoin: "lineJoin",
-	  font: "font",
+	    strokeStyle: "strokeStyle",
+	    lineColor: "strokeStyle",
+	    lineWidth: "lineWidth",
+	    lineCap: "lineCap",
+	    lineJoin: "lineJoin",
+	    font: "font",
 	
-	  textAlign: "textAlign",
-	  textBaseline: "textBaseline",
+	    textAlign: "textAlign",
+	    textBaseline: "textBaseline",
 	
-	  shadowColor: "shadowColor",
-	  shadowOffsetX: "shadowOffsetX",
-	  shadowOffsetY: "shadowOffsetY",
-	  shadowBlur: "shadowBlur",
-	  shadowx: "shadowOffsetX",
-	  shadowy: "shadowOffsetY",
+	    shadowColor: "shadowColor",
+	    shadowOffsetX: "shadowOffsetX",
+	    shadowOffsetY: "shadowOffsetY",
+	    shadowBlur: "shadowBlur",
+	    shadowx: "shadowOffsetX",
+	    shadowy: "shadowOffsetY",
 	
-	  globalAlpha: "globalAlpha",
-	  alpha: "globalAlpha",
-	  globalCompositionOperation: "globalCompositionOperation",
-	  overlaystyle: "globalCompositionOperation"
+	    globalAlpha: "globalAlpha",
+	    alpha: "globalAlpha",
+	    globalCompositionOperation: "globalCompositionOperation",
+	    overlaystyle: "globalCompositionOperation"
 	};
 	
 	/**
@@ -4016,121 +3954,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	var style = function style() {};
 	
 	style.prototype = {
-	  /**
-	   * 线条颜色，用于任意路劲绘制中线条样式的控制。
-	   * 值可以是任意十六进制颜色或者英文单词
-	   * 别名 : lineColor
-	   * @type string
-	   * @default blue
-	   */
-	  strokeStyle: "blue",
+	    /**
+	     * 线条颜色，用于任意路劲绘制中线条样式的控制。
+	     * 值可以是任意十六进制颜色或者英文单词
+	     * 别名 : lineColor
+	     * @type string
+	     * @default blue
+	     */
+	    strokeStyle: "blue",
 	
-	  /**
-	   * 填充颜色，用于任意路劲中fill方法的填充样式
-	   * 值可以是任意十六进制颜色或者英文单词
-	   * 别名 ： fillColor  color
-	   * @type string
-	   * @default #dcd5d9
-	   */
-	  fillStyle: "#dcd5d9",
+	    /**
+	     * 填充颜色，用于任意路劲中fill方法的填充样式
+	     * 值可以是任意十六进制颜色或者英文单词
+	     * 别名 ： fillColor  color
+	     * @type string
+	     * @default #dcd5d9
+	     */
+	    fillStyle: "#dcd5d9",
 	
-	  /**
-	   * 线宽。
-	   * @type number
-	   * @default 1
-	   */
-	  lineWidth: 1,
+	    /**
+	     * 线宽。
+	     * @type number
+	     * @default 1
+	     */
+	    lineWidth: 1,
 	
-	  /**
-	   * 线条两端样式. butt、round、square
-	   * @type string
-	   * @default round
-	   */
-	  lineCap: "round",
+	    /**
+	     * 线条两端样式. butt、round、square
+	     * @type string
+	     * @default round
+	     */
+	    lineCap: "round",
 	
-	  /**
-	   * bevel,miter线条相交的方式. 园交,斜交还是斜接.
-	   * @type string
-	   * @default round
-	   */
-	  lineJoin: "round",
+	    /**
+	     * bevel,miter线条相交的方式. 园交,斜交还是斜接.
+	     * @type string
+	     * @default round
+	     */
+	    lineJoin: "round",
 	
-	  /**
-	   * 文字
-	   * @type string
-	   * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
-	   */
-	  font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
+	    /**
+	     * 文字
+	     * @type string
+	     * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
+	     */
+	    font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
 	
-	  /**
-	   * 文字颜色。 strokeStyle
-	   * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
-	   * @type string
-	   * @default black
-	   */
-	  textColor: "black", //文字样式。 非标准canvas属性
+	    /**
+	     * 文字颜色。 strokeStyle
+	     * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
+	     * @type string
+	     * @default black
+	     */
+	    textColor: "black", //文字样式。 非标准canvas属性
 	
-	  /**
-	   * 文本对齐方式
-	   * @type string
-	   * @default start
-	   */
-	  textAlign: "start",
+	    /**
+	     * 文本对齐方式
+	     * @type string
+	     * @default start
+	     */
+	    textAlign: "start",
 	
-	  /**
-	   * 文本基线
-	   * @type string
-	   * @default bottom
-	   */
-	  textBaseline: "bottom",
+	    /**
+	     * 文本基线
+	     * @type string
+	     * @default bottom
+	     */
+	    textBaseline: "bottom",
 	
-	  /**
-	   * 默认阴影颜色
-	   * @type string
-	   * @default #EA9090
-	   */
-	  shadowColor: "#EA9090",
+	    /**
+	     * 默认阴影颜色
+	     * @type string
+	     * @default #EA9090
+	     */
+	    shadowColor: "#EA9090",
 	
-	  /**
-	   * 阴影X偏移
-	   * @type number
-	   * @default  shadowOffsetX
-	   */
-	  shadowOffsetX: 0,
+	    /**
+	     * 阴影X偏移
+	     * @type number
+	     * @default  shadowOffsetX
+	     */
+	    shadowOffsetX: 0,
 	
-	  /**
-	   * 阴影Y偏移
-	   * @type number
-	   * @default shadowOffsetY
-	   */
-	  shadowOffsetY: 0,
+	    /**
+	     * 阴影Y偏移
+	     * @type number
+	     * @default shadowOffsetY
+	     */
+	    shadowOffsetY: 0,
 	
-	  /**
-	   * 像素的模糊数
-	   * @type number
-	   * @default 0
-	   */
-	  shadowBlur: 0,
+	    /**
+	     * 像素的模糊数
+	     * @type number
+	     * @default 0
+	     */
+	    shadowBlur: 0,
 	
-	  /**
-	   * 透明度。  0为透明
-	   * @type number
-	   * @default 1
-	   */
-	  globalAlpha: 1,
+	    /**
+	     * 透明度。  0为透明
+	     * @type number
+	     * @default 1
+	     */
+	    globalAlpha: 1,
 	
-	  /**
-	   * 透明重叠情况
-	   * @type string
-	   * @default source-over
-	   */
-	  globalCompositionOperation: "source-over"
+	    /**
+	     * 透明重叠情况
+	     * @type string
+	     * @default source-over
+	     */
+	    globalCompositionOperation: "source-over"
 	
 	};
 	
 	exports.default = {
-	  style: style,
-	  styleMap: styleMap
+	    style: style,
+	    styleMap: styleMap
 	};
 	module.exports = exports["default"];
 
@@ -4170,7 +4108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    getTextHeight: function getTextHeight(text, textFont) {
 	        textFont = textFont || defaultFont;
-	        var key = text + ':' + textFont;
+	        var key = text + ":" + textFont;
 	        if (TextUtil._textHeightCache[key]) {
 	            return TextUtil._textHeightCache[key];
 	        }
@@ -4180,9 +4118,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _ctx.font = textFont;
 	        }
 	
-	        text = (text + '').split('\n');
+	        text = (text + "").split("\n");
 	        // 比较粗暴
-	        var height = (_ctx.measureText('国').width + 2) * text.length;
+	        var height = (_ctx.measureText("国").width + 2) * text.length;
 	
 	        _ctx.restore();
 	
@@ -4200,7 +4138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    getTextWidth: function getTextWidth(text, textFont) {
 	
 	        textFont = textFont || defaultFont;
-	        var key = text + ':' + textFont;
+	        var key = text + ":" + textFont;
 	        if (TextUtil._textWidthCache[key]) {
 	            return TextUtil._textWidthCache[key];
 	        }
@@ -4210,7 +4148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _ctx.font = textFont;
 	        }
 	
-	        text = (text + '').split('\n');
+	        text = (text + "").split("\n");
 	        var width = 0;
 	        for (var i = 0, l = text.length; i < l; i++) {
 	            width = Math.max(_ctx.measureText(text[i]).width, width);
@@ -4234,30 +4172,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {string} textFont 字体
 	     */
 	    getTextRect: function getTextRect(text, x, y, textFont, textAlign, textBaseline) {
-	
 	        textFont = textFont || defaultFont;
 	        textAlign = textAlign || defaultAlign;
 	        textBaseline = textBaseline || defaultBaseline;
 	
 	        var width = TextUtil.getTextWidth(text, textFont);
-	        var lineHeight = TextUtil.getTextHeight('国', textFont);
+	        var lineHeight = TextUtil.getTextHeight("国", textFont);
 	
-	        text = (text + '').split('\n');
+	        text = (text + "").split("\n");
 	
 	        switch (textAlign) {
-	            case 'end':
-	            case 'right':
+	            case "end":
+	            case "right":
 	                x -= width;
 	                break;
-	            case 'center':
+	            case "center":
 	                x -= width / 2;
 	                break;
 	        }
 	
 	        switch (textBaseline) {
-	            case 'top':
+	            case "top":
 	                break;
-	            case 'bottom':
+	            case "bottom":
 	                y -= lineHeight * text.length;
 	                break;
 	            default:
@@ -4285,10 +4222,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    text = (text + "").split("\n");
 	
 	    var lineHeight = TextUtil.getTextHeight("国", textFont);
-	
+	    var _left = rect.x,
+	        _right = _left + rect.width;
+	    var _top = y + lineHeight * text.length,
+	        _bottom = y;
 	    switch (textBaseline) {
 	        case "top":
 	            y = rect.y;
+	            _top = y;
+	            _bottom = y + lineHeight * text.length;
 	            break;
 	        case "bottom":
 	            y = rect.y + lineHeight;
@@ -4296,11 +4238,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        default:
 	            y = rect.y + lineHeight / 2;
 	    }
-	
 	    for (var i = 0, l = text.length; i < l; i++) {
 	        ctx.fillText(text[i], x, y);
 	        y += lineHeight;
 	    }
+	
+	    return {
+	        left: _left,
+	        bottom: _bottom,
+	        top: _top,
+	        right: _right
+	    };
 	}
 	
 	exports.default = {
@@ -4520,7 +4468,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    GetContainRect: function GetContainRect() {
 	        if (!this.rect) {
-	
 	            var i = 0,
 	                tmp;
 	            for (i = 0; i < this.config.pts.length; i++) {
@@ -4604,8 +4551,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _util = __webpack_require__(3);
-	
 	var _text = __webpack_require__(30);
 	
 	var _text2 = _interopRequireDefault(_text);
@@ -4613,6 +4558,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _viewBuilder = __webpack_require__(25);
 	
 	var _viewBuilder2 = _interopRequireDefault(_viewBuilder);
+	
+	var _config = __webpack_require__(19);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -4637,44 +4584,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    DrawText: function DrawText(ctx, config) {
-	        if ((0, _util.checkNull)(config.text)) {
+	        if (!config.text) {
 	            return;
 	        }
+	        var x = config.dx;
+	        var y = config.dy;
+	
+	        var st = this.configProxy.getStyle();
+	        var textAlign = st.textAlign,
+	            textBaseline = st.textBaseline;
+	        // var textrect = text.getTextRect(config.text , x ,y ,st.textFont ,st.textAlign ,st.textBaseline);
+	
 	        ctx.save();
-	
 	        //文字颜色
-	        if (!(0, _util.checkNull)(config.style.textColor)) {
-	            ctx.fillStyle = config.style.textColor;
+	        if (st.textColor) {
+	            ctx.fillStyle = st.textColor;
 	        }
-	
-	        var rect = this.getRectByCtx(ctx);
-	
-	        var y = rect[1] - config.dy;
-	
-	        if (this.coordinate == -1) {
-	            y = config.dy;
-	        }
-	
-	        var textparams = [config.text, config.dx, y, config.style.font, config.style.textAlign, config.style.textBaseline];
-	
-	        _text2.default.fillText(ctx, textparams[0], textparams[1], textparams[2], textparams[3], textparams[4], textparams[5]);
-	
-	        //设置文本的包围圈
-	        if (this.__dirty || !this.containRect) {
-	            var textrect = _text2.default.getTextRect(textparams[0], textparams[1], textparams[2], textparams[3], textparams[4], textparams[5]);
-	            this.containRect = [textrect.x, textrect.y, textrect.x + textrect.width, textrect.y + textrect.height];
-	        }
-	
+	        //由于文字在canvas额默认变换下就是正的, 而ychart很可能是采用的笛卡尔坐标系,
+	        //所以在这里转换一下
+	        // y = 400-y;
+	        var globalTextPos = this.transformCoordToGlobal(x, y);
+	        x = globalTextPos[0], y = globalTextPos[1];
+	        var rect = _text2.default.fillText(ctx, config.text, x, y, st.font, textAlign, textBaseline);
 	        ctx.restore();
+	
+	        if (this.__dirty && !this.rect) {
+	            var bottom = rect.bottom,
+	                top = rect.top;
+	            if (_config.DEFAULT_CONFIG.coordinateSystem == "Cartesian") {
+	                this.decomposeTransform();
+	                var h = this.position[1];
+	                bottom = h - bottom, top = top - h;
+	            }
+	            this.rect = [rect.left, bottom, rect.right, top];
+	        }
 	    },
 	
-	    GetContainRect: function GetContainRect() {
-	        return this.containRect;
-	    }
-	
-	    /* IsPtInPath: function(){
+	    /*eslint-disable*/
+	    _isPtInPath: function _isPtInPath(x, y) {
 	        return true;
-	    } */
+	    }
+	    /*eslint-disable */
 	
 	}); /**
 	     * 文字
@@ -4735,7 +4685,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Init: function Init(config) {
 	        var _this2 = this;
 	
-	        this.origin = this.origin || [];
 	        //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
 	        if (typeof config.image != "string") {
 	            this.image = config.image;
@@ -4788,10 +4737,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var sHeight = config.sHeight || image.height;
 	                var dWidth = config.dWidth || image.width;
 	                var dHeight = config.dHeight || image.height;
-	                /*if (this.coordinate == 1) {
-	                    let rect = this.getRectByCtx(ctx);
-	                    dy = rect[1] - dHeight - dy;
-	                }*/
 	                //图片的目标位置应该是图片的左下角, 在笛卡尔坐标系中就应该加上图片的目标高度
 	                dy += dHeight;
 	                ctx.drawImage(image, config.sx, config.sy, sWidth, sHeight, config.dx, dy, dWidth, dHeight);
@@ -4799,13 +4744,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        };
 	        (0, _lang.onImgReady)(this, this.image, [buildImagePath1, function () {
-	            this.RebrushAll();
+	            this.ReBrushAll();
 	        }]);
 	    },
 	
+	    /*eslint-disable*/
 	    _isPtInPath: function _isPtInPath(x, y) {
 	        return true;
 	    }
+	    /*eslint-disable */
 	}); /**
 	     * 图片
 	     * @module ychart/shape/Image

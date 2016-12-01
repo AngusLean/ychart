@@ -11,6 +11,10 @@
     <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
 </div>
 
+<div style="width :800px; margin: 0 auto;margin-top: 20px;">
+    <canvas id="drawing1" style="border:blue solid 1px ;width :800px;height:400px "> </canvas>
+</div>
+
 <script>
     var $= function (id) {
         return document.getElementById(id);
@@ -23,15 +27,33 @@
     var text = new Ytext({
         text: "我是测试文字",
         <!-- coordinate: -1, -->
-        dx: 20,
-        dy: 50,
+        dx: 0,
+        dy: 0,
         style:{
-            textColor: "green"
+            textColor: "green",
+            textAlign: "left",
+            textBaseline: "bottom"
         }
     });
 
     yh.add(text);
     yh.BrushAll();
+    
+    function test(){
+        var text = "测试文字"
+        var font = "bold 14px Arial, Helvetica, sans-serif, Times, serif"
+        var textAlign = "start"
+        var textBaseLine = "top"
+        
+        var ctx = document.getElementById("drawing1").getContext("2d");
+        ctx.rotate(Math.PI/180);
+        ctx.font = font;
+        ctx.textAlign = textAlign;
+        ctx.textBaseline = textBaseLine;
+        ctx.fillText(text, 20,20);
+
+    }
+    test();
     </script>
 </body>
 </html>

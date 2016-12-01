@@ -4,8 +4,8 @@
  * @module ychart/core/graphic/mixin
  */
 
-import matrix from './helper/matrix'
-import vector from './helper/vector'
+import matrix from "./helper/matrix";
+import vector from "./helper/vector";
 var mIdentity = matrix.identity;
 
 var EPSILON = 5e-5;
@@ -81,7 +81,6 @@ Transformable.prototype.updateTransform = function () {
     var parent = this.parent;
     var parentHasTransform = parent && parent.transform;
     var needLocalTransform = this.needLocalTransform();
-
     var m = this.transform;
     m = m || [];
     if (!(needLocalTransform || parentHasTransform)) {

@@ -33,7 +33,6 @@ export default ShapeBuilder.baseContextViewExtend({
 
     GetContainRect: function() {
         if (!this.rect) {
-
             var i = 0,
                 tmp;
             for (i = 0; i < this.config.pts.length; i++) {

@@ -2,11 +2,11 @@
  * 文字
  * @module ychart/shape/Text
  */
-import {
-    checkNull
-} from "../tool/util";
-import utext from "../core/graphic/helper/text";
+
+import text from "../core/graphic/helper/text";
 import ShapeBuilder from "../core/viewBuilder";
+import {DEFAULT_CONFIG} from "../core/config/config";
+
 /**
  * 文本
  * 由于文本显示与图像刚好是竖向完全相反的两个方向，所以对文本绘制特殊处理。
@@ -28,43 +28,45 @@ export default ShapeBuilder.baseContextViewExtend({
     },
 
     DrawText: function(ctx, config) {
-        if (checkNull(config.text)) {
+        if (!config.text) {
             return;
         }
+        var x = config.dx;
+        var y = config.dy;
+
+        var st = this.configProxy.getStyle();
+        var textAlign = st.textAlign , textBaseline = st.textBaseline;
+        // var textrect = text.getTextRect(config.text , x ,y ,st.textFont ,st.textAlign ,st.textBaseline);
+
         ctx.save();
-
         //文字颜色
-        if (!checkNull(config.style.textColor)) {
-            ctx.fillStyle = config.style.textColor;
+        if (st.textColor) {
+            ctx.fillStyle = st.textColor;
         }
-
-        var rect = this.getRectByCtx(ctx);
-
-        var y = rect[1] - config.dy;
-
-        if (this.coordinate == -1) {
-            y = config.dy;
-        }
-
-        var textparams = [config.text, config.dx, y, config.style.font, config.style.textAlign, config.style.textBaseline];
-
-        utext.fillText(ctx, textparams[0], textparams[1], textparams[2], textparams[3], textparams[4], textparams[5]);
-
-        //设置文本的包围圈
-        if (this.__dirty || !this.containRect) {
-            let textrect = utext.getTextRect(textparams[0], textparams[1], textparams[2], textparams[3], textparams[4], textparams[5]);
-            this.containRect = [textrect.x, textrect.y, textrect.x + textrect.width, textrect.y + textrect.height];
-        }
-
+        //由于文字在canvas额默认变换下就是正的, 而ychart很可能是采用的笛卡尔坐标系,
+        //所以在这里转换一下
+        // y = 400-y;
+        var globalTextPos = this.transformCoordToGlobal(x,y);
+        x = globalTextPos[0] ,y=globalTextPos[1];
+        var rect = text.fillText(ctx, config.text, x, y, st.font, textAlign, textBaseline);
         ctx.restore();
+
+        if(this.__dirty && !this.rect){
+            let bottom = rect.bottom,top = rect.top;
+            if(DEFAULT_CONFIG.coordinateSystem == "Cartesian"){
+                this.decomposeTransform();
+                let h = this.position[1];
+                bottom = h-bottom , top = top-h ;
+            }
+            this.rect = [rect.left , bottom ,rect.right , top];
+        }
     },
 
-    GetContainRect: function() {
-        return this.containRect;
-    }
 
-    /* IsPtInPath: function(){
+    /*eslint-disable*/
+    _isPtInPath: function(x,y){
         return true;
-    } */
+    }
+    /*eslint-disable */
 
 });

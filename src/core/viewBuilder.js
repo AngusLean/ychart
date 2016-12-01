@@ -5,6 +5,7 @@
 import ContextView from "./graphic/contextView";
 import { isType ,isFunc} from "../tool/util";
 import debugs from "../tool/debug";
+import {DEFAULT_CONFIG} from "./config/config";
 
 var REQUIRED_CHILD = {
     type: "String",
@@ -47,8 +48,9 @@ var baseContextViewExtend = function (defaults) {
         setDefaultConfig(config){
             //设置全局ychart属性
             this.__yh = config.yh;
-            //设置笛卡尔坐标系
-            this._setDefaultTrasformToCartesian(config.height);
+            if(DEFAULT_CONFIG.coordinateSystem == "Cartesian")
+                //设置笛卡尔坐标系
+                this._setDefaultTrasformToCartesian(config.height);
         }
 
         /**
@@ -63,7 +65,6 @@ var baseContextViewExtend = function (defaults) {
             this.position = [0 , height];
             this.scale = [1,-1];
         }
-
     }
 
     for(var prop in defaults){

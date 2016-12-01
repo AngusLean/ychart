@@ -11,7 +11,9 @@ export var DEFAULT_CONFIG = {
 
     //元素在获取焦点时显示信息提示框必须和鼠标当前位置有偏移不然元素本身将不能捕获事件
     tipoffsetX: 10,
-    tipoffsetY: 0
+    tipoffsetY: 0,
+
+    //默认的坐标系. 默认为笛卡尔坐标系, 否则就是已左上角为原点的坐标系
+    coordinateSystem: "Cartesian"
 };
 
-export var useRectangularCoordinateSystem = 0;

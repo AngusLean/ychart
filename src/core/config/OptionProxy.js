@@ -4,18 +4,10 @@
  */
 
 
-import styleProxy from "./StyleProxy"
+import styleProxy from "./StyleProxy";
 
-import {
-    DEFAULT_CONFIG,
-    useRectangularCoordinateSystem
-} from "./config"
+import { simpleMerge } from "../../tool/util";
 
-import {
-    checkNull,
-    merge,
-    simpleMerge
-} from "../../tool/util"
 /**
  * 每个可绘制元素的配置代理类
  * 每个可绘制元素的配置项管理类。 该类将管理每个元素绘制需要的各项属性，其中，
@@ -24,7 +16,7 @@ import {
  * @class
  * @param config
  */
-var OptionProxy = function(...option) {
+var OptionProxy = function(...options) {
     /**
      * 样式配置代理
      * @member {boolean}
@@ -46,14 +38,14 @@ var OptionProxy = function(...option) {
         enumerable : true,
         configurable : false,
         get: function(){
-            return _this.styleProxy.getStyle()
+            return _this.styleProxy.getStyle();
         },
         set: function (val) {
             _this.styleProxy.update(val);
         }
     });
 
-    this.update(option);
+    this.update(options);
 };
 
 
@@ -61,7 +53,7 @@ var OptionProxy = function(...option) {
  * 获取所有配置
  * @returns {object} config
  */
-OptionProxy.prototype.getConfig = function(width, height) {
+OptionProxy.prototype.getConfig = function() {
     return this.config;
 };
 
@@ -82,10 +74,10 @@ OptionProxy.prototype.bindContext = function(context) {
 };
 
 /**
- * 获取画刷类型。 自动基于属性选择是填充还是描边
- * @param context
+ * 获取画刷类型。用于AfterBrush刷新时判断
+ * @return {string} 画刷类型, 'both' \  'stroke' \ 'fill' \ 'none'
  */
-OptionProxy.prototype.getBrushType = function(context) {
+OptionProxy.prototype.getBrushType = function() {
     return this.styleProxy.getBrushType();
 };
 

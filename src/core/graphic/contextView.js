@@ -55,36 +55,6 @@ class ContextView extends View {
     }
 
     /**
-     * 每个具体元素类的默认配置。
-     * 该配置将覆盖全局系统默认配置，但是会被全局用户自定义配置以及具体元素配置所覆盖
-     * @property {Object}  config  元素默认配置
-     * @default {style:{}}
-     */
-    // static defaultConfig = {
-    // style:{
-    // }
-    // }
-
-
-    /**
-     * 是否使用直角座标系，除了图片和文字，其他字体默认都是以
-     * 左下角为原点的座标系
-     * @property {number} coordinate o为正常形状的直角座标系，1为图片或者文字的直角座标系。 其他值使用默认座标系
-     * @default 图片或文字为1，其他元素为0
-     */
-/*
-    get coordinate() {
-        return this.configProxy.getConfig().coordinate;
-    }
-*/
-
-    set coordinate(val) {
-        this.configProxy.update({
-            coordinate: val
-        });
-    }
-
-    /**
      *
      * @property {boolean} Draggable 当前元素是否可以拖动
      * @default true
@@ -122,7 +92,7 @@ class ContextView extends View {
     /**
      * 重绘整个ychart实例. 通常用于元素位置改变\图片加载完成过后
      */
-    RebrushAll() {
+    ReBrushAll() {
         this.__yh && this.__yh.update();
     }
 
@@ -175,11 +145,8 @@ class ContextView extends View {
      * @param {CanvasRenderingContext2D} ctx
      */
     _SetShapeTransform(ctx) {
-
         this.updateTransform();
-
         this.setTransform(ctx);
-
     }
 
     /**
@@ -233,7 +200,7 @@ class ContextView extends View {
     BuildPath(ctx, config) {
             //设置合适的填充方法
             throw new Error(" unsurported operation -- can't build shape path");
-        }
+    }
     /* eslint-enable */
 
     /**
@@ -352,9 +319,6 @@ class ContextView extends View {
             default:
                 textAlign = "center";
                 textBaseline = "middle";
-                // x -= textw/2;
-                // y -= texth/2;
-                // st.textBaseline = "top";
         }
         /* eslint-disable */
         ctx.save();

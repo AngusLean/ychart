@@ -3,8 +3,6 @@
  */
 
 
-import {isArr} from "../../../tool/util"
-
 /**
  * 元素移动相关功能实现。 混入类
  * @class
@@ -27,7 +25,7 @@ Moveable.prototype = {
         // }
 
         this.position[0] += dx;
-        this.position[1] -= dy;
+        this.position[1] += dy;
         this.__dirty = true;
     },
 
@@ -47,9 +45,6 @@ Moveable.prototype = {
      * @param {number}  angle 旋转弧度
      */
     rotate: function (x, y, angle) {
-        // if (!isArr(this.origin)) {
-            // this.origin = [0, 0];
-        // }
         if(!this.rotation){
             this.rotation = 0;
         }
