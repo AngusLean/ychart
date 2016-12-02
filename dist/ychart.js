@@ -1410,12 +1410,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {number} dy
 	     */
 	    drift: function drift(dx, dy) {
-	        // if (!isArr(this.position)) {
-	        // this.position = [0, 0];
-	        // }
-	
 	        this.position[0] += dx;
-	        this.position[1] += dy;
+	        this.position[1] -= dy;
 	        this.__dirty = true;
 	    },
 	
@@ -2310,17 +2306,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var target;
-	
 	/**
 	 * 拖动的实现类。 由于该类仅需要一个实例，所以没有做成混合类
 	 * @class
 	 * @constructor
 	 */
-	/**
-	 * @module ychart/core/graphic/mixin
-	 */
-	
 	var Draggable = function Draggable() {
 	    _eventful2.default.call(this);
 	
@@ -2328,7 +2318,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.on("mousemove", this._dragIng, this);
 	    this.on("mouseup", this._dragEnd, this);
 	    this.on("globalout", this._dragEnd, this);
-	};
+	}; /**
+	    * @module ychart/core/graphic/mixin
+	    */
 	
 	Draggable.prototype = {
 	    constructor: Draggable,
@@ -2343,7 +2335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @private
 	     */
 	    _dragStart: function _dragStart(exEvent) {
-	        target = exEvent.targetEle;
+	        var target = exEvent.targetEle;
 	        this._lastClickTime = new Date();
 	        if (target) {
 	            this._x = exEvent.offsetX;
@@ -2360,7 +2352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    _dragIng: function _dragIng(exEvent) {
 	        var ele = exEvent.targetEle;
-	        target = this._dragingTarget;
+	        var target = this._dragingTarget;
 	        var crt = new Date();
 	        crt = crt - this._lastClickTime;
 	        if (ele) {
@@ -2378,7 +2370,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var dy = y - this._y;
 	            this._x = x;
 	            this._y = y;
-	            target.drift(dx, dy);
+	            //向上移动时距离为负. 但是在底层实现中, 向上为正. 所以y取负
+	            target.drift(dx, -dy);
 	            this.trigger(target, "draging", exEvent);
 	            // 更新视图
 	            target.ReBrushAll();
@@ -2392,12 +2385,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    _dragEnd: function _dragEnd(exEvent) {
 	        exEvent.target.style.cursor = _config.DEFAULT_CONFIG.cursor_default;
-	        target = this._dragingTarget;
+	        var target = this._dragingTarget;
 	        if (target) {
 	            target.dragging = false;
 	            this.trigger(target, "dragend", exEvent);
 	        }
-	
 	        this._dragingTarget = null;
 	    }
 	};
@@ -4799,9 +4791,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var animate = function animate(option) {
 	    var onBegin = option.onBegin || Nop,
 	        onChanging = option.onChanging || Nop,
-	        onEnd = option.onEnd || Nop,
+	        onEnd = option.onEnd || null,
 	        beginDelay = option.beginDelay || 0;
-	
 	    (function frame(beginResult) {
 	        if (onEnd()) {
 	            return;

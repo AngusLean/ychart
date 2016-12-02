@@ -7,7 +7,6 @@ import Eventful from "./eventful";
 import {mixin} from "../../../tool/klass";
 import {DEFAULT_CONFIG} from "../../config/config";
 
-var target;
 
 /**
  * 拖动的实现类。 由于该类仅需要一个实例，所以没有做成混合类
@@ -16,6 +15,7 @@ var target;
  */
 var Draggable = function () {
     Eventful.call(this);
+
 
     this.on("mousedown", this._dragStart, this);
     this.on("mousemove", this._dragIng, this);
@@ -37,7 +37,7 @@ Draggable.prototype = {
      * @private
      */
     _dragStart: function (exEvent) {
-        target = exEvent.targetEle;
+        var target = exEvent.targetEle;
         this._lastClickTime = new Date();
         if (target) {
             this._x = exEvent.offsetX;
@@ -54,7 +54,7 @@ Draggable.prototype = {
      */
     _dragIng: function (exEvent) {
         var ele = exEvent.targetEle;
-        target = this._dragingTarget;
+        var target = this._dragingTarget;
         var crt = new Date();
         crt = crt - this._lastClickTime;
         if(ele){
@@ -75,7 +75,8 @@ Draggable.prototype = {
             var dy = y - this._y;
             this._x = x;
             this._y = y;
-            target.drift(dx, dy);
+            //向上移动时距离为负. 但是在底层实现中, 向上为正. 所以y取负
+            target.drift(dx, -dy);
             this.trigger(target, "draging", exEvent);
             // 更新视图
             target.ReBrushAll();
@@ -89,12 +90,11 @@ Draggable.prototype = {
      */
     _dragEnd: function (exEvent) {
         exEvent.target.style.cursor =DEFAULT_CONFIG.cursor_default;
-        target = this._dragingTarget;
+        var target = this._dragingTarget;
         if (target) {
             target.dragging = false;
             this.trigger(target, "dragend", exEvent);
         }
-
         this._dragingTarget = null;
     }
 };

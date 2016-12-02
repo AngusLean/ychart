@@ -20,12 +20,8 @@ Moveable.prototype = {
      * @param {number} dy
      */
     drift: function (dx, dy) {
-        // if (!isArr(this.position)) {
-            // this.position = [0, 0];
-        // }
-
         this.position[0] += dx;
-        this.position[1] += dy;
+        this.position[1] -= dy;
         this.__dirty = true;
     },
 

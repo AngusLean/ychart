@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rect测试</title>
+<script type="text/javascript" src="../../dist/ychart.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <!-- <div id="drawing" style="border:blue solid 1px ;width :738px;height:664px "> </div> -->
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:600px "> </div>
+</div>
+<div style="margin-top: 5px;">
+    <input type="button" value="移动" onclick="move()">
+</div>
+<script>
+
+    var $= function (id) {
+        return document.getElementById(id);
+    };
+
+
+    var ycharts = ychart,Rect = ychart.shape.Rect ;
+    var Group = ychart.Group;
+    yh = ycharts.init("drawing");
+
+//coordinate: -1,
+//     textpos: "left-center",  
+    var imgs =new Rect({
+        pts:[[10,10],[10,100],[100,40],[100,10]],
+        text: '文字',
+        textpos: "top-center",
+        style:{
+            fillColor:"red",
+            textColor: "black"
+        }
+    });
+
+    yh.add(imgs);
+    yh.BrushAll();
+  
+    imgs.on("click",function(){
+        console.log("click img");
+    })
+
+    function move() {
+        imgs.move(10,10);
+        yh.update();
+    }
+
+</script>
+</body>
+</html>

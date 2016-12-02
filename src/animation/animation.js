@@ -25,9 +25,8 @@ var Nop = function () {
 var animate = function (option) {
     var onBegin = option.onBegin || Nop,
         onChanging = option.onChanging || Nop,
-        onEnd = option.onEnd || Nop,
+        onEnd = option.onEnd || null,
         beginDelay = option.beginDelay || 0;
-
     (function frame(beginResult) {
         if (onEnd()) {
             return;

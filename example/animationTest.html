@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>canvas原始变换测试</title>
+    <script type="text/javascript" src="../dist/ychart.js"></script>
+
+</head>
+
+<body>
+    <div style="width :800px; margin: 0 auto;">
+        <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+    </div>
+
+    <script>
+        var Line = ychart.shape.Line , animation = ychart.Animation.animate;
+
+        var yh = ychart.init("drawing");
+        var line = new Line({
+            x0: 10,
+            y0: 10,
+            x1: 50,
+            y1: 50,
+            style:{
+                lineColor: "red",
+                lineWidth: 5
+            }
+        });
+        yh.add(line);
+        yh.BrushAll();
+
+        var onStart = function(){
+           return line.config.x0;
+        }
+        var steplen = 2;
+        var onChaning = function(x0){
+            if(x0> 10 && x0 < 600){
+
+            }else{
+               steplen=-2;
+            }
+            line.move(3,0);
+            yh.update()
+            return x0;
+        }
+        var onChaning1 = function(x0){
+
+            line.move(0,1);
+            yh.update()
+            return x0;
+        }
+        var onEnd = function(){
+            if(line.config.x0 > 800)
+                return true
+            return false
+        }
+        animation({
+            onBegin: onStart,
+            onChanging: onChaning,
+            onEnd: onEnd
+        });
+         animation({
+            onBegin: onStart,
+            onChanging: onChaning1,
+            onEnd: onEnd
+        });
+    </script>
+</body>
+
+</html>
