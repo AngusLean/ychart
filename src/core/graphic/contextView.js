@@ -115,10 +115,17 @@ class ContextView extends View {
      * 获取当前元素的包围圈。
      * @return {Array.<Number>} 返回rect数组
      */
-    GetContainRect() {
-            return this.rect;
-        }
-        /*eslint-enable */
+    GetContainRect() { return this.rect; }
+    /*eslint-enable */
+
+    /**
+     * 通过上下文获取绘图的canvas尺寸
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    getRectByCtx(ctx) {
+        return getRectByCtx(ctx);
+    }
+
 
     /**
      * 绘图元素在把内容绘制到context之前调用的函数
@@ -150,14 +157,6 @@ class ContextView extends View {
     }
 
     /**
-     * 通过上下文获取绘图的canvas尺寸
-     * @param {CanvasRenderingContext2D} ctx
-     */
-    getRectByCtx(ctx) {
-        return getRectByCtx(ctx);
-    }
-
-    /**
      * 绘图元素在把内容绘制到context之后调用的函数
      * @method
      * @private
@@ -186,7 +185,6 @@ class ContextView extends View {
         }
         /* eslint-enable */
         ctx.restore();
-
         this.AfterBrush(ctx, config);
     }
 
@@ -196,12 +194,11 @@ class ContextView extends View {
      * @param {CanvasRenderingContext2D} ctx
      * @param {object} config --配置。
      */
-    /* eslint-disable*/
-    BuildPath(ctx, config) {
-            //设置合适的填充方法
-            throw new Error(" unsurported operation -- can't build shape path");
+    _BuildPath(ctx, config) {
+        //子类设置合适的填充方法
+        this.BuildPath(ctx, config);
     }
-    /* eslint-enable */
+
 
     /**
      * 绘制的接口。 绘制该元素必须调用该方法
@@ -214,7 +211,7 @@ class ContextView extends View {
             //设置样式
             this._BeforeBrush(ctx, config);
             //具体图形自己的定制
-            this.BuildPath(ctx, config);
+            this._BuildPath(ctx, config);
             //恢复事故现场
             this._AfterBrush(ctx, config);
 

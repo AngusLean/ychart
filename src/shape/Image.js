@@ -45,14 +45,8 @@ export default ShapeBuilder.baseContextViewExtend({
         //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
         if (typeof config.image != "string") {
             this.image = config.image;
-            this.__setOrigin(this.image);
         } else {
             this.image = new Image();
-            let _this = this;
-            this.image.onload = function() {
-                this.image = null;
-                _this.__setOrigin(_this.image);
-            };
             this.image.src = config.image;
         }
     },
@@ -93,9 +87,11 @@ export default ShapeBuilder.baseContextViewExtend({
                 let dWidth = config.dWidth || image.width;
                 let dHeight = config.dHeight || image.height;
                 //图片的目标位置应该是图片的左下角, 在笛卡尔坐标系中就应该加上图片的目标高度
-                dy += dHeight;
+                // dy += dHeight;
                 ctx.drawImage(image, config.sx, config.sy, sWidth, sHeight, config.dx, dy, dWidth, dHeight);
+
                 this.rect = [config.dx, dy, config.dx + dWidth, dy + dHeight];
+                // this.__setOrigin(image);
             }
         };
         onImgReady(this, this.image, [buildImagePath1, function() {

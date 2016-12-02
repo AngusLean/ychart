@@ -3160,8 +3160,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
 	                                                                                                                                                                                                                                                   * 绘图元素类构造器
 	                                                                                                                                                                                                                                                   * @module  ychart/graphic/viewBuilder
@@ -3229,11 +3227,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        _createClass(BaseContextView, [{
-	            key: "zoom",
-	            value: function zoom(x, y) {
-	                _get(BaseContextView.prototype.__proto__ || Object.getPrototypeOf(BaseContextView.prototype), "zoom", this).call(this, x, y);
-	            }
-	        }, {
 	            key: "setDefaultConfig",
 	            value: function setDefaultConfig(config) {
 	                //设置全局ychart属性
@@ -3243,6 +3236,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this._setDefaultTrasformToCartesian(config.height);
 	            }
 	
+	            /* eslint-disable*/
+	
+	        }, {
+	            key: "BuildPath",
+	            value: function BuildPath(ctx, config) {
+	                throw new Error(" unsurported operation -- can't build shape path");
+	            }
+	            /* eslint-enable */
 	            /**
 	             * 设置当前元素的默认坐标系为直角坐标系. 该方法应该在刷新之前调用并且仅仅调用一次.
 	             * 由于变换要在元素知道被添加到某个具体的 @see{CanvasRenderingContext2D} 的时候
@@ -3418,6 +3419,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /*eslint-enable */
 	
 	        /**
+	         * 通过上下文获取绘图的canvas尺寸
+	         * @param {CanvasRenderingContext2D} ctx
+	         */
+	
+	    }, {
+	        key: "getRectByCtx",
+	        value: function getRectByCtx(ctx) {
+	            return (0, _dom.getRectByCtx)(ctx);
+	        }
+	
+	        /**
 	         * 绘图元素在把内容绘制到context之前调用的函数
 	         * @method
 	         * @private
@@ -3453,17 +3465,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * 通过上下文获取绘图的canvas尺寸
-	         * @param {CanvasRenderingContext2D} ctx
-	         */
-	
-	    }, {
-	        key: "getRectByCtx",
-	        value: function getRectByCtx(ctx) {
-	            return (0, _dom.getRectByCtx)(ctx);
-	        }
-	
-	        /**
 	         * 绘图元素在把内容绘制到context之后调用的函数
 	         * @method
 	         * @private
@@ -3495,7 +3496,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            /* eslint-enable */
 	            ctx.restore();
-	
 	            this.AfterBrush(ctx, config);
 	        }
 	
@@ -3505,15 +3505,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {CanvasRenderingContext2D} ctx
 	         * @param {object} config --配置。
 	         */
-	        /* eslint-disable*/
 	
 	    }, {
-	        key: "BuildPath",
-	        value: function BuildPath(ctx, config) {
-	            //设置合适的填充方法
-	            throw new Error(" unsurported operation -- can't build shape path");
+	        key: "_BuildPath",
+	        value: function _BuildPath(ctx, config) {
+	            //子类设置合适的填充方法
+	            this.BuildPath(ctx, config);
 	        }
-	        /* eslint-enable */
 	
 	        /**
 	         * 绘制的接口。 绘制该元素必须调用该方法
@@ -3529,7 +3527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                //设置样式
 	                this._BeforeBrush(ctx, config);
 	                //具体图形自己的定制
-	                this.BuildPath(ctx, config);
+	                this._BuildPath(ctx, config);
 	                //恢复事故现场
 	                this._AfterBrush(ctx, config);
 	
@@ -4320,6 +4318,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	/* import {PIx2} from "../tool/math"; */
+	
 	/**
 	 * 圆形
 	 * @class Circle
@@ -4335,22 +4335,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {object} option  绘制形状的配置
 	     * @private
 	     */
-	    Init: function Init(config) {
-	        this.origin = [config.x, config.y];
-	    },
+	    // Init: function (config) {
+	    // this.origin = [config.x,config.y];
+	    // },
 	
-	    type: "circle",
+	    type: "Circle",
 	
 	    BuildPath: function BuildPath(ctx, config) {
-	        ctx.arc(config.x, config.y, config.r, Math.PI * 2, config.startangel || 0, config.endangel || Math.PI * 2);
-	    },
-	
-	    GetContainRect: function GetContainRect() {
-	        var config = this.config;
-	        if (this.dirty || !this.rect) {
-	            this.rect = [config.x - config.r, config.y - config.r, config.x + config.r, config.y + config.r];
-	        }
-	        return this.rect;
+	        var x = parseFloat(config.x),
+	            y = parseFloat(config.y),
+	            radius = parseFloat(config.r);
+	        // ctx.moveTo(x,y+radius);
+	        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+	        /* var x = parseFloat(config.x) , y=parseFloat(config.y), r=parseFloat(config.r);
+	        ctx.moveTo(x,y);
+	        ctx.arc(0,0,r ,0, Math.PI*2,false);*/
+	        this.rect = [config.x - config.r, config.y - config.r, config.x + config.r, config.y + config.r];
 	    }
 	
 	}); /**
@@ -4675,22 +4675,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @private
 	     */
 	    Init: function Init(config) {
-	        var _this2 = this;
-	
 	        //由于引入了异步加载图片的机制，获取图片的大小在图片还没有实际加载的时候也就无法执行
 	        if (typeof config.image != "string") {
 	            this.image = config.image;
-	            this.__setOrigin(this.image);
 	        } else {
-	            (function () {
-	                _this2.image = new Image();
-	                var _this = _this2;
-	                _this2.image.onload = function () {
-	                    this.image = null;
-	                    _this.__setOrigin(_this.image);
-	                };
-	                _this2.image.src = config.image;
-	            })();
+	            this.image = new Image();
+	            this.image.src = config.image;
 	        }
 	    },
 	
@@ -4730,9 +4720,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var dWidth = config.dWidth || image.width;
 	                var dHeight = config.dHeight || image.height;
 	                //图片的目标位置应该是图片的左下角, 在笛卡尔坐标系中就应该加上图片的目标高度
-	                dy += dHeight;
+	                // dy += dHeight;
 	                ctx.drawImage(image, config.sx, config.sy, sWidth, sHeight, config.dx, dy, dWidth, dHeight);
+	
 	                this.rect = [config.dx, dy, config.dx + dWidth, dy + dHeight];
+	                // this.__setOrigin(image);
 	            }
 	        };
 	        (0, _lang.onImgReady)(this, this.image, [buildImagePath1, function () {

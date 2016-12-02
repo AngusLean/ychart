@@ -4,6 +4,7 @@
  */
 
 import ShapeBuilder from "../core/viewBuilder";
+/* import {PIx2} from "../tool/math"; */
 
 /**
  * 圆形
@@ -20,24 +21,22 @@ export default ShapeBuilder.baseContextViewExtend({
      * @param {object} option  绘制形状的配置
      * @private
      */
-    Init: function (config) {
-        this.origin = [config.x,config.y];
-    },
+    // Init: function (config) {
+        // this.origin = [config.x,config.y];
+    // },
 
-    type: "circle",
+    type: "Circle",
 
     BuildPath: function (ctx, config) {
-        ctx.arc(config.x, config.y, config.r, Math.PI * 2,
-            config.startangel || 0, config.endangel || Math.PI * 2);
-    },
-
-    GetContainRect: function(){
-        var config = this.config;
-        if(this.dirty || !this.rect){
-            this.rect = [config.x - config.r,config.y-config.r ,config.x+config.r,config.y+config.r];
-        }
-        return this.rect;
+        var x = parseFloat(config.x) , y=parseFloat(config.y), radius=parseFloat(config.r);
+        // ctx.moveTo(x,y+radius);
+        ctx.arc(x,y,radius,0,2*Math.PI,false);
+        /* var x = parseFloat(config.x) , y=parseFloat(config.y), r=parseFloat(config.r);
+        ctx.moveTo(x,y);
+        ctx.arc(0,0,r ,0, Math.PI*2,false);*/
+        this.rect = [config.x - config.r,config.y-config.r ,config.x+config.r,config.y+config.r];
     }
+
 
 });
 

@@ -41,9 +41,6 @@ var baseContextViewExtend = function (defaults) {
                 defaults["Init"].call(this,baseOption);
             }
         }
-        zoom(x, y){
-            super.zoom(x , y);
-        }
 
         setDefaultConfig(config){
             //设置全局ychart属性
@@ -53,6 +50,11 @@ var baseContextViewExtend = function (defaults) {
                 this._setDefaultTrasformToCartesian(config.height);
         }
 
+        /* eslint-disable*/
+        BuildPath(ctx , config){
+            throw new Error(" unsurported operation -- can't build shape path");
+        }
+        /* eslint-enable */
         /**
          * 设置当前元素的默认坐标系为直角坐标系. 该方法应该在刷新之前调用并且仅仅调用一次.
          * 由于变换要在元素知道被添加到某个具体的 @see{CanvasRenderingContext2D} 的时候
