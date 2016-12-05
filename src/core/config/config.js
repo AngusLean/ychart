@@ -14,6 +14,7 @@ export var DEFAULT_CONFIG = {
     tipoffsetY: 0,
 
     //默认的坐标系. 默认为笛卡尔坐标系, 否则就是已左上角为原点的坐标系
+    //该值对ViewBuilder类的设置和YText类有直接影响
     coordinateSystem: "Cartesian"
 };
 

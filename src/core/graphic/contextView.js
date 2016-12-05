@@ -135,11 +135,11 @@ class ContextView extends View {
      */
     _BeforeBrush(ctx, config) {
         ctx.save();
-
+        //设置变换
         this._SetShapeTransform(ctx, config);
-
+        //设置样式. 意味着子元素在进入BuildPath时样式已经设置好
         this.configProxy.bindContext(ctx);
-
+        //调用外部的绘制之前的API
         this.BeforeBrush(ctx, config);
 
         ctx.beginPath();
@@ -197,7 +197,14 @@ class ContextView extends View {
     _BuildPath(ctx, config) {
         //子类设置合适的填充方法
         this.BuildPath(ctx, config);
+        if(this.__dirty){
+            this.AfterFirstBuildPath();
+        }
     }
+
+
+
+    AfterFirstBuildPath(){}
 
 
     /**

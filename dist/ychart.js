@@ -2577,6 +2577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    tipoffsetY: 0,
 	
 	    //默认的坐标系. 默认为笛卡尔坐标系, 否则就是已左上角为原点的坐标系
+	    //该值对ViewBuilder类的设置和YText类有直接影响
 	    coordinateSystem: "Cartesian"
 	};
 
@@ -3440,11 +3441,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "_BeforeBrush",
 	        value: function _BeforeBrush(ctx, config) {
 	            ctx.save();
-	
+	            //设置变换
 	            this._SetShapeTransform(ctx, config);
-	
+	            //设置样式. 意味着子元素在进入BuildPath时样式已经设置好
 	            this.configProxy.bindContext(ctx);
-	
+	            //调用外部的绘制之前的API
 	            this.BeforeBrush(ctx, config);
 	
 	            ctx.beginPath();
@@ -3511,7 +3512,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _BuildPath(ctx, config) {
 	            //子类设置合适的填充方法
 	            this.BuildPath(ctx, config);
+	            if (this.__dirty) {
+	                this.AfterFirstBuildPath();
+	            }
 	        }
+	    }, {
+	        key: "AfterFirstBuildPath",
+	        value: function AfterFirstBuildPath() {}
 	
 	        /**
 	         * 绘制的接口。 绘制该元素必须调用该方法
