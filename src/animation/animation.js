@@ -39,6 +39,7 @@ var animate = function (option) {
     }());
 };
 
+
 export default {
     animate: animate
 };
