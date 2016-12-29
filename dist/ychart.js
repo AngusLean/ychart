@@ -400,7 +400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	exports.forEach = forEach;
 	exports.checkNull = checkNull;
@@ -1389,7 +1389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	/**
 	 * @module ychart/core/graphic/mixin
@@ -1404,56 +1404,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Moveable.prototype = {
 	
-	    /**
-	     * 拖动
-	     * @param {number} dx
-	     * @param {number} dy
-	     */
-	    drift: function drift(dx, dy) {
-	        this.position[0] += dx;
-	        this.position[1] -= dy;
-	        this.__dirty = true;
-	    },
+	  /**
+	   * 拖动
+	   * @param {number} dx
+	   * @param {number} dy
+	   */
+	  drift: function drift(dx, dy) {
+	    this.position[0] += dx;
+	    this.position[1] -= dy;
+	    this.__dirty = true;
+	  },
 	
-	    /**
-	     * 移动。 和drift方法完全一样
-	     * @param {number} dx
-	     * @param {number} dy
-	     */
-	    move: function move(dx, dy) {
-	        this.drift(dx, dy);
-	    },
+	  /**
+	   * 移动。 和drift方法完全一样
+	   * @param {number} dx
+	   * @param {number} dy
+	   */
+	  move: function move(dx, dy) {
+	    this.drift(dx, dy);
+	  },
 	
-	    /**
-	     * 旋转
-	     * @param {number}  x 圆心X座标
-	     * @param {number}  y 圆心y座标
-	     * @param {number}  angle 旋转弧度
-	     */
-	    rotate: function rotate(x, y, angle) {
-	        if (!this.rotation) {
-	            this.rotation = 0;
-	        }
-	        this.origin[0] += x;
-	        this.origin[1] += y;
-	        this.rotation += angle;
-	
-	        this.__dirty = true;
-	    },
-	
-	    /**
-	     * 缩放
-	     * 注意该缩放必须是相对于某个点的. 默认情况下是[0,0] 这个肯定不是想要的结果,
-	     * 必须在shape指定origin为缩放的原点
-	     *
-	     * @param {number}  x X方向放大比例
-	     * @param {number}  y y方向放大比例
-	     */
-	    zoom: function zoom(x, y) {
-	        this.scale[0] *= x;
-	        this.scale[1] *= y;
-	        this.__dirty = true;
+	  /**
+	   * 旋转
+	   * @param {number}  x 圆心X座标
+	   * @param {number}  y 圆心y座标
+	   * @param {number}  angle 旋转弧度
+	   */
+	  rotate: function rotate(x, y, angle) {
+	    if (!this.rotation) {
+	      this.rotation = 0;
 	    }
+	    this.origin[0] += x;
+	    this.origin[1] += y;
+	    this.rotation += angle;
+	
+	    this.__dirty = true;
+	  },
+	
+	  /**
+	   * 缩放
+	   * 注意该缩放必须是相对于某个点的. 默认情况下是[0,0] 这个肯定不是想要的结果,
+	   * 必须在shape指定origin为缩放的原点
+	   *
+	   * @param {number}  x X方向放大比例
+	   * @param {number}  y y方向放大比例
+	   */
+	  zoom: function zoom(x, y) {
+	    this.scale[0] *= x;
+	    this.scale[1] *= y;
+	    this.__dirty = true;
+	  }
 	};
 	
 	exports.default = Moveable;
@@ -1493,7 +1493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {String} type  元素类型. 该类型为element
 	   */
 	  function Element() {
-	    var type = arguments.length <= 0 || arguments[0] === undefined ? "element" : arguments[0];
+	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "element";
 	
 	    _classCallCheck(this, Element);
 	
@@ -2687,7 +2687,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(HtmlView, _View);
 	
 	    function HtmlView() {
-	        var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	        var option = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
 	        _classCallCheck(this, HtmlView);
 	
@@ -2802,8 +2802,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {Object} option
 	   */
 	  function View() {
-	    var type = arguments.length <= 0 || arguments[0] === undefined ? "view" : arguments[0];
-	    var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	    var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "view";
+	    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	
 	    _classCallCheck(this, View);
 	
@@ -3161,10 +3161,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /**
-	                                                                                                                                                                                                                                                   * 绘图元素类构造器
-	                                                                                                                                                                                                                                                   * @module  ychart/graphic/viewBuilder
-	                                                                                                                                                                                                                                                   */
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+	                                                                                                                                                                                                                                                                               * 绘图元素类构造器
+	                                                                                                                                                                                                                                                                               * @module  ychart/graphic/viewBuilder
+	                                                                                                                                                                                                                                                                               */
 	
 	
 	var _contextView = __webpack_require__(26);
@@ -3346,8 +3346,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @constructor
 	     */
 	    function ContextView() {
-	        var type = arguments.length <= 0 || arguments[0] === undefined ? "ContextView" : arguments[0];
-	        var option = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	        var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "ContextView";
+	        var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	
 	        _classCallCheck(this, ContextView);
 	
@@ -3612,6 +3612,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    y = crect[1];
 	                    textAlign = "center";
 	                    break;
+	                case "top-center":
+	                    //y = crect[3];
+	                    //textAlign = "center";
+	                    //x = crect[2];
+	                    textAlign = "center";
+	                    y = crect[1];
+	                    break;
+	
 	                case "top-left":
 	                case "left-top":
 	                    x = crect[0];
@@ -3631,12 +3639,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case "bottom-left":
 	                    x = crect[0];
 	                    y = crect[3];
-	                    break;
-	                case "top-center":
-	                    y = crect[3];
-	                    textAlign = "center";
-	                    textBaseline = "top";
-	                    // x -= textw/2;
 	                    break;
 	                case "top-right":
 	                case "right-top":
@@ -3724,7 +3726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _StyleProxy = __webpack_require__(28);
@@ -3749,37 +3751,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	var OptionProxy = function OptionProxy() {
-	    /**
-	     * 样式配置代理
-	     * @member {boolean}
-	     * @default null
-	     */
-	    this.styleProxy = new _StyleProxy2.default();
+	  /**
+	   * 样式配置代理
+	   * @member {boolean}
+	   * @default null
+	   */
+	  this.styleProxy = new _StyleProxy2.default();
 	
-	    /**
-	     * 实际配置
-	     * 每个绘图元素的所有配置项。 其中 style 这个项表示所有样式相关。 独立处理
-	     * @member {object}
-	     */
-	    this.config = {};
+	  /**
+	   * 实际配置
+	   * 每个绘图元素的所有配置项。 其中 style 这个项表示所有样式相关。 独立处理
+	   * @member {object}
+	   */
+	  this.config = {};
 	
-	    var _this = this;
-	    Object.defineProperty(this.config, "style", {
-	        enumerable: true,
-	        configurable: false,
-	        get: function get() {
-	            return _this.styleProxy.getStyle();
-	        },
-	        set: function set(val) {
-	            _this.styleProxy.update(val);
-	        }
-	    });
-	
-	    for (var _len = arguments.length, options = Array(_len), _key = 0; _key < _len; _key++) {
-	        options[_key] = arguments[_key];
+	  var _this = this;
+	  Object.defineProperty(this.config, "style", {
+	    enumerable: true,
+	    configurable: false,
+	    get: function get() {
+	      return _this.styleProxy.getStyle();
+	    },
+	    set: function set(val) {
+	      _this.styleProxy.update(val);
 	    }
+	  });
 	
-	    this.update(options);
+	  for (var _len = arguments.length, options = Array(_len), _key = 0; _key < _len; _key++) {
+	    options[_key] = arguments[_key];
+	  }
+	
+	  this.update(options);
 	};
 	
 	/**
@@ -3787,7 +3789,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {object} config
 	 */
 	OptionProxy.prototype.getConfig = function () {
-	    return this.config;
+	  return this.config;
 	};
 	
 	/**
@@ -3795,7 +3797,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {OptionProxy.config.style|{}}
 	 */
 	OptionProxy.prototype.getStyle = function () {
-	    return this.config.style || {};
+	  return this.config.style || {};
 	};
 	
 	/**
@@ -3803,7 +3805,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param context
 	 */
 	OptionProxy.prototype.bindContext = function (context) {
-	    this.styleProxy.bindContext(context);
+	  this.styleProxy.bindContext(context);
 	};
 	
 	/**
@@ -3811,7 +3813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {string} 画刷类型, 'both' \  'stroke' \ 'fill' \ 'none'
 	 */
 	OptionProxy.prototype.getBrushType = function () {
-	    return this.styleProxy.getBrushType();
+	  return this.styleProxy.getBrushType();
 	};
 	
 	/**
@@ -3819,7 +3821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param option
 	 */
 	OptionProxy.prototype.update = function (config) {
-	    (0, _util.simpleMerge)(this.config, config);
+	  (0, _util.simpleMerge)(this.config, config);
 	};
 	
 	exports.default = OptionProxy;
@@ -3905,7 +3907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	/**
 	 * 样式名映射
@@ -3913,31 +3915,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var styleMap = {
 	
-	    fillStyle: "fillStyle",
-	    fillColor: "fillStyle",
-	    color: "fillStyle",
+	  fillStyle: "fillStyle",
+	  fillColor: "fillStyle",
+	  color: "fillStyle",
 	
-	    strokeStyle: "strokeStyle",
-	    lineColor: "strokeStyle",
-	    lineWidth: "lineWidth",
-	    lineCap: "lineCap",
-	    lineJoin: "lineJoin",
-	    font: "font",
+	  strokeStyle: "strokeStyle",
+	  lineColor: "strokeStyle",
+	  lineWidth: "lineWidth",
+	  lineCap: "lineCap",
+	  lineJoin: "lineJoin",
+	  font: "font",
 	
-	    textAlign: "textAlign",
-	    textBaseline: "textBaseline",
+	  textAlign: "textAlign",
+	  textBaseline: "textBaseline",
 	
-	    shadowColor: "shadowColor",
-	    shadowOffsetX: "shadowOffsetX",
-	    shadowOffsetY: "shadowOffsetY",
-	    shadowBlur: "shadowBlur",
-	    shadowx: "shadowOffsetX",
-	    shadowy: "shadowOffsetY",
+	  shadowColor: "shadowColor",
+	  shadowOffsetX: "shadowOffsetX",
+	  shadowOffsetY: "shadowOffsetY",
+	  shadowBlur: "shadowBlur",
+	  shadowx: "shadowOffsetX",
+	  shadowy: "shadowOffsetY",
 	
-	    globalAlpha: "globalAlpha",
-	    alpha: "globalAlpha",
-	    globalCompositionOperation: "globalCompositionOperation",
-	    overlaystyle: "globalCompositionOperation"
+	  globalAlpha: "globalAlpha",
+	  alpha: "globalAlpha",
+	  globalCompositionOperation: "globalCompositionOperation",
+	  overlaystyle: "globalCompositionOperation"
 	};
 	
 	/**
@@ -3951,121 +3953,121 @@ return /******/ (function(modules) { // webpackBootstrap
 	var style = function style() {};
 	
 	style.prototype = {
-	    /**
-	     * 线条颜色，用于任意路劲绘制中线条样式的控制。
-	     * 值可以是任意十六进制颜色或者英文单词
-	     * 别名 : lineColor
-	     * @type string
-	     * @default blue
-	     */
-	    strokeStyle: "blue",
+	  /**
+	   * 线条颜色，用于任意路劲绘制中线条样式的控制。
+	   * 值可以是任意十六进制颜色或者英文单词
+	   * 别名 : lineColor
+	   * @type string
+	   * @default blue
+	   */
+	  strokeStyle: "blue",
 	
-	    /**
-	     * 填充颜色，用于任意路劲中fill方法的填充样式
-	     * 值可以是任意十六进制颜色或者英文单词
-	     * 别名 ： fillColor  color
-	     * @type string
-	     * @default #dcd5d9
-	     */
-	    fillStyle: "#dcd5d9",
+	  /**
+	   * 填充颜色，用于任意路劲中fill方法的填充样式
+	   * 值可以是任意十六进制颜色或者英文单词
+	   * 别名 ： fillColor  color
+	   * @type string
+	   * @default #dcd5d9
+	   */
+	  fillStyle: "#dcd5d9",
 	
-	    /**
-	     * 线宽。
-	     * @type number
-	     * @default 1
-	     */
-	    lineWidth: 1,
+	  /**
+	   * 线宽。
+	   * @type number
+	   * @default 1
+	   */
+	  lineWidth: 1,
 	
-	    /**
-	     * 线条两端样式. butt、round、square
-	     * @type string
-	     * @default round
-	     */
-	    lineCap: "round",
+	  /**
+	   * 线条两端样式. butt、round、square
+	   * @type string
+	   * @default round
+	   */
+	  lineCap: "round",
 	
-	    /**
-	     * bevel,miter线条相交的方式. 园交,斜交还是斜接.
-	     * @type string
-	     * @default round
-	     */
-	    lineJoin: "round",
+	  /**
+	   * bevel,miter线条相交的方式. 园交,斜交还是斜接.
+	   * @type string
+	   * @default round
+	   */
+	  lineJoin: "round",
 	
-	    /**
-	     * 文字
-	     * @type string
-	     * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
-	     */
-	    font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
+	  /**
+	   * 文字
+	   * @type string
+	   * @default bold 14px Arial, Helvetica, sans-serif, Times, serif
+	   */
+	  font: "bold 14px Arial, Helvetica, sans-serif, Times, serif",
 	
-	    /**
-	     * 文字颜色。 strokeStyle
-	     * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
-	     * @type string
-	     * @default black
-	     */
-	    textColor: "black", //文字样式。 非标准canvas属性
+	  /**
+	   * 文字颜色。 strokeStyle
+	   * 该属性不是标准的canvas样式，是ycharts为方便文字控制添加的
+	   * @type string
+	   * @default black
+	   */
+	  textColor: "black", //文字样式。 非标准canvas属性
 	
-	    /**
-	     * 文本对齐方式
-	     * @type string
-	     * @default start
-	     */
-	    textAlign: "start",
+	  /**
+	   * 文本对齐方式
+	   * @type string
+	   * @default start
+	   */
+	  textAlign: "start",
 	
-	    /**
-	     * 文本基线
-	     * @type string
-	     * @default bottom
-	     */
-	    textBaseline: "bottom",
+	  /**
+	   * 文本基线
+	   * @type string
+	   * @default bottom
+	   */
+	  textBaseline: "bottom",
 	
-	    /**
-	     * 默认阴影颜色
-	     * @type string
-	     * @default #EA9090
-	     */
-	    shadowColor: "#EA9090",
+	  /**
+	   * 默认阴影颜色
+	   * @type string
+	   * @default #EA9090
+	   */
+	  shadowColor: "#EA9090",
 	
-	    /**
-	     * 阴影X偏移
-	     * @type number
-	     * @default  shadowOffsetX
-	     */
-	    shadowOffsetX: 0,
+	  /**
+	   * 阴影X偏移
+	   * @type number
+	   * @default  shadowOffsetX
+	   */
+	  shadowOffsetX: 0,
 	
-	    /**
-	     * 阴影Y偏移
-	     * @type number
-	     * @default shadowOffsetY
-	     */
-	    shadowOffsetY: 0,
+	  /**
+	   * 阴影Y偏移
+	   * @type number
+	   * @default shadowOffsetY
+	   */
+	  shadowOffsetY: 0,
 	
-	    /**
-	     * 像素的模糊数
-	     * @type number
-	     * @default 0
-	     */
-	    shadowBlur: 0,
+	  /**
+	   * 像素的模糊数
+	   * @type number
+	   * @default 0
+	   */
+	  shadowBlur: 0,
 	
-	    /**
-	     * 透明度。  0为透明
-	     * @type number
-	     * @default 1
-	     */
-	    globalAlpha: 1,
+	  /**
+	   * 透明度。  0为透明
+	   * @type number
+	   * @default 1
+	   */
+	  globalAlpha: 1,
 	
-	    /**
-	     * 透明重叠情况
-	     * @type string
-	     * @default source-over
-	     */
-	    globalCompositionOperation: "source-over"
+	  /**
+	   * 透明重叠情况
+	   * @type string
+	   * @default source-over
+	   */
+	  globalCompositionOperation: "source-over"
 	
 	};
 	
 	exports.default = {
-	    style: style,
-	    styleMap: styleMap
+	  style: style,
+	  styleMap: styleMap
 	};
 	module.exports = exports["default"];
 
@@ -4316,7 +4318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _viewBuilder = __webpack_require__(25);
@@ -4337,28 +4339,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * */
 	exports.default = _viewBuilder2.default.baseContextViewExtend({
 	
-	    /**
-	     * 构造函数 。 在构造函数中指定该图像的中心点
-	     * @param {object} option  绘制形状的配置
-	     * @private
-	     */
-	    // Init: function (config) {
-	    // this.origin = [config.x,config.y];
-	    // },
+	  /**
+	   * 构造函数 。 在构造函数中指定该图像的中心点
+	   * @param {object} option  绘制形状的配置
+	   * @private
+	   */
+	  // Init: function (config) {
+	  // this.origin = [config.x,config.y];
+	  // },
 	
-	    type: "Circle",
+	  type: "Circle",
 	
-	    BuildPath: function BuildPath(ctx, config) {
-	        var x = parseFloat(config.x),
-	            y = parseFloat(config.y),
-	            radius = parseFloat(config.r);
-	        // ctx.moveTo(x,y+radius);
-	        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-	        /* var x = parseFloat(config.x) , y=parseFloat(config.y), r=parseFloat(config.r);
-	        ctx.moveTo(x,y);
-	        ctx.arc(0,0,r ,0, Math.PI*2,false);*/
-	        this.rect = [config.x - config.r, config.y - config.r, config.x + config.r, config.y + config.r];
-	    }
+	  BuildPath: function BuildPath(ctx, config) {
+	    var x = parseFloat(config.x),
+	        y = parseFloat(config.y),
+	        radius = parseFloat(config.r);
+	    // ctx.moveTo(x,y+radius);
+	    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+	    /* var x = parseFloat(config.x) , y=parseFloat(config.y), r=parseFloat(config.r);
+	    ctx.moveTo(x,y);
+	    ctx.arc(0,0,r ,0, Math.PI*2,false);*/
+	    this.rect = [config.x - config.r, config.y - config.r, config.x + config.r, config.y + config.r];
+	  }
 	
 	}); /**
 	     * 圆形
@@ -4468,23 +4470,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    GetContainRect: function GetContainRect() {
 	        if (!this.rect) {
 	            var i = 0,
-	                tmp;
-	            for (i = 0; i < this.config.pts.length; i++) {
-	                tmp = this.config.pts[i];
-	                if (tmp[0] < minx) {
-	                    minx = tmp[0];
-	                }
-	                if (tmp[1] < miny) {
-	                    miny = tmp[1];
-	                }
-	                if (tmp[0] > maxx) {
-	                    maxx = tmp[0];
-	                }
-	                if (tmp[1] > maxy) {
-	                    maxy = tmp[1];
-	                }
-	            }
-	            this.rect = [minx, miny, maxx, maxy];
+	                tmp = void 0;
+	            var xs = this.config.pts.every(function (pt) {
+	                return pt[0];
+	            });
+	            var ys = this.config.pts.every(function (pt) {
+	                return pt[1];
+	            });
+	            var _minx = Math.min(xs);
+	            var _miny = Math.max(ys);
+	            var _maxx = Math.max(xs);
+	            var _maxy = Math.max(ys);
+	            this.rect = [_minx, _miny, _maxx, _maxy];
 	        }
 	        return this.rect;
 	    }
@@ -4769,6 +4766,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
 	/**
 	 *动画效果模块
 	 * @module ychart/animation
@@ -4802,6 +4802,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    })(function () {
 	        setTimeout(onBegin, beginDelay);
 	    }());
+	};
+	
+	var Animation = function Animation() {
+	    _classCallCheck(this, Animation);
+	
+	    for (var _len = arguments.length, elements = Array(_len), _key = 0; _key < _len; _key++) {
+	        elements[_key] = arguments[_key];
+	    }
+	
+	    this.__elements = elements || [];
 	};
 	
 	exports.default = {

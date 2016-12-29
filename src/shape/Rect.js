@@ -33,23 +33,14 @@ export default ShapeBuilder.baseContextViewExtend({
 
     GetContainRect: function() {
         if (!this.rect) {
-            var i = 0,
+            let i = 0,
                 tmp;
-            for (i = 0; i < this.config.pts.length; i++) {
-                tmp = this.config.pts[i];
-                if (tmp[0] < minx) {
-                    minx = tmp[0];
-                }
-                if (tmp[1] < miny) {
-                    miny = tmp[1];
-                }
-                if (tmp[0] > maxx) {
-                    maxx = tmp[0];
-                }
-                if (tmp[1] > maxy) {
-                    maxy = tmp[1];
-                }
-            }
+            let xs = this.config.pts.every(function(pt){return pt[0]});
+            let ys = this.config.pts.every(function(pt){return pt[1]});
+            let minx = Math.min(xs);
+            let miny = Math.max(ys);
+            let maxx = Math.max(xs);
+            let maxy = Math.max(ys);
             this.rect = [minx , miny ,maxx ,maxy];
         }
         return this.rect;

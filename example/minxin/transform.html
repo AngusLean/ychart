@@ -25,20 +25,27 @@
 <script type="text/javascript" charset="utf-8">
     var yh = ychart.init("drawing");
     var line = new ychart.shape.Line({
-        beginpt: [0,250],
-        endpt: [300,250],
+        x0: 0,
+        y0: 10,
+        x1: 100,
+        y1: 150,
         style:{
             lineColor: "blue",
             lineWidth: 3
         }
     });
+var text = new ychart.shape.YText({
+    text: "测试文字",
+    dx: 100,
+    dy: 100
+})
+    yh.add(text);
     yh.add(line);
     yh.BrushAll();
 
 
     function Zoom(){
         var per = parseFloat($("#percent").val());
-        <!-- line.origin=[150,-250] -->
         line.zoom(per,per);
         yh.update();
     }

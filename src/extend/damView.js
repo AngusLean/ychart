@@ -2,7 +2,7 @@
 //自定义的大坝水位图示
 
 (function (global) {
-    var YH = global.ychart;
+    var ychart = global.ychart;
     function merge(target, source, overwrite) {
         function mergeItem(target, source, key, overwrite) {
             if (source.hasOwnProperty(key) && !(source[key] == null)) {
@@ -117,12 +117,12 @@
         var config = merge(dam,damModule,false);
 
         var size = damSizeAdapter(config,containerWh,containerht);
-        var damView = new YH.Group({
+        var damView = new ychart.Group({
             scale: size.globalScale
         });
         var damgroup = generatorDamGroup(size.damBeginPt,config),
         wlgroup = generatorWaterLevel(size.wlBeginPt ,config ,size.wlWidth);
-        damView.addChild(wlgroup).addChild(damgroup);
+        damView.add(wlgroup).add(damgroup);
         return damView;
     };
     global.damview = generatorDam;
@@ -166,7 +166,7 @@
      * 生成大坝图
      */
     function generatorDamGroup(beginpt ,damModule) {
-        var damGroup= new YH.Group({
+        var damGroup= new ychart.Group({
             position:beginpt
         });
         var damPts = [[0,0]], pt;
@@ -197,8 +197,8 @@
         }
 
         //大坝
-        var damShape = new YH.shape.Rect({
-            allpt: damPts,
+        var damShape = new ychart.shape.Rect({
+            pts: damPts,
             draggable: false,
             style: {
                 lineColor: "red",
@@ -209,7 +209,7 @@
             },
             text: damModule.name
         });
-        damGroup.addChild(damShape);
+        damGroup.add(damShape);
         if (damModule.CDREWALL) {
 
             var cdrect = [],damrect=damPts;
@@ -255,8 +255,8 @@
             }
             cdrect.push(pt1);
             //绘制心墙
-            var heartShape = new YH.shape.Rect({
-                allpt: cdrect,
+            var heartShape = new ychart.shape.Rect({
+                pts: cdrect,
                 draggable: false,
                 style: {
                     fillStyle: "#8B7E6C",
@@ -264,7 +264,7 @@
                     brushType: "fill"
                 }
             });
-            damGroup.addChild(heartShape);
+            damGroup.add(heartShape);
         }
         return damGroup;
     }
@@ -287,7 +287,7 @@
 
     function generatorWaterLevel(begin ,damModule , maxwaterwidth) {
 
-        var wlGroup = new YH.Group({
+        var wlGroup = new ychart.Group({
             position: begin
         });
         if (damModule.HYCH) {
@@ -309,9 +309,9 @@
             crtwl.push([beginpt[0] + maxwaterwidth, beginpt[1] + crtz]);
             crtwl.push([beginpt[0] + maxwaterwidth, beginpt[1]]);
             //当前水对应的海水背景
-            wlGroup.addChild(new YH.shape.Rect({
-                allpt: crtwl,
-                draggable: false,
+            wlGroup.add(new ychart.shape.Rect({
+                pts: crtwl,
+                //draggable: false,
                 style: {
                     fillColor: '#1C6BA0',
                     brushType: "fill",
@@ -338,8 +338,8 @@
             waterruler.push([beginpt[0] + rulerwidth, [beginpt[1] +damModule.MAXDMHG]]);
             waterruler.push([beginpt[0] + rulerwidth, beginpt[1]]);
             //水尺本身
-            wlGroup.addChild(new YH.shape.Rect({
-                allpt: waterruler,
+            wlGroup.add(new ychart.shape.Rect({
+                pts: waterruler,
                 draggable: false,
                 style: {
                     fillColor: "#4B86AD",
@@ -353,16 +353,18 @@
                 y = beginpt[1] + eachlen * i;
                 //处理水位标识和分段之前的关系
                 tt = DMBTEL + eachlen * (i + 1);
-                wlGroup.addChild(new YH.shape.Line({
-                    beginpt: [beginpt[0], y],
-                    endpt: [beginpt[0] + rulerwidth, y],
+                wlGroup.add(new ychart.shape.Line({
+                    x0: beginpt[0],
+                    y0: y,
+                    x1: beginpt[0]+rulerwidth,
+                    y1: y,
                     draggable: false,
                     style: {
                         lineColor: "white",
                         brushType: "stroke"
                     }
                 }));
-                wlGroup.addChild(new YH.shape.YText({
+                wlGroup.add(new ychart.shape.YText({
                     beginpt: [beginpt[0] - 25, y + 5],
                     text: tt,
                     draggable: false,
@@ -374,15 +376,15 @@
 
             // 水位标识
             var nrpllvtext = "正常蓄水位" + hych.NRPLLV ;
-            wlGroup.addChild(buildWaterLevelLine({
+            wlGroup.add(buildWaterLevelLine({
                 beginpt: [beginpt[0] +rulerwidth + 2, beginpt[1] + hych.NRPLLV - DMBTEL],
                 endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.NRPLLV - DMBTEL],
                 text: nrpllvtext,
                 leftMargin: 10
             }));
-            var nrptextrect = YH.textutil.getTextRect(nrpllvtext ,0,0);
+            var nrptextrect = ychart.textutil.getTextRect(nrpllvtext ,0,0);
 
-            wlGroup.addChild(buildWaterLevelLine({
+            wlGroup.add(buildWaterLevelLine({
                 beginpt: [beginpt[0] + rulerwidth + 2, beginpt[1] + hych.DDWL - DMBTEL],
                 endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.DDWL - DMBTEL],
                 text: "死水位" + hych.DDWL,
@@ -393,7 +395,7 @@
             if(nrptextrect.width < maxwaterwidth/2){
                 zx += nrptextrect.width+30;
             }
-            wlGroup.addChild(buildWaterLevelLine({
+            wlGroup.add(buildWaterLevelLine({
                 beginpt: [zx, beginpt[1] + hych.Z - DMBTEL],
                 endpt: [beginpt[0] + rulerwidth + 120, beginpt[1] + hych.Z - DMBTEL],
                 text: "当前水位" + hych.Z ,
@@ -403,9 +405,9 @@
             return wlGroup;
         }
         function buildWaterLevelLine(param ,noline) {
-            var wlline = new YH.Group();
+            var wlline = new ychart.Group();
             if(!noline){
-                wlline.addChild(new YH.shape.Line({
+                wlline.add(new ychart.shape.Line({
                     beginpt: param.beginpt,
                     endpt: param.endpt,
                     splitnum: 20,
@@ -415,10 +417,10 @@
                     }
                 }));
             }
-            wlline.addChild(gereratorWlTag([param.beginpt[0] + param.leftMargin, param.beginpt[1] + GlobalConfig.triangleHeight],
+            wlline.add(gereratorWlTag([param.beginpt[0] + param.leftMargin, param.beginpt[1] + GlobalConfig.triangleHeight],
                                            GlobalConfig.triangleWidth ,GlobalConfig.triangleHeight));
             //水位标识中的文字
-            wlline.addChild(new YH.shape.YText({
+            wlline.add(new ychart.shape.YText({
                 beginpt: [param.beginpt[0] + param.leftMargin + GlobalConfig.triangleWidth + 3, param.beginpt[1]],
                 text: param.text,
                 draggable: false,
@@ -433,8 +435,8 @@
 
         //生成水位标识
         function gereratorWlTag(toplefttp ,width,height) {
-            var wlTag = new YH.Group();
-            wlTag.addChild(new YH.shape.Triangle({
+            var wlTag = new ychart.Group();
+            wlTag.add(new ychart.shape.Triangle({
                 beginpt:toplefttp,
                 width:width,
                 height:height,
@@ -445,7 +447,7 @@
                 }
             }));
             for (var i = 0; i < 2; i++) {
-                wlTag.addChild(new YH.shape.Line({
+                wlTag.add(new ychart.shape.Line({
                     beginpt: [toplefttp[0] + i * GlobalConfig.scalelinepd, toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)],
                     endpt: [toplefttp[0] + toplefttp + i * GlobalConfig.scalelinepd + (3 - i) * GlobalConfig.scalelinewh,
                     toplefttp[1] - GlobalConfig.scalelinetp * (i + 1)

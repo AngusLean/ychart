@@ -40,9 +40,10 @@ var animate = function (option) {
 };
 
 class Animation{
-    constructor(..elements){
+    constructor(...elements){
         this.__elements = elements || [];
     }
+
 }
 
 
