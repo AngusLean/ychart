@@ -285,6 +285,11 @@ class ContextView extends View {
                 y = crect[1];
                 textAlign = "center";
                 break;
+            case "top-center":
+                textAlign = "center";
+                y = crect[1];
+                break;
+
             case "top-left":
             case "left-top":
                 x = crect[0];
@@ -304,12 +309,6 @@ class ContextView extends View {
             case "bottom-left":
                 x = crect[0];
                 y = crect[3];
-                break;
-            case "top-center":
-                y = crect[3];
-                textAlign = "center";
-                textBaseline = "top";
-                // x -= textw/2;
                 break;
             case "top-right":
             case "right-top":

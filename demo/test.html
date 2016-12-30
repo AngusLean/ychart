@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas测试</title>
+<script type="text/javascript" src="../require/require.js"></script>
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+</div>
+<script>
+        yh = ycharts.init("drawing");
+        var line1 =new Line({
+            beginpt: [0,0],
+            endpt: [15,150],
+            style:{
+                lineColor: "blue",
+                lineWidth: 5
+            }
+        });
+        var line2 =new Line({
+            beginpt: [50,0],
+            endpt: [150,15],
+            style:{
+                lineColor: "red",
+                lineWidth: 8
+            }
+        });
+        var rect = new Rect({
+            allpt: [[100,100],[150,100],[300,150],[500,400]],
+            text: "I'm text",
+            style: {
+                fillColor: 'blue',
+                lineColor: 'red'
+            }
+        });
+        var tx = new Ytext({
+            text: "My name is 中文",
+            beginpt: [80,90]
+        });
+        var gp = new Group({
+            style: {
+                lineColor: "blue"
+            }
+        });
+        var gp1 = new Group({
+            position: [190,180]
+        });
+//        gp.addChild(line1);
+//        gp.addChild(line2);
+//        gp.addChild(tx);
+//        gp1.addChild(gp);
+
+        yh.add(line1);
+        yh.add(line2);
+        <!-- yh.add(rect); -->
+        yh.BrushAll();
+</script>
+<script>
+
+</script>
+</body>
+</html>

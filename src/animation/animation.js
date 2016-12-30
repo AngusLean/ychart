@@ -39,6 +39,14 @@ var animate = function (option) {
     }());
 };
 
+class Animation{
+    constructor(...elements){
+        this.__elements = elements || [];
+    }
+
+}
+
+
 export default {
     animate: animate
 };
