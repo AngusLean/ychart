@@ -1,29 +1,62 @@
+mocha.ui('tdd');
+mocha.setup("bdd");
+var assert = chai.assert,
+    contontainer = document.getElementById("container"),
+
+    origAssertEqual = assert.equal,
+    origAssert = assert,
+    origNotEqual = assert.notEqual,
+    assertionCount = 0,
+    assertions = document.createElement('em');
+
+
+
+function init() {
+  // assert extenders so that we can count assertions
+  assert = function() {
+    origAssert.apply(this, arguments);
+    assertions.innerHTML = ++assertionCount;
+  };
+  assert.equal = function() {
+    origAssertEqual.apply(this, arguments);
+    assertions.innerHTML = ++assertionCount;
+  };
+  assert.notEqual = function() {
+    origNotEqual.apply(this, arguments);
+    assertions.innerHTML = ++assertionCount;
+  };
+
+  window.onload = function() {
+    var mochaStats = document.getElementById('mocha-stats');
+
+    if (mochaStats) {
+      var li = document.createElement('li');
+      var anchor = document.createElement('a');
+
+      anchor.href = '#';
+      anchor.innerHTML = 'assertions:';
+      assertions.innerHTML = 0;
+
+      li.appendChild(anchor);
+      li.appendChild(assertions);
+      mochaStats.appendChild(li);
+    }
+  };
+}
 
 var uid = 1000;
-var parent = document.getElementById("container");
-function generateContainer(width,height,visible){
+function createYchartContainer() {
     var div = document.createElement("div");
-    div.style = "width: "+width+"px ; height:"+height+"px; visibility:"+visible+";position:relative;"
-    var id = "testContainer-"+uid++;
+    var id = "ychartcontainer-"+uid++;
+    div.style = "width: 900px; height: 300px;position: relative;";
     div.setAttribute("id",id);
-    parent.appendChild(div);
+    contontainer.appendChild(div);
 
     return id;
 }
 
-var globalInstanceCount = 0;
-function generateHiddeYchart(){
-    var id = generateContainer(10,10,"hidden");
-    var yh = ychart.init(id);
-    return yh;
-}
 
-function generateRandomElement(){
-    var line = new ychart.shape.Line({
-        x0: 0,
-        y0: 0,
-        x1: 10,
-        y1: 10
-    });
-    return line;
-}
+
+
+
+init();
