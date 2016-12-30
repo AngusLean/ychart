@@ -63,6 +63,7 @@
     "jasmine-core": "^2.4.1",
     "jsdoc": "3.4.0",
     "docdash": "0.4.0",
+
     "karma": "^0.13.8",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.0",
@@ -73,6 +74,10 @@
     "karma-sauce-launcher": "^0.3.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
+
+    "chai": "1.9.2",
+    "mocha": "1.21.4",
+
     "minami": "^1.1.1",
     "object-assign": "^4.0.1",
     "jsdoc-webpack-plugin": "^0.0.1",

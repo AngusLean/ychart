@@ -36,9 +36,17 @@
             textColor: "black"
         }
     });
-
-    yh.add(imgs);
-    yh.BrushAll();
+    var imgs1 =new Rect({
+        pts:[[50,50],[50,100],[100,400],[100,200]],
+        text: '文字',
+        textpos: "top-center",
+        style:{
+            fillColor:"red",
+            textColor: "black"
+        }
+    });
+//    yh.add(imgs);
+//    yh.BrushAll();
   
     imgs.on("click",function(){
         console.log("click img");

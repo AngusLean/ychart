@@ -4,7 +4,7 @@ webpackConfig.devtool = 'inline-source-map'
 
 // shared config for all unit tests
 module.exports = {
-  frameworks: ['jasmine'],
+  frameworks: ['mocha', 'chai'],
   files: [
     '../test/unit/lib/jquery.js',
     '../test/unit/specs/index.js'

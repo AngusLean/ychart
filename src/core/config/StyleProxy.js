@@ -57,5 +57,6 @@ StyleProxy.prototype.getStyle = function () {
     return this.style;
 };
 
+
 export default StyleProxy;
 
