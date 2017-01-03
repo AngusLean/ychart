@@ -153,7 +153,7 @@ var DamHeart = ychart.extendView({
             return;
         }
     }
-})
+});
 
 var WaterLevel = ychart.extendView({
     type: "waterLevel",
@@ -175,4 +175,4 @@ var WaterLevel = ychart.extendView({
         ctx.lineTo(rectW,0);
         ctx.closePath();
     }
-})
+});
