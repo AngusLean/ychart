@@ -71,12 +71,9 @@ Painter.prototype.updateLayerState = function(shapeList) {
     var i, layer, zlevel, shape;
     for (i = 0; i < shapeList.length; i++) {
         shape = shapeList[i];
-        //对于每个形状来说要到具体绘制的时候才知道所属的ychart实例，所以在这里添加
-        !shape.__yh && (shape.__yh = this.__yh);
 
         zlevel = shape.zLevel;
         layer = this.getLayer(zlevel);
-        //已经设置过
 
         //如果图像为脏，则需要清除当前画布
         !layer.__dirty && (layer.__dirty = shape.__dirty);

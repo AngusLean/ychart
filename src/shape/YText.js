@@ -17,9 +17,6 @@ import {DEFAULT_CONFIG} from "../core/config/config";
  * @constructor YText
  */
 export default ShapeBuilder.baseContextViewExtend({
-    defaultConfig: {
-        coordinate: 1
-    },
 
     type: "Text",
 
@@ -31,8 +28,8 @@ export default ShapeBuilder.baseContextViewExtend({
         if (!config.text) {
             return;
         }
-        var x = config.dx;
-        var y = config.dy;
+        var x = config.dx || config.x;
+        var y = config.dy || config.y;
 
         var st = this.configProxy.getStyle();
         var textAlign = st.textAlign , textBaseline = st.textBaseline;

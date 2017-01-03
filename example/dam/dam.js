@@ -158,6 +158,17 @@ var DamHeart = ychart.extendView({
 var WaterLevel = ychart.extendView({
     type: "waterLevel",
 
+    defaultConfig: {
+        style: {
+            fillColor: "#1C6BA0",
+            brushType: "fill",
+            gradient: {
+                beginColor: "#83ADF5",
+                endColor: "#1C6BA0"
+            }
+        }
+    },
+
     BuildPath: function(ctx , config){
         if(!config.HYCH){
             error("当前水库没有指定水位数据");
@@ -174,5 +185,41 @@ var WaterLevel = ychart.extendView({
         ctx.lineTo(rectW,rectH);
         ctx.lineTo(rectW,0);
         ctx.closePath();
+    }
+});
+
+/**
+ * 水尺
+ */
+var TideStaff = ychart.extendView({
+    type: "TideStaff",
+
+    BuildPath: function(ctx , config){
+        var dmHeight = config.MAXDMHG;
+        //水尺宽度
+        var tidestaffW = 30;
+        var tidestaffLeftW = tidestaffW  * 2 /3;
+        // var tidestaffRightW =tidestaffW * 1/3;
+        //不同长度的水尺宽度
+        var s_scale = 5 , l_scale = 8;
+        //水尺左边的矩形
+        var leftpts = [ [0,0], [0,dmHeight],[tidestaffLeftW,dmHeight],[tidestaffLeftW,0] ];
+        ctx.moveTo(0,0);
+        leftpts.forEach(function(item){
+            ctx.lineTo(item[0],item[1]);
+        })
+        ctx.lineTo(0,0);
+
+        //水尺右边矩形
+        var rightpts = [[tidestaffW,dmHeight],[tidestaffW ,0] ];
+        ctx.moveTo(tidestaffLeftW,dmHeight);
+        rightpts.forEach(function(item){
+            ctx.lineTo(item[0],item[1]);
+        })
+        ctx.lineTo(tidestaffLeftW ,0);
+
+
+        //水尺左边的水位标识
+
     }
 });

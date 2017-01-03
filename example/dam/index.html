@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>dam测试</title>
+        <script src="../../dist/ychart.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body>
+        <div style="width: 800px; height: 500px; margin: 0 auto ;border: solid 1px red " id="drawing"></div>
+
+
+
+        <script type="text/javascript" charset="utf-8">
+            var yh = ychart.init("drawing");
+            var gp = new ychart.Group({
+                scale: [2,2],
+                position: [100,100]
+            });
+            var pts = [
+                [0,20,10,20],
+                [0,40,10,40],
+                [0,60,10,60]
+            ]
+            pts.forEach(function(pt){
+                gp.add(new ychart.shape.Line({
+                    x0: pt[0],
+                    y0: pt[1],
+                    x1: pt[2],
+                    y1: pt[3],
+                    style:{
+                        lineColor: "red"
+                    }
+                }));
+                gp.add(new ychart.shape.YText({
+                    text: "文字",
+                    x: pt[0],
+                    y: pt[1],
+                    style:{
+                        textColor: "black"
+                    }
+                }));
+            })
+            yh.add(gp);
+            yh.BrushAll();
+        </script>
+    </body>
+</html>

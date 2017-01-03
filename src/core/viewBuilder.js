@@ -48,7 +48,7 @@ var baseContextViewExtend = function (defaults) {
             this.__yh = config.yh;
             if(DEFAULT_CONFIG.coordinateSystem == "Cartesian")
                 //设置笛卡尔坐标系
-                this._setDefaultTrasformToCartesian(config.height);
+                this._setDefaultTrasformToCartesian(config.yh.getHeight());
         }
 
         /* eslint-disable*/
@@ -66,6 +66,7 @@ var baseContextViewExtend = function (defaults) {
          * @param scale  缩放及方向变换
          */
         _setDefaultTrasformToCartesian(height){
+            return
             this.position = [0 , height];
             this.scale = [1,-1];
         }

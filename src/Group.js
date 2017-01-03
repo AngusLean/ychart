@@ -49,7 +49,11 @@ class Group extends Element{
     }
 
     setDefaultConfig(config){
-
+        this.children.forEach(function(item){
+            item.setDefaultConfig({
+                yh: config.yh
+            })
+        })
     }
 }
 

@@ -39,9 +39,10 @@ Storage.prototype.addEle = function (element) {
             return;
         }
     }
+        //对于每个形状来说要到具体绘制的时候才知道所属的ychart实例，所以在这里添加
+        // !shape.__yh && (shape.__yh = this.__yh);
     element.setDefaultConfig({
-        yh:  this._yh,
-        height: this._yh.getHeight()
+        yh:  this._yh
     });
 
     //group当成一个元素便于管理
@@ -67,7 +68,6 @@ Storage.prototype.getDisplayableShapeList = function () {
             _getList(root.children);
         }
     };
-
     _getList(this._roots);
 
     return list;
