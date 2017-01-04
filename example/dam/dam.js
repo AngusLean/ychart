@@ -198,10 +198,13 @@ var TideStaff = ychart.extendView({
         var dmHeight = config.MAXDMHG;
         //水尺宽度
         var tidestaffW = 30;
+        //水尺分为左右两部分
         var tidestaffLeftW = tidestaffW  * 2 /3;
         // var tidestaffRightW =tidestaffW * 1/3;
         //不同长度的水尺宽度
-        var s_scale = 5 , l_scale = 8;
+        var s_tidestaffLen = 5 , l_tidestaffLen = 8;
+        //水尺的长短横线的间距
+        var tidestaffSAndSLen = 5;
         //水尺左边的矩形
         var leftpts = [ [0,0], [0,dmHeight],[tidestaffLeftW,dmHeight],[tidestaffLeftW,0] ];
         ctx.moveTo(0,0);
@@ -219,7 +222,25 @@ var TideStaff = ychart.extendView({
         ctx.lineTo(tidestaffLeftW ,0);
 
 
-        //水尺左边的水位标识
+        //水尺左边边的水位标识
+        //长水尺数量
+        var l_tidestaffNum = parseInt(dmHeight/tidestaffSAndSLen);
+        //短水尺数量
+        var s+tidestaffNum = DamHeart - l_tidestaffNum;
+        //长水尺的所有点
+        var l_tidestaffpts = [];
+        //长水尺的开始位置
+        let l_tidestaffBegin = tidestaffLeftW-l_tidestaffLen;
+        for(let i=0 ;i<l_tidestaffNum;i++){
+            l_tidestaffpts.push([l_tidestaffBegin,tidestaffSAndSLen*i])
+        }
+        //短水尺的所有点
+        var s_tidestaffpts = [];
+        //短水尺的开始位置
+        let s_tidestaffBegin = tidestaffLeftW-s_tidestaffLen;
+        for(let i=1 ;i<l_tidestaffNum;i++){
+            s_tidestaffpts.push([s_tidestaffBegin,tidestaffSAndSLen*i])
+        }
 
     }
 });
