@@ -218,8 +218,6 @@ var TideStaff = ychart.extendView({
         })
         ctx.lineTo(tidestaffLeftW ,0);
 
-
         //水尺左边的水位标识
-
     }
 });
