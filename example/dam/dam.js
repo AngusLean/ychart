@@ -71,13 +71,13 @@ var baseDamEntity = {
 
 var warn = function(text){
     console.warn(text);
-}
+};
 var error = function(text){
     console.error(text);
-}
+};
 var isNum = function(dt){
     return !isNaN(dt);
-}
+};
 
 var Dam = ychart.extendView({
     type: "Dam",
@@ -226,7 +226,7 @@ var TideStaff = ychart.extendView({
         //长水尺数量
         var l_tidestaffNum = parseInt(dmHeight/tidestaffSAndSLen);
         //短水尺数量
-        var s+tidestaffNum = DamHeart - l_tidestaffNum;
+        var s_tidestaffNum = DamHeart - l_tidestaffNum;
         //长水尺的所有点
         var l_tidestaffpts = [];
         //长水尺的开始位置
@@ -239,8 +239,9 @@ var TideStaff = ychart.extendView({
         //短水尺的开始位置
         let s_tidestaffBegin = tidestaffLeftW-s_tidestaffLen;
         for(let i=1 ;i<l_tidestaffNum;i++){
-            s_tidestaffpts.push([s_tidestaffBegin,tidestaffSAndSLen*i])
+            s_tidestaffpts.push([s_tidestaffBegin,i])
         }
+
 
     }
 });

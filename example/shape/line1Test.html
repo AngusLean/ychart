@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Line测试</title>
+    <script type="text/javascript" src="../../dist/ychart.js"></script>
+
+</head>
+<body>
+<div style="width :800px; margin: 0 auto;">
+    <div id="drawing" style="border:blue solid 1px ;width :800px;height:400px "> </div>
+    <button id="moveBtn" onclick="move()">移动</button>
+</div>
+
+<script>
+
+    var ycharts = ychart,Line = ychart.shape.Line;
+    yh = ycharts.init("drawing");
+    var line1 =new Line({
+        x0: 0,
+        y0: 50,
+        x1: 150,
+        y1: 50,
+        text: "直线文字",
+        textpos: "top-left",
+        style:{
+            lineColor: "blue",
+            lineWidth: 5
+        }
+    });
+
+
+
+    yh.add(line1);
+
+    yh.BrushAll();
+    function move() {
+        console.log("元素移动了")
+        line1.drift(10,10);
+        line1.zoom(1.5,1.5);
+        yh.BrushAll();
+
+    }
+
+line1.on("click",function(event, config){
+    console.log("line1.click: "+event.targetEle.id)
+})
+    </script>
+</body>
+</html>
