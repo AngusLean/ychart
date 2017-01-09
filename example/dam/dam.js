@@ -57,8 +57,7 @@ var baseDamEntity = {
         DDWL: 0,
         //正常蓄水位
         NRPLLV: 0,
-        //汛限水位
-        FLSSCNWL: 0,
+        //汛限水位 FLSSCNWL: 0,
         //设计洪水位
         DSFLLV: 0,
         //校核洪水位
@@ -81,6 +80,13 @@ var isNum = function(dt){
 
 var Dam = ychart.extendView({
     type: "Dam",
+
+    defaultConfig: {
+        style:{
+            brushType: "both"
+        }
+    },
+
     BuildPath: function(ctx, config) {
         var dmHeight = config.MAXDMHG;
         if(!isNum(dmHeight)){
@@ -101,11 +107,15 @@ var Dam = ychart.extendView({
             warn("上游多坡面坝尚未实现");
             return;
         }
-
+        console.log("坝顶宽度 "+config.DMTPWD)
+        console.log(damLeftW+" ; "+(damLeftW+config.DMTPWD ))
         //坝右侧坡面宽度
         var damRightW ;
+        //坝左上角
+        allpts.push([damLeftW , dmHeight]);
+        var damRight = damLeftW+config.DMTPWD;
         //坝右上角点
-        allpts.push([damLeftW+config.DMTPWD , dmHeight]);
+        allpts.push([damRight , dmHeight]);
         //坝右下角
         if(isNum(config.DWDMSL)){
             damRightW = dmHeight/config.DWDMSL;
@@ -114,6 +124,7 @@ var Dam = ychart.extendView({
             warn("下游多坡面坝尚未实现");
             return;
         }
+        console.log(allpts)
         //绘制大坝
         ctx.moveTo(0,0);
         allpts.forEach(function(item){
@@ -245,3 +256,14 @@ var TideStaff = ychart.extendView({
 
     }
 });
+
+function drawWaterLevel(options){
+    if(!options.MAXDMHG){
+        alert("没有指定坝高");
+        return;
+    }
+    yh = ychart.init(options.id);
+    yh.add(new Dam(options));
+    yh.BrushAll();
+}
+

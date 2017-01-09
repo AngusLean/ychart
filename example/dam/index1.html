@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" charset="utf-8" src="../../dist/ychart.js"></script>
+    <script type="text/javascript" charset="utf-8"  src="dam.js"></script>
+</head>
+<body>
+    <div style="width: 800px; height: 500px; margin: 0 auto ;border: solid 1px red " id="drawing"></div>
+
+    <script>
+
+var testData = {
+    name: "",
+    /**
+     * 按结构形式分为 重力坝/土石坝/拱坝/支墩坝
+     */
+    DMTP: '土石坝',
+
+    //最大坝高
+    MAXDMHG: 44.22,
+    //坝顶宽度
+    DMTPWD: 6,
+    //坝底宽度. 基本上用不到。 使用坝顶和坡度可以计算
+    // DMBTWD : 0,
+    //坝顶长度
+    DMTPLN: 0,
+    //坝顶高程
+    DMTPEL: 514.5,
+
+    //上游坝坡
+    UPDMSL: 2,
+    //下游坝坡
+    DWDMSL: 1.8,
+
+    //心墙
+    CDREWALL: {
+        //心墙材料
+        MT: "沥青混凝土",
+        //心墙宽度
+        WIDTH: 0,
+        //心墙上游坡度
+        UPSL: 1,
+        //心墙下游坡度
+        DWSL: 1
+    },
+
+    //水位特征值
+    HYCH: {
+        //死水位
+        DDWL: 498,
+        //正常蓄水位
+        NRPLLV: 513,
+        //汛限水位
+        FLSSCNWL: 513.20,
+        //设计洪水位
+        DSFLLV: 513.08,
+        //校核洪水位
+        CHFLLV: 513.52,
+
+        //当前水位
+        Z: 513
+    }
+}
+testData.id = "drawing";
+drawWaterLevel(testData);
+
+    </script>
+</body>
+</html>
