@@ -75,7 +75,7 @@ var error = function(text){
     console.error(text);
 };
 var isNum = function(dt){
-    return !isNaN(dt);
+    return typeof dt === "number";
 };
 
 var Dam = ychart.extendView({
@@ -107,26 +107,21 @@ var Dam = ychart.extendView({
             warn("上游多坡面坝尚未实现");
             return;
         }
-        console.log("坝顶宽度 "+config.DMTPWD)
-        console.log(damLeftW+" ; "+(damLeftW+config.DMTPWD ))
         //坝右侧坡面宽度
         var damRightW ;
-        //坝左上角
-        allpts.push([damLeftW , dmHeight]);
         var damRight = damLeftW+config.DMTPWD;
         //坝右上角点
         allpts.push([damRight , dmHeight]);
         //坝右下角
         if(isNum(config.DWDMSL)){
             damRightW = dmHeight/config.DWDMSL;
-            allpts.push([damLeftW+config.DMTPWD+damRightW, dmHeight]);
+            allpts.push([damLeftW+config.DMTPWD+damRightW, 0]);
         }else{
             warn("下游多坡面坝尚未实现");
             return;
         }
-        console.log(allpts)
+        allpts.push([0,0])
         //绘制大坝
-        ctx.moveTo(0,0);
         allpts.forEach(function(item){
             ctx.lineTo(item[0],item[1]);
         });
@@ -134,6 +129,12 @@ var Dam = ychart.extendView({
 });
 var DamHeart = ychart.extendView({
     type: "damHeart",
+
+    defaultConfig: {
+        style:{
+            brushType: "both"
+        }
+    },
 
     BuildPath: function(ctx, config){
         if(!config.CDREWALL){
@@ -146,7 +147,7 @@ var DamHeart = ychart.extendView({
 
         var damHeartLeftW;
         if(isNum(CDREWALL.UPSL)){
-            damHeartLeftW = dmHeight / CDREWALL.UPSL;
+            damHeartLeftW = dmHeight * CDREWALL.UPSL;
             pts.push([damHeartLeftW,dmHeight]);
         }else{
             warn("心墙上游坝坡多折线尚未实现");
@@ -155,14 +156,17 @@ var DamHeart = ychart.extendView({
         //心墙右上角
         pts.push([damHeartLeftW+CDREWALL.WIDTH , dmHeight]);
         //心墙右下角
-        var damHeartRightW;
-        if(isNum(CDREWALL.DMSL)){
-            damHeartLeftW = dmHeight / CDREWALL.DMSL;
-            pts.push([damHeartLeftW+CDREWALL.WIDTH+damHeartRightW , 0]);
+        if(isNum(CDREWALL.DWSL)){
+            let damHeartRightW = dmHeight * CDREWALL.DWSL;
+            let right =damHeartLeftW+CDREWALL.WIDTH+damHeartRightW ;
+            pts.push([right, 0]);
         }else{
-            warn("心墙上游坝坡多折线尚未实现");
+            warn("心墙下游坝坡多折线尚未实现");
             return;
         }
+        pts.forEach(function(item){
+            ctx.lineTo(item[0],item[1]);
+        })
     }
 });
 
@@ -171,12 +175,12 @@ var WaterLevel = ychart.extendView({
 
     defaultConfig: {
         style: {
-            fillColor: "#1C6BA0",
             brushType: "fill",
+            /* fillColor: "#1C6BA0",
             gradient: {
                 beginColor: "#83ADF5",
                 endColor: "#1C6BA0"
-            }
+            } */
         }
     },
 
@@ -185,12 +189,12 @@ var WaterLevel = ychart.extendView({
             error("当前水库没有指定水位数据");
             return;
         }
-        var rectH = config.Z || config.NRPLLV;
+        var rectH = config.HYCH.Z || config.HYCH.NRPLLV;
         if(!isNum(rectH)){
             error("既没有指定正常蓄水位也没有指定实时水位");
             return;
         }
-        var rectW = config.with || ctx.width;
+        var rectW = config.width || ctx.width;
         ctx.moveTo(0,0);
         ctx.lineTo(0,rectH);
         ctx.lineTo(rectW,rectH);
@@ -204,6 +208,12 @@ var WaterLevel = ychart.extendView({
  */
 var TideStaff = ychart.extendView({
     type: "TideStaff",
+
+    defaultConfig: {
+        style:{
+            brushType: "stroke"
+        }
+    },
 
     BuildPath: function(ctx , config){
         var dmHeight = config.MAXDMHG;
@@ -252,7 +262,9 @@ var TideStaff = ychart.extendView({
         for(let i=1 ;i<l_tidestaffNum;i++){
             s_tidestaffpts.push([s_tidestaffBegin,i])
         }
-
+        l_tidestaffpts.forEach(function(item){
+            ctx.moveTo(item[0],item[1]);
+        })
 
     }
 });
@@ -262,8 +274,34 @@ function drawWaterLevel(options){
         alert("没有指定坝高");
         return;
     }
+    console.log(options);
     yh = ychart.init(options.id);
-    yh.add(new Dam(options));
+
+    //大坝group
+    var damGp = new ychart.Group({
+
+    })
+    damGp.add(new Dam(options));
+
+    //心墙group
+    var heartGp = new ychart.Group({
+        position: [100,0]
+    })
+    heartGp.add(new DamHeart(options));
+
+    //水位group
+    var wlGp = new ychart.Group({})
+    wlGp.add(new WaterLevel(options));
+
+    var tidestaffGp = new ychart.Group({
+        position: [100,10]
+    })
+    tidestaffGp.add(new TideStaff(options))
+
+    yh.add(tidestaffGp)
+    // yh.add(wlGp);
+    // yh.add(damGp);
+    // yh.add(heartGp);
     yh.BrushAll();
 }
 

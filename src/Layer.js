@@ -57,6 +57,9 @@ class Layer {
         //当前画布由于包含的图形有变化需要清除后重新绘制
         this.__dirty = false;
 
+        this.position = [0,this.layerH];
+        this.scale = [1,-1]
+
         Transform.call(this);
     }
 

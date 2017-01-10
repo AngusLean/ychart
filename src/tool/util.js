@@ -140,4 +140,5 @@ export function isArr(obj) {
 }
 
 export var isFunc = isType("Function"),
-    isObj = isType("Object");
+    isObj = isType("Object"),
+    isNum = isType("Number");

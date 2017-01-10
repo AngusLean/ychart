@@ -87,6 +87,7 @@ Painter.prototype.updateLayerState = function(shapeList) {
  * @param layer {module:ychart/layer} 绘图层
  */
 Painter.prototype.preProcessShapeInLayer = function(shape, layer) {
+    layer.updateTransform();
     var _preProcessShapeInLayer = function(_shape) {
         if (_shape.parent == null) {
             _shape.parent = layer;
