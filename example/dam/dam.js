@@ -102,7 +102,7 @@ var Dam = ychart.extendView({
         //坝左上角点
         if(isNum(config.UPDMSL)){
             damLeftW = dmHeight/config.UPDMSL;
-           allpts.push([damLeftW, dmHeight]);
+            allpts.push([damLeftW, dmHeight]);
         }else{
             warn("上游多坡面坝尚未实现");
             return;
@@ -176,8 +176,8 @@ var WaterLevel = ychart.extendView({
     defaultConfig: {
         style: {
             brushType: "fill",
-            /* fillColor: "#1C6BA0",
-            gradient: {
+            fillColor: "#1C6BA0",
+            /* gradient: {
                 beginColor: "#83ADF5",
                 endColor: "#1C6BA0"
             } */
@@ -225,7 +225,7 @@ var TideStaff = ychart.extendView({
         //不同长度的水尺宽度
         var s_tidestaffLen = 5 , l_tidestaffLen = 8;
         //水尺的长短横线的间距
-        var tidestaffSAndSLen = 5;
+        var tidestaffSAndSLen = 10;
         //水尺左边的矩形
         var leftpts = [ [0,0], [0,dmHeight],[tidestaffLeftW,dmHeight],[tidestaffLeftW,0] ];
         ctx.moveTo(0,0);
@@ -252,56 +252,194 @@ var TideStaff = ychart.extendView({
         var l_tidestaffpts = [];
         //长水尺的开始位置
         let l_tidestaffBegin = tidestaffLeftW-l_tidestaffLen;
-        for(let i=0 ;i<l_tidestaffNum;i++){
-            l_tidestaffpts.push([l_tidestaffBegin,tidestaffSAndSLen*i])
+        var i;
+        for(i=0 ;i<l_tidestaffNum;i++){
+            l_tidestaffpts.push([[l_tidestaffBegin,tidestaffSAndSLen*i],[tidestaffLeftW,tidestaffSAndSLen*i]])
         }
+        l_tidestaffpts.forEach(function(item){
+            ctx.moveTo(item[0][0],item[0][1]);
+            ctx.lineTo(item[1][0],item[1][1]);
+        })
         //短水尺的所有点
         var s_tidestaffpts = [];
         //短水尺的开始位置
-        let s_tidestaffBegin = tidestaffLeftW-s_tidestaffLen;
-        for(let i=1 ;i<l_tidestaffNum;i++){
-            s_tidestaffpts.push([s_tidestaffBegin,i])
+        var s_tidestaffBegin = tidestaffLeftW-s_tidestaffLen;
+        for(i=1 ;i<dmHeight ;i+=2){
+            if(i % tidestaffSAndSLen != 0)
+                s_tidestaffpts.push([[s_tidestaffBegin,i],[tidestaffLeftW,i]])
         }
-        l_tidestaffpts.forEach(function(item){
-            ctx.moveTo(item[0],item[1]);
+        console.log(s_tidestaffpts)
+        s_tidestaffpts.forEach(function(item){
+            ctx.moveTo(item[0][0],item[0][1]);
+            ctx.lineTo(item[1][0],item[1][1]);
         })
-
     }
 });
+
+function createTideStaff(config){
+    var tidestaffGp = new ychart.Group();
+
+    var dmHeight = config.MAXDMHG;
+    //水尺宽度
+    var tidestaffW = 30;
+    //水尺分为左右两部分
+    var tidestaffLeftW = tidestaffW  * 2 /3;
+    // var tidestaffRightW =tidestaffW * 1/3;
+    //不同长度的水尺宽度
+    var s_tidestaffLen = 4 , l_tidestaffLen = 8;
+    //水尺的长短横线的间距
+    var tidestaffSAndSLen = 10;
+    //水尺左边的矩形
+    var leftpts = [ [0,0], [0,dmHeight],[tidestaffLeftW,dmHeight],[tidestaffLeftW,0],[0,0] ];
+    tidestaffGp.add(new ychart.shape.Rect({
+        pts: leftpts,
+        style:{
+            lineColor: "#083EF0"
+        }
+    }))
+
+    //水尺右边矩形
+    var rightpts = [[tidestaffLeftW ,dmHeight],[tidestaffW,dmHeight],[tidestaffW ,0] ,[tidestaffLeftW ,0]];
+    tidestaffGp.add(new ychart.shape.Rect({
+        pts: rightpts,
+        style:{
+            lineColor: "#083EF0"
+        }
+    }))
+
+    //水尺左边边的水位标识
+    //长水尺数量
+    var l_tidestaffNum = parseInt(dmHeight/tidestaffSAndSLen);
+    //短水尺数量
+    var s_tidestaffNum = DamHeart - l_tidestaffNum;
+    //长水尺的所有点
+    var l_tidestaffpts = [];
+    //长水尺的开始位置
+    let l_tidestaffBegin = tidestaffLeftW-l_tidestaffLen;
+    var i;
+    for(i=1 ;i<l_tidestaffNum;i++){
+        var crtH = tidestaffSAndSLen*i;
+        //左边的长水尺
+        tidestaffGp.add(new ychart.shape.Line({
+            x0: l_tidestaffBegin,
+            y0: crtH,
+            x1: tidestaffLeftW,
+            y1: crtH,
+            text: crtH,
+            textpos: "left-top",
+            style:{
+                lineColor: "#083EF0"
+            }
+        }))
+    }
+    //短水尺的开始位置
+    var s_tidestaffBegin = tidestaffLeftW-s_tidestaffLen;
+    for(i=1 ;i<dmHeight ;i+=2){
+        if(i % tidestaffSAndSLen != 0){
+            //左边的短水尺
+            var crtH = i;
+            tidestaffGp.add(new ychart.shape.Line({
+                x0: s_tidestaffBegin,
+                y0: crtH,
+                x1: tidestaffLeftW,
+                y1: crtH,
+                // text: crtH,
+                // textpos: "left-top",
+                style:{
+                    lineColor: "#083EF0"
+                }
+            }))
+        }
+    }
+    //正常蓄水位
+    var nrpllv = dmHeight - config.DMTPEL+config.HYCH.NRPLLV;
+    tidestaffGp.add(new ychart.shape.Line({
+        x0: tidestaffLeftW,
+        y0: nrpllv,
+        x1: tidestaffLeftW+s_tidestaffLen,
+        y1: nrpllv,
+        // text: " 正常蓄水位"+nrpllv,
+        textPos: "right-center",
+        style:{
+            lineColor: "#083EF0"
+        }
+    }))
+    console.log("正常蓄水位 "+nrpllv)
+    //校核洪水位
+    var chfllv = dmHeight-config.DMTPEL+config.HYCH.CHFLLV;
+    tidestaffGp.add(new ychart.shape.Line({
+        x0: tidestaffLeftW,
+        y0: chfllv,
+        x1: tidestaffLeftW+s_tidestaffLen,
+        y1: chfllv,
+        // text: " 校核洪水位"+chfllv,
+        textPos: "right-center",
+        style:{
+            lineColor: "#083EF0"
+        }
+    }))
+    console.log("校核洪水位 "+chfllv)
+    //汛限水位
+    var flsscnwl = dmHeight-config.DMTPEL+config.HYCH.FLSSCNWL;
+    tidestaffGp.add(new ychart.shape.Line({
+        x0: tidestaffLeftW,
+        y0: flsscnwl,
+        x1: tidestaffLeftW+s_tidestaffLen,
+        y1: flsscnwl,
+        // text: " 汛限水位"+chfllv,
+        textPos: "right-center",
+        style:{
+            lineColor: "#083EF0"
+        }
+    }))
+    console.log("汛期限制水位 "+flsscnwl);
+    return tidestaffGp;
+}
 
 function drawWaterLevel(options){
     if(!options.MAXDMHG){
         alert("没有指定坝高");
         return;
     }
-    console.log(options);
     yh = ychart.init(options.id);
 
     //大坝group
     var damGp = new ychart.Group({
-
+        position: [100,0]
     })
     damGp.add(new Dam(options));
 
     //心墙group
     var heartGp = new ychart.Group({
-        position: [100,0]
+        //指定心墙相对于大坝的位置
+        position: [25,0]
     })
     heartGp.add(new DamHeart(options));
+    damGp.add(heartGp);
 
     //水位group
-    var wlGp = new ychart.Group({})
+    var wlGp = new ychart.Group({
+    })
     wlGp.add(new WaterLevel(options));
 
     var tidestaffGp = new ychart.Group({
-        position: [100,10]
     })
     tidestaffGp.add(new TideStaff(options))
 
-    yh.add(tidestaffGp)
-    // yh.add(wlGp);
-    // yh.add(damGp);
-    // yh.add(heartGp);
+    var canvasH = yh.getHeight();
+    var damH = options.MAXDMHG;
+    var sc = canvasH / damH;
+    sc = 5;
+    var globalGp = new ychart.Group({
+        scale: [sc,sc]
+    })
+    globalGp.add(createTideStaff(options));
+    // globalGp.add(tidestaffGp)
+    // globalGp.add(wlGp);
+    globalGp.add(damGp);
+    // globalGp.add(heartGp);
+
+    yh.add(globalGp)
     yh.BrushAll();
 }
 
